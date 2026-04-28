@@ -192,12 +192,17 @@ export default async function Home() {
             const v = tierVisual[pkg.tier];
             return (
               <article
-                key={pkg.name}
+                key={pkg.tier}
                 className={cn(
                   "lift-on-hover relative overflow-hidden rounded-2xl p-5 pt-6",
                   v.card,
                 )}
               >
+                {pkg.bestValue ? (
+                  <span className="absolute right-3 top-3 rounded-full bg-red-600 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white shadow-sm">
+                    Best value
+                  </span>
+                ) : null}
                 <div
                   className={cn("absolute inset-x-0 top-0 h-1.5", v.bar)}
                   aria-hidden
@@ -211,11 +216,23 @@ export default async function Home() {
                   {pkg.blurb}
                 </p>
                 <p className={cn("mt-2 text-sm font-semibold", v.label)}>
-                  {pkg.name}
+                  {pkg.name} membership
                 </p>
                 <p className={cn("mt-3 text-2xl font-bold tabular-nums", v.price)}>
                   {currencyFormatter.format(pkg.price)}
                 </p>
+                <p className={cn("mt-1 text-sm tabular-nums opacity-90", v.blurb)}>
+                  ~${pkg.usdApprox.toLocaleString()} USD
+                </p>
+                <ul className={cn("mt-4 space-y-1.5 text-sm", v.blurb)}>
+                  <li>
+                    <span className="font-semibold">{pkg.boxes}</span>{" "}
+                    {pkg.boxes === 1 ? "box" : "boxes"} of product
+                  </li>
+                  <li>
+                    <span className="font-semibold">{pkg.pv}</span> PV
+                  </li>
+                </ul>
               </article>
             );
           })}

@@ -93,7 +93,7 @@ export const products: Product[] = [
     title: "Advanced Miira-Curve - Weight Management",
     shortTitle: "Miira-Curve",
     tagline: "Shape Your Wellness Journey Naturally.",
-    price: 500,
+    price: 700,
     category: "Weight Management",
     shortBenefit: "Supports healthy weight and appetite balance",
     ingredients: ["L-Carnitine", "Green Tea Extract", "Garcinia Cambogia"],
@@ -113,7 +113,7 @@ export const products: Product[] = [
     title: "Advanced Miira-Cell+ - Cellular Regeneration",
     shortTitle: "Miira-Cell+",
     tagline: "Restore from Within. Age with Confidence.",
-    price: 620,
+    price: 700,
     category: "Cellular Health",
     shortBenefit: "Supports anti-aging and cellular wellness",
     ingredients: ["CoQ10", "Resveratrol", "Vitamin C", "Omega Complex"],
@@ -133,7 +133,7 @@ export const products: Product[] = [
     title: "Advanced Miira-Phyll - Digestive Health and Detox",
     shortTitle: "Miira-Phyll",
     tagline: "Cleanse Gently. Feel Light. Live Vibrant.",
-    price: 480,
+    price: 450,
     category: "Digestive Health",
     shortBenefit: "Supports digestion, gut health, and natural detox",
     ingredients: ["Chlorophyll", "Probiotics", "Peppermint", "Fiber Blend"],
@@ -153,7 +153,7 @@ export const products: Product[] = [
     title: "Miira Coffee - Functional Wellness Coffee",
     shortTitle: "Miira Coffee",
     tagline: "Wellness in a Cup.",
-    price: 520,
+    price: 600,
     category: "Unisex",
     shortBenefit: "Arabica coffee with botanicals for energy, focus, and daily balance",
     ingredients: [
@@ -177,11 +177,41 @@ export const products: Product[] = [
     images: ["/products/miira-coffee-1.png"],
   },
   {
+    slug: "miira-life",
+    title: "Miira-life - Immune & Vitality Support",
+    shortTitle: "Miira-life",
+    tagline: "Vitality for Your Life.",
+    price: 700,
+    category: "Cellular Health",
+    shortBenefit: "Wellness supplement for vitality, immune support, and everyday balance",
+    ingredients: [
+      "Seracol-G.Pink (mixed berry)",
+      "Black ginger extract",
+      "Bird's nest extract",
+      "Apple stem cell",
+      "Moringa extract",
+      "Rock salt",
+      "Wolfberry extract",
+    ],
+    benefits: [
+      "Designed to boost vitality and support immune health alongside diet and lifestyle",
+      "Black ginger, moringa, wolfberry, and bird's nest are traditionally associated with antioxidant and nutrient support",
+      "Apple stem cell and botanicals complement cellular wellness goals",
+      "Formulated for daily use; adults often take 1–2 sachets daily per label guidance",
+      "Can generally pair with other Miira-care style products when spaced 30–60 minutes apart",
+    ],
+    usage:
+      "From age 4: often ½–1 sachet daily; adults 18+: commonly 1–2 sachets daily. Always follow the product label and consult a healthcare professional—especially for children, pregnancy, or breastfeeding.",
+    featured: true,
+    stock: 80,
+    images: ["/products/miira-life-1.png"],
+  },
+  {
     slug: "edg3-plus",
     title: "EDG3 Plus - Immune & Vitality Beverage",
     shortTitle: "EDG3 Plus",
     tagline: "The Power of Three—Turmeric, Vitamin D3 & Glutathione Support.",
-    price: 495,
+    price: 850,
     category: "Cellular Health",
     shortBenefit: "Multi-functional drink for immunity, energy, and whole-body support",
     ingredients: ["Turmeric", "Glutathione amino acid blend (precursors)", "Vitamin D3"],
@@ -203,7 +233,7 @@ export const products: Product[] = [
     title: "Amezcua Bio Disc 3 - Structured Water & Energy Wellness",
     shortTitle: "Amezcua Bio Disc 3",
     tagline: "Energized Health Made Simple.",
-    price: 3890,
+    price: 2500,
     category: "Unisex",
     shortBenefit: "Glass wellness disc to structure water and support home vitality",
     ingredients: ["Energized glass disc with granulated crystal matrix", "Protective silicone shield (included)"],
@@ -233,16 +263,62 @@ export const trustIndicators = [
 export const distributorPackageTiers = ["starter", "bronze", "silver", "gold"] as const;
 export type DistributorPackageTier = (typeof distributorPackageTiers)[number];
 
-export const distributorPackages: {
+export type DistributorPackage = {
   tier: DistributorPackageTier;
+  /** Membership tier label */
   name: string;
+  /** Price in GHS (₵) */
   price: number;
+  /** Short tier tagline */
   blurb: string;
-}[] = [
-  { tier: "starter", name: "Starter Package", price: 1260, blurb: "Entry bundle" },
-  { tier: "bronze", name: "Bronze Package", price: 2160, blurb: "Growing team" },
-  { tier: "silver", name: "Silver Package", price: 10800, blurb: "Serious scale" },
-  { tier: "gold", name: "Gold Package", price: 21600, blurb: "Top tier" },
+  /** Reference USD from membership graphic */
+  usdApprox: number;
+  /** Number of product boxes included */
+  boxes: number;
+  /** Point value (PV) */
+  pv: number;
+  /** Highlight on card (e.g. Gold tier) */
+  bestValue?: boolean;
+};
+
+export const distributorPackages: DistributorPackage[] = [
+  {
+    tier: "starter",
+    name: "Starter",
+    price: 780,
+    blurb: "Start strong",
+    usdApprox: 65,
+    boxes: 1,
+    pv: 50,
+  },
+  {
+    tier: "bronze",
+    name: "Bronze",
+    price: 1440,
+    blurb: "Build momentum",
+    usdApprox: 120,
+    boxes: 2,
+    pv: 100,
+  },
+  {
+    tier: "silver",
+    name: "Silver",
+    price: 7200,
+    blurb: "Scale up",
+    usdApprox: 600,
+    boxes: 10,
+    pv: 500,
+  },
+  {
+    tier: "gold",
+    name: "Gold",
+    price: 14400,
+    blurb: "Maximum value",
+    usdApprox: 1200,
+    boxes: 20,
+    pv: 1000,
+    bestValue: true,
+  },
 ];
 
 export type SiteTestimonial = {

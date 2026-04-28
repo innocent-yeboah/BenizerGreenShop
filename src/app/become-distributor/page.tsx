@@ -65,7 +65,8 @@ export default function BecomeDistributorPage() {
                 </option>
                 {distributorPackages.map((p) => (
                   <option key={p.tier} value={p.tier}>
-                    {p.name} — {currencyFormatter.format(p.price)}
+                    {p.name} — {currencyFormatter.format(p.price)} (~${p.usdApprox}) · {p.boxes}{" "}
+                    {p.boxes === 1 ? "box" : "boxes"} · {p.pv} PV
                   </option>
                 ))}
               </select>

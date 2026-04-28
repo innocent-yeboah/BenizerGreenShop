@@ -52,7 +52,7 @@ export const submitDistributorLead = actionClient
   .action(async ({ parsedInput }) => {
     const pkg = distributorPackages.find((p) => p.tier === parsedInput.packageTier);
     const packageLine = pkg
-      ? `${pkg.name} (${currencyFormatter.format(pkg.price)})`
+      ? `${pkg.name} (${currencyFormatter.format(pkg.price)} · ~$${pkg.usdApprox} · ${pkg.boxes} box${pkg.boxes === 1 ? "" : "es"} · ${pkg.pv} PV)`
       : parsedInput.packageTier;
 
     const supabase = createAdminClient();
