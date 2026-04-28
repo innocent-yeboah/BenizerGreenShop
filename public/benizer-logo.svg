@@ -1,0 +1,6 @@
+<svg width="300" height="80" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="16" fill="#1B5E20"/>
+  <path d="M24 16H46C56 16 62 21 62 30C62 37 58 41 52 42C59 43 64 48 64 56C64 66 57 72 45 72H24V16ZM41 38C46 38 49 36 49 32C49 28 46 26 41 26H36V38H41ZM43 62C49 62 52 59 52 54C52 49 48 47 43 47H36V62H43Z" fill="#FFC107"/>
+  <text x="95" y="33" fill="#1B5E20" font-size="26" font-family="Montserrat, Arial, sans-serif" font-weight="700">GREEN SHOP</text>
+  <text x="95" y="56" fill="#212121" font-size="13" font-family="Open Sans, Arial, sans-serif">ORGANIC " NATURAL</text>
+</svg>

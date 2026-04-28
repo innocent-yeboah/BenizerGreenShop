@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff8e1;
+  --foreground: #212121;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-open-sans);
+  --font-heading: var(--font-montserrat);
+  --font-accent: var(--font-playfair);
+  --color-brand-green: #1b5e20;
+  --color-brand-green-dark: #0d3b0f;
+  --color-brand-green-light: #a5d6a7;
+  --color-brand-gold: #ffc107;
+  --color-brand-gold-dark: #ffa000;
+  --color-brand-gold-light: #ffecb3;
+  --color-brand-cream: #fff8e1;
+  --color-brand-charcoal: #212121;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-open-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-montserrat), Arial, sans-serif;
+  letter-spacing: -0.015em;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3.6rem);
+  line-height: 1.1;
+}
+
+h2 {
+  line-height: 1.2;
+}
+
+a,
+button {
+  transition: all 180ms ease;
+}
+
+.container-shell {
+  @apply mx-auto w-full max-w-7xl px-6;
+}
+
+.surface-card {
+  border: 1px solid color-mix(in srgb, var(--color-brand-green) 18%, transparent);
+  background: white;
+  box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.3);
+}
+
+.lift-on-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px -20px rgba(0, 0, 0, 0.45);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-full bg-brand-green px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-green-dark;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-full border border-brand-green px-6 py-2.5 text-sm font-semibold text-brand-green hover:bg-brand-green hover:text-white;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-full bg-brand-gold px-5 py-2 text-sm font-semibold text-brand-charcoal hover:bg-brand-gold-dark;
+}
+
+/* Top promo strip — continuous marquee (track must be exactly 2× one line width) */
+.promo-marquee-track {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: max-content;
+  will-change: transform;
+  animation: promo-marquee-scroll 22s linear infinite;
+}
+
+.promo-marquee-track > * {
+  flex-shrink: 0;
+}
+
+@keyframes promo-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-marquee-track {
+    animation: none;
+    transform: none;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}

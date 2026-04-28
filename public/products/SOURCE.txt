@@ -1,0 +1,7 @@
+Product imagery sources (download for local storefront use; verify licensing for production).
+
+- miira-coffee-1.png — https://e3well.com/cdn/shop/files/coffee.png (Miira Coffee retail asset)
+- edg3-plus-1.webp — https://www.qnet.net/wp-content/uploads/2024/09/edg3-6791fcdbb5528.webp (QNET EDG3 Plus)
+- amezcua-bio-disc-3-1.png — https://www.amezcua.com/wp-content/uploads/2023/08/bio-disc-3-img2.png (Amezcua Bio Disc 3)
+
+Other *.jpg files in this folder follow the same pattern as site catalog slugs.

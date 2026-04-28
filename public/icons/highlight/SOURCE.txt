@@ -1,0 +1,4 @@
+Outline icons from Heroicons v2.1.5 (MIT License).
+https://github.com/tailwindlabs/heroicons / https://heroicons.com
+
+Files were downloaded from unpkg and stroke color set to match site brand green.
