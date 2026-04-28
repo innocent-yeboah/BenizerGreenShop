@@ -3,6 +3,17 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+
+  if (!supabaseUrl || !supabaseKey) {
+    if (pathname.startsWith("/admin") || pathname.startsWith("/distributor")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next({ request });
+  }
+
   const response = NextResponse.next({ request });
 
   const cookieMethods: CookieMethodsServer = {
@@ -19,18 +30,13 @@ export async function middleware(request: NextRequest) {
     },
   };
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: cookieMethods,
-    },
-  );
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: cookieMethods,
+  });
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const pathname = request.nextUrl.pathname;
   const query = new URLSearchParams({ next: pathname }).toString();
 
   if ((pathname.startsWith("/admin") || pathname.startsWith("/distributor")) && !user) {

@@ -9,7 +9,7 @@ import {
 } from "@/lib/site-data";
 import { cn, currencyFormatter } from "@/lib/utils";
 import { getCurrentUserWithRole } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { HeroSlider } from "@/components/hero-slider";
@@ -23,7 +23,7 @@ export default async function Home() {
   const userCtx = await getCurrentUserWithRole();
   if (userCtx?.role === "admin") {
     shareEarnHref = "/distributor";
-  } else if (userCtx?.role === "distributor") {
+  } else if (userCtx?.role === "distributor" && isSupabaseConfigured()) {
     const supabase = await createClient();
     const { data: distributor } = await supabase
       .from("distributors")

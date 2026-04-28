@@ -1,7 +1,10 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export const getCurrentUserWithRole = cache(async () => {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
   const supabase = await createClient();
   const {
     data: { user },
