@@ -10,7 +10,7 @@ export const siteConfig = {
   whatsappAi: "+233545753721",
   /** Display format for footer / copy */
   whatsappDirect: "0545753721",
-  email: "shopbenizergreen@gmail.com",
+  email: "benizergreens@gmail.com",
   social: {
     tiktok: "https://www.tiktok.com/@benizer.green.shop",
     facebook: "https://www.facebook.com/Starlight94.co/",
