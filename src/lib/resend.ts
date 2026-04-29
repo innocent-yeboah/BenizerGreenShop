@@ -55,3 +55,8 @@ export function canSendWithCurrentResendSender(params: { from: string; to: strin
   if (!allow.size) return false;
   return params.to.every((addr) => allow.has(extractEmailAddress(addr)));
 }
+
+/** Enable verbose email logs on server (set RESEND_DEBUG=true). */
+export function isResendDebugEnabled(): boolean {
+  return (process.env.RESEND_DEBUG || "").trim().toLowerCase() === "true";
+}

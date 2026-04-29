@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
-import { canSendWithCurrentResendSender, getResend, getResendFrom } from "@/lib/resend";
+import { canSendWithCurrentResendSender, getResend, getResendFrom, isResendDebugEnabled } from "@/lib/resend";
 import {
   checkoutSchema,
   distributorLeadSchema,
@@ -21,6 +21,7 @@ import {
 
 const resend = getResend();
 const resendFrom = getResendFrom();
+const resendDebug = isResendDebugEnabled();
 
 const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
 
@@ -40,7 +41,20 @@ async function sendEmailSafe(params: {
   html: string;
   context: string;
 }) {
-  if (!resend) return;
+  if (!resend) {
+    if (resendDebug) {
+      console.info(`[${params.context}] Resend disabled: RESEND_API_KEY is missing.`);
+    }
+    return;
+  }
+
+  if (resendDebug) {
+    console.info(`[${params.context}] Email attempt`, {
+      from: resendFrom,
+      to: params.to,
+      subject: params.subject,
+    });
+  }
 
   if (!canSendWithCurrentResendSender({ from: resendFrom, to: params.to })) {
     console.warn(
@@ -51,12 +65,18 @@ async function sendEmailSafe(params: {
   }
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: resendFrom,
       to: params.to,
       subject: params.subject,
       html: params.html,
     });
+    if (resendDebug) {
+      console.info(`[${params.context}] Email accepted by Resend`, {
+        id: result?.data?.id ?? null,
+        error: result?.error?.message ?? null,
+      });
+    }
   } catch (e) {
     console.error(`[${params.context}] Resend send failed:`, e);
   }
