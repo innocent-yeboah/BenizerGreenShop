@@ -23,6 +23,20 @@ function signInErrorMessage(raw: string | undefined) {
   } catch {
     decoded = raw;
   }
+  if (/invalid path specified in request url/i.test(decoded)) {
+    return (
+      <>
+        <p className="font-semibold text-red-950">Sign-in request was rejected by Supabase.</p>
+        <p className="mt-2 text-sm leading-relaxed text-red-900/90">
+          Most often this is a <strong>project URL</strong> mistake on the server: use only your Project URL like{" "}
+          <span className="font-mono text-[0.8rem]">https://&lt;ref&gt;.supabase.co</span> — do not append{" "}
+          <span className="font-mono text-[0.8rem]">/auth/v1</span>. Check Vercel → Environment Variables, redeploy, and in
+          Supabase → Authentication → URL Configuration add your production URL (e.g.{" "}
+          <span className="font-mono text-[0.8rem]">https://your-site.vercel.app</span>) to Site URL / Redirect URLs.
+        </p>
+      </>
+    );
+  }
   if (/invalid login credentials/i.test(decoded)) {
     return (
       <>

@@ -1,11 +1,12 @@
 import type { CookieMethodsServer } from "@supabase/ssr";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { normalizeSupabaseProjectUrl } from "@/lib/supabase/project-url";
 
 async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
   const pathname = request.nextUrl.pathname;
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  const supabaseUrl = normalizeSupabaseProjectUrl(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? "";
 
   if (!supabaseUrl || !supabaseKey) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/distributor")) {
