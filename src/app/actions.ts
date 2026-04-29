@@ -24,21 +24,29 @@ const resendFrom = getResendFrom();
 
 const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
 
+function requireAdminDb() {
+  const supabase = createAdminClient();
+  if (!supabase) {
+    throw new Error(
+      "Supabase service role is missing. Set SUPABASE_SERVICE_ROLE_KEY on Vercel (Production + Preview) to store leads and orders.",
+    );
+  }
+  return supabase;
+}
+
 export const submitProductLead = actionClient
   .schema(productLeadSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = createAdminClient();
-    if (supabase) {
-      await supabase.from("leads").insert({
-        name: parsedInput.name,
-        email: parsedInput.email,
-        phone: parsedInput.phone,
-        type: "buyer",
-        product_interest: parsedInput.productInterest,
-        message: `${parsedInput.message} (preferred: ${parsedInput.preferredContact})`,
-        status: "new",
-      });
-    }
+    const supabase = requireAdminDb();
+    await supabase.from("leads").insert({
+      name: parsedInput.name,
+      email: parsedInput.email,
+      phone: parsedInput.phone,
+      type: "buyer",
+      product_interest: parsedInput.productInterest,
+      message: `${parsedInput.message} (preferred: ${parsedInput.preferredContact})`,
+      status: "new",
+    });
 
     if (resend) {
       await resend.emails.send({
@@ -61,17 +69,15 @@ export const submitDistributorLead = actionClient
       ? `${pkg.name} (${currencyFormatter.format(pkg.price)} · ~$${pkg.usdApprox} · ${qtyPart} · ${pkg.pv} PV)`
       : parsedInput.packageTier;
 
-    const supabase = createAdminClient();
-    if (supabase) {
-      await supabase.from("leads").insert({
-        name: parsedInput.name,
-        email: parsedInput.email,
-        phone: parsedInput.phone,
-        type: "distributor",
-        message: `Preferred package: ${packageLine}. Why join: ${parsedInput.whyJoin}. Sales exp: ${parsedInput.salesExperience || "n/a"}`,
-        status: "new",
-      });
-    }
+    const supabase = requireAdminDb();
+    await supabase.from("leads").insert({
+      name: parsedInput.name,
+      email: parsedInput.email,
+      phone: parsedInput.phone,
+      type: "distributor",
+      message: `Preferred package: ${packageLine}. Why join: ${parsedInput.whyJoin}. Sales exp: ${parsedInput.salesExperience || "n/a"}`,
+      status: "new",
+    });
 
     if (resend) {
       const adminMail = distributorApplicationAdminNotificationEmail({
@@ -131,7 +137,7 @@ export const createCheckoutSession = actionClient
 
     const amount = enrichedItems.reduce((sum, item) => sum + item.total, 0);
     const ref = `BGS-${Date.now()}`;
-    const supabase = createAdminClient();
+    const supabase = requireAdminDb();
 
     const gateway = moolreConfigured()
       ? "moolre"
@@ -139,10 +145,22 @@ export const createCheckoutSession = actionClient
         ? "paystack"
         : "manual";
 
-    if (supabase) {
-      const insertPayload = {
-        payment_reference: ref,
-        payment_gateway: gateway,
+    const insertPayload = {
+      payment_reference: ref,
+      payment_gateway: gateway,
+      customer_name: parsedInput.customerName,
+      customer_email: parsedInput.customerEmail,
+      customer_phone: parsedInput.customerPhone,
+      total_amount: amount,
+      status: "pending",
+      items: enrichedItems,
+      distributor_referral_code: parsedInput.distributorCode || null,
+    };
+
+    const { error } = await supabase.from("orders").insert(insertPayload);
+    if (error) {
+      // Backward compatibility for pre-migration databases.
+      await supabase.from("orders").insert({
         customer_name: parsedInput.customerName,
         customer_email: parsedInput.customerEmail,
         customer_phone: parsedInput.customerPhone,
@@ -150,21 +168,7 @@ export const createCheckoutSession = actionClient
         status: "pending",
         items: enrichedItems,
         distributor_referral_code: parsedInput.distributorCode || null,
-      };
-
-      const { error } = await supabase.from("orders").insert(insertPayload);
-      if (error) {
-        // Backward compatibility for pre-migration databases.
-        await supabase.from("orders").insert({
-          customer_name: parsedInput.customerName,
-          customer_email: parsedInput.customerEmail,
-          customer_phone: parsedInput.customerPhone,
-          total_amount: amount,
-          status: "pending",
-          items: enrichedItems,
-          distributor_referral_code: parsedInput.distributorCode || null,
-        });
-      }
+      });
     }
 
     const appUrl = getPublicAppUrl();
