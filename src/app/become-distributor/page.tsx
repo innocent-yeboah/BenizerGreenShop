@@ -63,12 +63,15 @@ export default function BecomeDistributorPage() {
                 <option value="" disabled>
                   Select a package
                 </option>
-                {distributorPackages.map((p) => (
+                {distributorPackages.map((p) => {
+                  const qtyLabel =
+                    p.quantityNote ?? `${p.boxes} ${p.boxes === 1 ? "box" : "boxes"}`;
+                  return (
                   <option key={p.tier} value={p.tier}>
-                    {p.name} — {currencyFormatter.format(p.price)} (~${p.usdApprox}) · {p.boxes}{" "}
-                    {p.boxes === 1 ? "box" : "boxes"} · {p.pv} PV
+                    {p.name} — {currencyFormatter.format(p.price)} (~${p.usdApprox}) · {qtyLabel} · {p.pv} PV
                   </option>
-                ))}
+                  );
+                })}
               </select>
             </div>
             <input name="salesExperience" placeholder="Sales experience (optional)" className="w-full rounded-lg border border-brand-green/20 p-3" />

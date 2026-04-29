@@ -304,7 +304,7 @@ export const trustIndicators = [
 ];
 
 /** Distributor starter tiers (aligned with homepage package cards). */
-export const distributorPackageTiers = ["starter", "bronze", "silver", "gold"] as const;
+export const distributorPackageTiers = ["revocare", "starter", "bronze", "silver", "gold"] as const;
 export type DistributorPackageTier = (typeof distributorPackageTiers)[number];
 
 export type DistributorPackage = {
@@ -317,15 +317,33 @@ export type DistributorPackage = {
   blurb: string;
   /** Reference USD from membership graphic */
   usdApprox: number;
-  /** Number of product boxes included */
+  /** Number of product boxes included (informational; see quantityNote for special cases) */
   boxes: number;
   /** Point value (PV) */
   pv: number;
   /** Highlight on card (e.g. Gold tier) */
   bestValue?: boolean;
+  /** Full card title line under blurb (default: "{name} membership") */
+  subtitle?: string;
+  /** Replaces the default "N box(es) of product" line when set */
+  quantityNote?: string;
+  /** Promo ribbon (e.g. limited promo tier) */
+  promo?: boolean;
 };
 
 export const distributorPackages: DistributorPackage[] = [
+  {
+    tier: "revocare",
+    name: "Revocare",
+    price: 350,
+    blurb: "Promo entry",
+    usdApprox: 29,
+    boxes: 0,
+    pv: 50,
+    subtitle: "Revocare promo package",
+    quantityNote: "Half product",
+    promo: true,
+  },
   {
     tier: "starter",
     name: "Starter",

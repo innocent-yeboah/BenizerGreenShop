@@ -46,6 +46,13 @@ export default async function Home() {
       price: "text-emerald-950",
       blurb: "text-emerald-800/80",
     },
+    revocare: {
+      card: "border-2 border-teal-500/55 bg-linear-to-br from-teal-50 via-cyan-50/90 to-teal-100/70 shadow-[0_12px_36px_-16px_rgba(13,148,136,0.35)] ring-1 ring-teal-400/30",
+      bar: "bg-linear-to-r from-teal-500 to-cyan-600",
+      label: "text-teal-950",
+      price: "text-teal-950",
+      blurb: "text-teal-900/85",
+    },
     bronze: {
       card: "border-2 border-amber-800/55 bg-linear-to-br from-amber-200/95 via-orange-100 to-amber-100 shadow-[0_12px_36px_-16px_rgba(120,53,15,0.35)]",
       bar: "bg-linear-to-r from-amber-800 to-orange-700",
@@ -187,7 +194,7 @@ export default async function Home() {
             Share &amp; earn
           </Link>
         </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {distributorPackages.map((pkg) => {
             const v = tierVisual[pkg.tier];
             return (
@@ -201,6 +208,10 @@ export default async function Home() {
                 {pkg.bestValue ? (
                   <span className="absolute right-3 top-3 rounded-full bg-red-600 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white shadow-sm">
                     Best value
+                  </span>
+                ) : pkg.promo ? (
+                  <span className="absolute right-3 top-3 rounded-full bg-teal-600 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-white shadow-sm">
+                    Promo
                   </span>
                 ) : null}
                 <div
@@ -216,7 +227,7 @@ export default async function Home() {
                   {pkg.blurb}
                 </p>
                 <p className={cn("mt-2 text-sm font-semibold", v.label)}>
-                  {pkg.name} membership
+                  {pkg.subtitle ?? `${pkg.name} membership`}
                 </p>
                 <p className={cn("mt-3 text-2xl font-bold tabular-nums", v.price)}>
                   {currencyFormatter.format(pkg.price)}
@@ -225,9 +236,9 @@ export default async function Home() {
                   ~${pkg.usdApprox.toLocaleString()} USD
                 </p>
                 <ul className={cn("mt-4 space-y-1.5 text-sm", v.blurb)}>
-                  <li>
-                    <span className="font-semibold">{pkg.boxes}</span>{" "}
-                    {pkg.boxes === 1 ? "box" : "boxes"} of product
+                  <li className="font-semibold">
+                    {pkg.quantityNote ??
+                      `${pkg.boxes} ${pkg.boxes === 1 ? "box" : "boxes"} of product`}
                   </li>
                   <li>
                     <span className="font-semibold">{pkg.pv}</span> PV
