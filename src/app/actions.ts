@@ -188,12 +188,16 @@ export const createCheckoutSession = actionClient
     }
 
     if (resend) {
-      await resend.emails.send({
-        from: "Benizer Orders <onboarding@resend.dev>",
-        to: [parsedInput.customerEmail],
-        subject: "Order initiated - Benizer Green Shop",
-        html: `<p>Your order reference is <strong>${ref}</strong>.</p><p>Total: GHS ${amount}</p>`,
-      });
+      try {
+        await resend.emails.send({
+          from: "Benizer Orders <onboarding@resend.dev>",
+          to: [parsedInput.customerEmail],
+          subject: "Order initiated - Benizer Green Shop",
+          html: `<p>Your order reference is <strong>${ref}</strong>.</p><p>Total: GHS ${amount}</p>`,
+        });
+      } catch (emailErr) {
+        console.error("[checkout] Order confirmation email failed (payment still proceeds):", emailErr);
+      }
     }
 
     return {
