@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CART_KEY, type CartItem } from "@/lib/cart";
+import { CART_KEY, dispatchCartUpdated, type CartItem } from "@/lib/cart";
 
 type Props = {
   slug: string;
@@ -26,6 +26,7 @@ export function AddToCartButton({ slug, quantity = 1 }: Props) {
         }
 
         localStorage.setItem(CART_KEY, JSON.stringify(existing));
+        dispatchCartUpdated();
         setLabel("Added");
         setTimeout(() => setLabel("Add to Cart"), 1200);
       }}

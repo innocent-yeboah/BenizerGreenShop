@@ -5,18 +5,22 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { createCheckoutSession } from "@/app/actions";
-import { CART_KEY, type CartItem } from "@/lib/cart";
+import {
+  CART_KEY,
+  dispatchCartUpdated,
+  readCartFromStorage,
+  type CartItem,
+} from "@/lib/cart";
 import { products } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 
 function readCart(): CartItem[] {
-  if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(CART_KEY);
-  return raw ? JSON.parse(raw) : [];
+  return readCartFromStorage();
 }
 
 function writeCart(next: CartItem[]) {
   localStorage.setItem(CART_KEY, JSON.stringify(next));
+  dispatchCartUpdated();
 }
 
 export default function CartPage() {
@@ -169,6 +173,7 @@ export default function CartPage() {
             });
             if (result?.data?.checkoutUrl) {
               localStorage.removeItem(CART_KEY);
+              dispatchCartUpdated();
               setCart([]);
               window.location.href = result.data.checkoutUrl;
             } else {

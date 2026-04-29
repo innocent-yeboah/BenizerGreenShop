@@ -4,6 +4,7 @@ import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import { BrandWordmark } from "@/components/brand-wordmark";
+import { CartNavLink } from "@/components/cart-nav-link";
 import { SocialLinks } from "@/components/social-links";
 import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
 import { siteConfig } from "@/lib/site-data";
@@ -81,7 +82,7 @@ export default async function RootLayout({
             <nav className="hidden gap-6 text-sm font-semibold md:flex">
               <Link href="/products">Products</Link>
               <Link href="/about">About Us</Link>
-              <Link href="/cart">Cart</Link>
+              <CartNavLink />
               <Link href="/become-distributor">Become a Distributor</Link>
               {currentUser?.role === "admin" ? (
                 <Link href="/admin">Admin</Link>
@@ -107,9 +108,7 @@ export default async function RootLayout({
             <Link href="/about" className="whitespace-nowrap">
               About
             </Link>
-            <Link href="/cart" className="whitespace-nowrap">
-              Cart
-            </Link>
+            <CartNavLink className="whitespace-nowrap" />
             <Link href="/become-distributor" className="whitespace-nowrap">
               Distributor
             </Link>
