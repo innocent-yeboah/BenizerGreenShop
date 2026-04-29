@@ -108,7 +108,7 @@ export default async function RootLayout({
             <Link href="/about" className="whitespace-nowrap">
               About
             </Link>
-            <CartNavLink className="whitespace-nowrap" />
+            <CartNavLink />
             <Link href="/become-distributor" className="whitespace-nowrap">
               Distributor
             </Link>

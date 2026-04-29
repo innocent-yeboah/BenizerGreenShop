@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   CART_UPDATED_EVENT,
   getCartTotalQuantity,
   readCartFromStorage,
 } from "@/lib/cart";
+import { cn } from "@/lib/utils";
 
 type Props = {
   className?: string;
@@ -28,19 +30,30 @@ export function CartNavLink({ className }: Props) {
     };
   }, []);
 
+  const ariaLabel =
+    count > 0
+      ? `Shopping cart, ${count} item${count === 1 ? "" : "s"}`
+      : "Shopping cart";
+
   return (
-    <Link href="/cart" className={className}>
-      <span className="inline-flex items-center gap-1.5">
-        <span>Cart</span>
-        {count > 0 ? (
-          <span
-            className="inline-flex min-h-4.5 min-w-4.5 items-center justify-center rounded-full bg-brand-green px-1 text-[0.65rem] font-bold leading-none text-white tabular-nums"
-            aria-label={`${count} items in cart`}
-          >
-            {count > 99 ? "99+" : count}
-          </span>
-        ) : null}
-      </span>
+    <Link
+      href="/cart"
+      aria-label={ariaLabel}
+      title={ariaLabel}
+      className={cn(
+        "relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-brand-green-dark transition-colors hover:bg-brand-green/12 hover:text-brand-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
+        className,
+      )}
+    >
+      <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={2} aria-hidden />
+      {count > 0 ? (
+        <span
+          className="absolute -right-0.5 -top-0.5 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-green px-1 text-[0.65rem] font-bold leading-none text-white tabular-nums ring-2 ring-brand-cream"
+          aria-hidden
+        >
+          {count > 99 ? "99+" : count}
+        </span>
+      ) : null}
     </Link>
   );
 }

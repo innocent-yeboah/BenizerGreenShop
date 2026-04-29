@@ -123,3 +123,42 @@ export function distributorApplicationConfirmationEmail(params: {
     html: wrapEmail(inner),
   };
 }
+
+/** Internal notification for admin inbox — matches brand styling for scanning on mobile. */
+export function distributorApplicationAdminNotificationEmail(params: {
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone: string;
+  packageLine: string;
+  whyJoin: string;
+  salesExperience?: string;
+}): { subject: string; html: string } {
+  const sales = params.salesExperience?.trim() || "—";
+  const inner = `
+<tr><td style="background:linear-gradient(135deg,${EMAIL_BRAND.greenDark} 0%,${EMAIL_BRAND.green} 100%);padding:22px 24px;text-align:center;">
+<p style="margin:0;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:${EMAIL_BRAND.gold};">Admin · ${escapeHtml(siteConfig.name)}</p>
+<h1 style="margin:8px 0 0;font-size:20px;font-weight:700;color:${EMAIL_BRAND.white};">New distributor application</h1>
+</td></tr>
+<tr><td style="padding:24px 24px 16px;">
+<p style="margin:0 0 14px;font-size:15px;line-height:1.5;"><strong>${escapeHtml(params.applicantName)}</strong> submitted a distributor inquiry.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:${EMAIL_BRAND.cream};border-radius:8px;overflow:hidden;margin-bottom:14px;">
+<tr><td style="padding:10px 14px;border-bottom:1px solid rgba(27,94,32,0.12);font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:${EMAIL_BRAND.greenDark};font-weight:700;">Package</td></tr>
+<tr><td style="padding:12px 14px;font-size:14px;line-height:1.45;">${escapeHtml(params.packageLine)}</td></tr>
+</table>
+<p style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:${EMAIL_BRAND.greenDark};font-weight:700;">Contact</p>
+<p style="margin:0 0 4px;font-size:14px;">Email: <a href="mailto:${escapeHtml(params.applicantEmail)}" style="color:${EMAIL_BRAND.green};font-weight:600;">${escapeHtml(params.applicantEmail)}</a></p>
+<p style="margin:0 0 14px;font-size:14px;">Phone: ${escapeHtml(params.applicantPhone)}</p>
+<p style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:${EMAIL_BRAND.greenDark};font-weight:700;">Sales experience</p>
+<p style="margin:0 0 14px;font-size:14px;line-height:1.5;">${escapeHtml(sales)}</p>
+<p style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;color:${EMAIL_BRAND.greenDark};font-weight:700;">Why join</p>
+<p style="margin:0;font-size:14px;line-height:1.55;">${escapeHtml(params.whyJoin)}</p>
+</td></tr>
+<tr><td style="padding:0 24px 24px;font-size:13px;color:#555;">
+<p style="margin:0;">Reply directly to the applicant or manage leads in <strong>Admin → Distributors</strong>.</p>
+</td></tr>`;
+
+  return {
+    subject: `New distributor application — ${params.applicantName} (${siteConfig.name})`,
+    html: wrapEmail(inner),
+  };
+}

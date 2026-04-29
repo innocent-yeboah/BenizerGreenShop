@@ -14,6 +14,7 @@ import { distributorPackages, products, siteConfig } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
+  distributorApplicationAdminNotificationEmail,
   distributorApplicationConfirmationEmail,
   orderCheckoutConfirmationEmail,
 } from "@/lib/email-templates";
@@ -73,30 +74,40 @@ export const submitDistributorLead = actionClient
     }
 
     if (resend) {
-      try {
-        await resend.emails.send({
+      const adminMail = distributorApplicationAdminNotificationEmail({
+        applicantName: parsedInput.name,
+        applicantEmail: parsedInput.email,
+        applicantPhone: parsedInput.phone,
+        packageLine,
+        whyJoin: parsedInput.whyJoin,
+        salesExperience: parsedInput.salesExperience,
+      });
+      const applicantMail = distributorApplicationConfirmationEmail({
+        applicantName: parsedInput.name,
+        packageLine,
+        siteUrl: getPublicAppUrl(),
+      });
+
+      const [adminResult, applicantResult] = await Promise.allSettled([
+        resend.emails.send({
           from: resendFrom,
           to: [adminEmail],
-          subject: `New Distributor Application — ${packageLine}`,
-          html: `<p>${parsedInput.name} applied for <strong>${packageLine}</strong>.</p><p>${parsedInput.email} / ${parsedInput.phone}</p><p>Why join: ${parsedInput.whyJoin}</p>`,
-        });
-      } catch (adminMailErr) {
-        console.error("[distributor-lead] Admin notification email failed:", adminMailErr);
-      }
-      try {
-        const applicantMail = distributorApplicationConfirmationEmail({
-          applicantName: parsedInput.name,
-          packageLine,
-          siteUrl: getPublicAppUrl(),
-        });
-        await resend.emails.send({
+          subject: adminMail.subject,
+          html: adminMail.html,
+        }),
+        resend.emails.send({
           from: resendFrom,
           to: [parsedInput.email],
           subject: applicantMail.subject,
           html: applicantMail.html,
-        });
-      } catch (applicantMailErr) {
-        console.error("[distributor-lead] Applicant confirmation email failed:", applicantMailErr);
+        }),
+      ]);
+
+      if (adminResult.status === "rejected") {
+        console.error("[distributor-lead] Admin notification email failed:", adminResult.reason);
+      }
+      if (applicantResult.status === "rejected") {
+        console.error("[distributor-lead] Applicant confirmation email failed:", applicantResult.reason);
       }
     }
     revalidatePath("/admin/distributors");
