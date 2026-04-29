@@ -2,7 +2,7 @@ import type { CookieMethodsServer } from "@supabase/ssr";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
   const pathname = request.nextUrl.pathname;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
@@ -36,18 +36,25 @@ export async function middleware(request: NextRequest) {
 
   const {
     data: { user },
+    error: sessionErr,
   } = await supabase.auth.getUser();
+
+  if (sessionErr) {
+    console.error("[middleware] getUser:", sessionErr.message);
+    return response;
+  }
+
   const query = new URLSearchParams({ next: pathname }).toString();
 
   if ((pathname.startsWith("/admin") || pathname.startsWith("/distributor")) && !user) {
     return NextResponse.redirect(new URL(`/auth/sign-in?${query}`, request.url));
   }
 
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/admin") && user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", user!.id)
+      .eq("id", user.id)
       .maybeSingle();
 
     if (profile?.role !== "admin") {
@@ -55,11 +62,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/distributor")) {
+  if (pathname.startsWith("/distributor") && user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", user!.id)
+      .eq("id", user.id)
       .maybeSingle();
 
     if (profile?.role !== "distributor" && profile?.role !== "admin") {
@@ -69,7 +76,7 @@ export async function middleware(request: NextRequest) {
     const { data: distributor } = await supabase
       .from("distributors")
       .select("approved")
-      .eq("user_id", user!.id)
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (!distributor?.approved && profile?.role !== "admin") {
@@ -107,6 +114,15 @@ export async function middleware(request: NextRequest) {
   }
 
   return response;
+}
+
+export async function middleware(request: NextRequest) {
+  try {
+    return await middlewareImpl(request);
+  } catch (e) {
+    console.error("[middleware]", e);
+    return NextResponse.next({ request });
+  }
 }
 
 export const config = {
