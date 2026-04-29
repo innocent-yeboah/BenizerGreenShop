@@ -17,6 +17,13 @@ export type MoolreInitiateInput = {
   description?: string;
 };
 
+function firstHttpUrl(...vals: unknown[]): string | null {
+  for (const v of vals) {
+    if (typeof v === "string" && /^https?:\/\//i.test(v.trim())) return v.trim();
+  }
+  return null;
+}
+
 function pickAuthUrl(data: unknown): string | null {
   if (!data || typeof data !== "object") return null;
   const d = data as Record<string, unknown>;
@@ -26,12 +33,17 @@ function pickAuthUrl(data: unknown): string | null {
     d.authorization_url,
     d.checkoutUrl,
     d.checkout_url,
+    d.paymentUrl,
+    d.payment_url,
+    d.paymentLink,
+    d.payment_link,
     d.url,
     d.link,
+    d.go,
   ];
-  for (const c of candidates) {
-    if (typeof c === "string" && c.startsWith("http")) return c;
-  }
+  const direct = firstHttpUrl(...candidates);
+  if (direct) return direct;
+
   if (inner && typeof inner === "object") {
     const i = inner as Record<string, unknown>;
     const nested = [
@@ -39,11 +51,21 @@ function pickAuthUrl(data: unknown): string | null {
       i.authorization_url,
       i.checkoutUrl,
       i.checkout_url,
+      i.paymentUrl,
+      i.payment_url,
+      i.paymentLink,
+      i.payment_link,
       i.url,
       i.link,
+      i.go,
     ];
-    for (const c of nested) {
-      if (typeof c === "string" && c.startsWith("http")) return c;
+    const nestedUrl = firstHttpUrl(...nested);
+    if (nestedUrl) return nestedUrl;
+    const links = i.links;
+    if (links && typeof links === "object") {
+      const href = (links as Record<string, unknown>).href;
+      const url = firstHttpUrl(href);
+      if (url) return url;
     }
   }
   return null;
@@ -71,11 +93,15 @@ export async function initiateMoolrePayment(
   const pub = process.env.MOOLRE_API_PUBKEY!;
   const vas = process.env.MOOLRE_API_VASKEY!;
 
-  /** Amount: pesewas (smallest GHS unit), same convention as Paystack. */
-  const amountPesewas = Math.round(input.amountGhs * 100);
+  const amountUnit = process.env.MOOLRE_AMOUNT_UNIT?.trim().toLowerCase();
+  /** Default: pesewas (amount × 100), same as Paystack. Set MOOLRE_AMOUNT_UNIT=ghs if your Moolre endpoint expects cedis. */
+  const amountPayload =
+    amountUnit === "ghs" || amountUnit === "cedis"
+      ? Number(input.amountGhs.toFixed(2))
+      : Math.round(input.amountGhs * 100);
 
   const body: Record<string, unknown> = {
-    amount: amountPesewas,
+    amount: amountPayload,
     email: input.email,
     currency: "GHS",
     reference: input.reference,
@@ -105,6 +131,13 @@ export async function initiateMoolrePayment(
     json = JSON.parse(text) as unknown;
   } catch {
     return { error: `Moolre returned non-JSON (${res.status}): ${text.slice(0, 200)}` };
+  }
+
+  const envelope = typeof json === "object" && json !== null ? (json as Record<string, unknown>) : null;
+  /** Moolre wraps payloads with status: 1 = success, 0 = failure (may still use HTTP 200). */
+  if (envelope && "status" in envelope && envelope.status === 0) {
+    const msg = [envelope.message, envelope.code].filter(Boolean).join(" — ") || "Request rejected";
+    return { error: `Moolre: ${msg}` };
   }
 
   if (!res.ok) {

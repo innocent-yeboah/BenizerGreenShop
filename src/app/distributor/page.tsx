@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { currencyFormatter } from "@/lib/utils";
+import { getPublicAppUrl } from "@/lib/app-url";
 
 export default async function DistributorDashboardPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function DistributorDashboardPage() {
         .eq("distributor_referral_code", distributor.referral_code)
     : { data: [] };
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl = getPublicAppUrl();
   const referralLink = distributor?.referral_code
     ? `${appUrl}/products?ref=${distributor.referral_code}`
     : "Referral code unavailable";

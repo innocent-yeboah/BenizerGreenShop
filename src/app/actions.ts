@@ -9,6 +9,7 @@ import {
   productLeadSchema,
 } from "@/lib/schemas";
 import { initiateMoolrePayment, moolreConfigured } from "@/lib/moolre/initiate-payment";
+import { getPublicAppUrl } from "@/lib/app-url";
 import { distributorPackages, products, siteConfig } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -133,7 +134,7 @@ export const createCheckoutSession = actionClient
       }
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getPublicAppUrl();
     let checkoutUrl = `/cart/success?reference=${ref}`;
 
     if (moolreConfigured()) {

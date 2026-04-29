@@ -177,7 +177,16 @@ export default function CartPage() {
               setCart([]);
               window.location.href = result.data.checkoutUrl;
             } else {
-              setMessage("Unable to initialize checkout.");
+              const errRaw = result?.serverError;
+              const errMsg =
+                errRaw != null
+                  ? typeof errRaw === "string"
+                    ? errRaw
+                    : JSON.stringify(errRaw)
+                  : result?.validationErrors
+                    ? "Check cart items and customer fields, then try again."
+                    : "Unable to initialize checkout.";
+              setMessage(errMsg);
             }
           }}
         >
