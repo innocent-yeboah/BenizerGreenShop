@@ -1,8 +1,8 @@
 "use server";
 
-import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
+import { getResend, getResendFrom } from "@/lib/resend";
 import {
   checkoutSchema,
   distributorLeadSchema,
@@ -13,10 +13,13 @@ import { getPublicAppUrl } from "@/lib/app-url";
 import { distributorPackages, products, siteConfig } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  distributorApplicationConfirmationEmail,
+  orderCheckoutConfirmationEmail,
+} from "@/lib/email-templates";
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+const resend = getResend();
+const resendFrom = getResendFrom();
 
 const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
 
@@ -38,7 +41,7 @@ export const submitProductLead = actionClient
 
     if (resend) {
       await resend.emails.send({
-        from: "Benizer Leads <onboarding@resend.dev>",
+        from: resendFrom,
         to: [adminEmail],
         subject: `New Product Lead: ${parsedInput.productInterest}`,
         html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
@@ -70,12 +73,31 @@ export const submitDistributorLead = actionClient
     }
 
     if (resend) {
-      await resend.emails.send({
-        from: "Benizer Distributors <onboarding@resend.dev>",
-        to: [adminEmail],
-        subject: `New Distributor Application — ${packageLine}`,
-        html: `<p>${parsedInput.name} applied for <strong>${packageLine}</strong>.</p><p>${parsedInput.email} / ${parsedInput.phone}</p><p>Why join: ${parsedInput.whyJoin}</p>`,
-      });
+      try {
+        await resend.emails.send({
+          from: resendFrom,
+          to: [adminEmail],
+          subject: `New Distributor Application — ${packageLine}`,
+          html: `<p>${parsedInput.name} applied for <strong>${packageLine}</strong>.</p><p>${parsedInput.email} / ${parsedInput.phone}</p><p>Why join: ${parsedInput.whyJoin}</p>`,
+        });
+      } catch (adminMailErr) {
+        console.error("[distributor-lead] Admin notification email failed:", adminMailErr);
+      }
+      try {
+        const applicantMail = distributorApplicationConfirmationEmail({
+          applicantName: parsedInput.name,
+          packageLine,
+          siteUrl: getPublicAppUrl(),
+        });
+        await resend.emails.send({
+          from: resendFrom,
+          to: [parsedInput.email],
+          subject: applicantMail.subject,
+          html: applicantMail.html,
+        });
+      } catch (applicantMailErr) {
+        console.error("[distributor-lead] Applicant confirmation email failed:", applicantMailErr);
+      }
     }
     revalidatePath("/admin/distributors");
     return { success: true };
@@ -189,11 +211,19 @@ export const createCheckoutSession = actionClient
 
     if (resend) {
       try {
+        const customerMail = orderCheckoutConfirmationEmail({
+          customerName: parsedInput.customerName,
+          reference: ref,
+          amountGhs: amount,
+          items: enrichedItems,
+          checkoutUrl,
+          appUrl,
+        });
         await resend.emails.send({
-          from: "Benizer Orders <onboarding@resend.dev>",
+          from: resendFrom,
           to: [parsedInput.customerEmail],
-          subject: "Order initiated - Benizer Green Shop",
-          html: `<p>Your order reference is <strong>${ref}</strong>.</p><p>Total: GHS ${amount}</p>`,
+          subject: customerMail.subject,
+          html: customerMail.html,
         });
       } catch (emailErr) {
         console.error("[checkout] Order confirmation email failed (payment still proceeds):", emailErr);
