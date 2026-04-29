@@ -22,3 +22,36 @@ export function getResendFrom(): string {
   if (custom) return custom;
   return "Benizer Green Shop <onboarding@resend.dev>";
 }
+
+function extractEmailAddress(input: string): string {
+  const trimmed = input.trim().toLowerCase();
+  const match = trimmed.match(/<([^>]+)>/);
+  return (match?.[1] || trimmed).trim();
+}
+
+/** True when using Resend sandbox sender (onboarding@resend.dev). */
+export function isResendSandboxSender(from: string): boolean {
+  return extractEmailAddress(from).endsWith("@resend.dev");
+}
+
+/**
+ * Optional comma-separated allowlist for sandbox/testing sends.
+ * Example: RESEND_SANDBOX_ALLOWLIST=you@gmail.com,admin@domain.com
+ */
+export function getResendSandboxAllowlist(): string[] {
+  return (process.env.RESEND_SANDBOX_ALLOWLIST || "")
+    .split(",")
+    .map((v) => extractEmailAddress(v))
+    .filter(Boolean);
+}
+
+/**
+ * Sandbox rule: onboarding@resend.dev can only send to allowlisted testing emails.
+ * Production sender domains are unrestricted by this helper.
+ */
+export function canSendWithCurrentResendSender(params: { from: string; to: string[] }): boolean {
+  if (!isResendSandboxSender(params.from)) return true;
+  const allow = new Set(getResendSandboxAllowlist());
+  if (!allow.size) return false;
+  return params.to.every((addr) => allow.has(extractEmailAddress(addr)));
+}

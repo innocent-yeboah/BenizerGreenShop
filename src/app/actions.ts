@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
-import { getResend, getResendFrom } from "@/lib/resend";
+import { canSendWithCurrentResendSender, getResend, getResendFrom } from "@/lib/resend";
 import {
   checkoutSchema,
   distributorLeadSchema,
@@ -34,6 +34,34 @@ function requireAdminDb() {
   return supabase;
 }
 
+async function sendEmailSafe(params: {
+  to: string[];
+  subject: string;
+  html: string;
+  context: string;
+}) {
+  if (!resend) return;
+
+  if (!canSendWithCurrentResendSender({ from: resendFrom, to: params.to })) {
+    console.warn(
+      `[${params.context}] Email skipped: sandbox sender ${resendFrom} cannot deliver to ${params.to.join(", ")}. ` +
+        "Set RESEND_FROM to a verified domain or add RESEND_SANDBOX_ALLOWLIST for testing.",
+    );
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: resendFrom,
+      to: params.to,
+      subject: params.subject,
+      html: params.html,
+    });
+  } catch (e) {
+    console.error(`[${params.context}] Resend send failed:`, e);
+  }
+}
+
 export const submitProductLead = actionClient
   .schema(productLeadSchema)
   .action(async ({ parsedInput }) => {
@@ -48,14 +76,12 @@ export const submitProductLead = actionClient
       status: "new",
     });
 
-    if (resend) {
-      await resend.emails.send({
-        from: resendFrom,
-        to: [adminEmail],
-        subject: `New Product Lead: ${parsedInput.productInterest}`,
-        html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
-      });
-    }
+    await sendEmailSafe({
+      to: [adminEmail],
+      subject: `New Product Lead: ${parsedInput.productInterest}`,
+      html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
+      context: "product-lead-admin",
+    });
     revalidatePath("/admin/leads");
     return { success: true };
   });
@@ -94,27 +120,20 @@ export const submitDistributorLead = actionClient
         siteUrl: getPublicAppUrl(),
       });
 
-      const [adminResult, applicantResult] = await Promise.allSettled([
-        resend.emails.send({
-          from: resendFrom,
+      await Promise.all([
+        sendEmailSafe({
           to: [adminEmail],
           subject: adminMail.subject,
           html: adminMail.html,
+          context: "distributor-lead-admin",
         }),
-        resend.emails.send({
-          from: resendFrom,
+        sendEmailSafe({
           to: [parsedInput.email],
           subject: applicantMail.subject,
           html: applicantMail.html,
+          context: "distributor-lead-applicant",
         }),
       ]);
-
-      if (adminResult.status === "rejected") {
-        console.error("[distributor-lead] Admin notification email failed:", adminResult.reason);
-      }
-      if (applicantResult.status === "rejected") {
-        console.error("[distributor-lead] Applicant confirmation email failed:", applicantResult.reason);
-      }
     }
     revalidatePath("/admin/distributors");
     return { success: true };
@@ -224,26 +243,20 @@ export const createCheckoutSession = actionClient
       }
     }
 
-    if (resend) {
-      try {
-        const customerMail = orderCheckoutConfirmationEmail({
-          customerName: parsedInput.customerName,
-          reference: ref,
-          amountGhs: amount,
-          items: enrichedItems,
-          checkoutUrl,
-          appUrl,
-        });
-        await resend.emails.send({
-          from: resendFrom,
-          to: [parsedInput.customerEmail],
-          subject: customerMail.subject,
-          html: customerMail.html,
-        });
-      } catch (emailErr) {
-        console.error("[checkout] Order confirmation email failed (payment still proceeds):", emailErr);
-      }
-    }
+    const customerMail = orderCheckoutConfirmationEmail({
+      customerName: parsedInput.customerName,
+      reference: ref,
+      amountGhs: amount,
+      items: enrichedItems,
+      checkoutUrl,
+      appUrl,
+    });
+    await sendEmailSafe({
+      to: [parsedInput.customerEmail],
+      subject: customerMail.subject,
+      html: customerMail.html,
+      context: "checkout-customer",
+    });
 
     return {
       success: true,
