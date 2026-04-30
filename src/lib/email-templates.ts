@@ -50,7 +50,7 @@ export function orderCheckoutConfirmationEmail(params: {
   items: { title: string; quantity: number; unitPrice: number; total: number }[];
   checkoutUrl: string;
   appUrl: string;
-}): { subject: string; html: string } {
+}): { subject: string; html: string; text: string } {
   const first = firstNameFromFullName(params.customerName);
   const href =
     params.checkoutUrl.startsWith("http") ? params.checkoutUrl : `${params.appUrl.replace(/\/$/, "")}${params.checkoutUrl.startsWith("/") ? params.checkoutUrl : `/${params.checkoutUrl}`}`;
@@ -85,8 +85,22 @@ ${rows}
 </td></tr>`;
 
   return {
-    subject: `Your order ${params.reference} — ${siteConfig.name}`,
+    subject: `Order received: ${params.reference}`,
     html: wrapEmail(inner),
+    text: [
+      `Hi ${first},`,
+      "",
+      `Thank you for your order with ${siteConfig.name}.`,
+      `Reference: ${params.reference}`,
+      `Total: ${currencyFormatter.format(params.amountGhs)}`,
+      "",
+      "Items:",
+      ...params.items.map((item) => `- ${item.title} x ${item.quantity}: ${currencyFormatter.format(item.total)}`),
+      "",
+      `Complete payment: ${href}`,
+      "",
+      `Questions? Contact us at ${siteConfig.email}.`,
+    ].join("\n"),
   };
 }
 
@@ -94,7 +108,7 @@ export function distributorApplicationConfirmationEmail(params: {
   applicantName: string;
   packageLine: string;
   siteUrl: string;
-}): { subject: string; html: string } {
+}): { subject: string; html: string; text: string } {
   const first = firstNameFromFullName(params.applicantName);
   const shopLink = params.siteUrl.replace(/\/$/, "");
   const inner = `
@@ -119,8 +133,19 @@ export function distributorApplicationConfirmationEmail(params: {
 </td></tr>`;
 
   return {
-    subject: `We received your distributor application — ${siteConfig.name}`,
+    subject: "We received your distributor application",
     html: wrapEmail(inner),
+    text: [
+      `Hi ${first},`,
+      "",
+      `Thank you for applying to join ${siteConfig.name} as a distributor.`,
+      `Selected package: ${params.packageLine}`,
+      "",
+      "Our team will review your application and get back to you soon.",
+      "",
+      `Visit: ${shopLink}`,
+      `Questions? ${siteConfig.email}`,
+    ].join("\n"),
   };
 }
 
@@ -132,7 +157,7 @@ export function distributorApplicationAdminNotificationEmail(params: {
   packageLine: string;
   whyJoin: string;
   salesExperience?: string;
-}): { subject: string; html: string } {
+}): { subject: string; html: string; text: string } {
   const sales = params.salesExperience?.trim() || "—";
   const inner = `
 <tr><td style="background:linear-gradient(135deg,${EMAIL_BRAND.greenDark} 0%,${EMAIL_BRAND.green} 100%);padding:22px 24px;text-align:center;">
@@ -158,7 +183,19 @@ export function distributorApplicationAdminNotificationEmail(params: {
 </td></tr>`;
 
   return {
-    subject: `New distributor application — ${params.applicantName} (${siteConfig.name})`,
+    subject: `New distributor application: ${params.applicantName}`,
     html: wrapEmail(inner),
+    text: [
+      "New distributor application",
+      "",
+      `Name: ${params.applicantName}`,
+      `Email: ${params.applicantEmail}`,
+      `Phone: ${params.applicantPhone}`,
+      `Package: ${params.packageLine}`,
+      `Sales experience: ${sales}`,
+      "",
+      "Why join:",
+      params.whyJoin,
+    ].join("\n"),
   };
 }

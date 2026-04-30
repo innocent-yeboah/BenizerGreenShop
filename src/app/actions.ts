@@ -22,6 +22,7 @@ import {
 const resend = getResend();
 const resendFrom = getResendFrom();
 const resendDebug = isResendDebugEnabled();
+const resendReplyTo = (process.env.RESEND_REPLY_TO || process.env.ADMIN_EMAIL || siteConfig.email).trim();
 
 const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
 
@@ -39,6 +40,7 @@ async function sendEmailSafe(params: {
   to: string[];
   subject: string;
   html: string;
+  text?: string;
   context: string;
 }) {
   if (!resend) {
@@ -51,6 +53,7 @@ async function sendEmailSafe(params: {
   if (resendDebug) {
     console.info(`[${params.context}] Email attempt`, {
       from: resendFrom,
+      replyTo: resendReplyTo,
       to: params.to,
       subject: params.subject,
     });
@@ -70,6 +73,8 @@ async function sendEmailSafe(params: {
       to: params.to,
       subject: params.subject,
       html: params.html,
+      text: params.text,
+      replyTo: resendReplyTo,
     });
     if (resendDebug) {
       console.info(`[${params.context}] Email accepted by Resend`, {
@@ -98,8 +103,16 @@ export const submitProductLead = actionClient
 
     await sendEmailSafe({
       to: [adminEmail],
-      subject: `New Product Lead: ${parsedInput.productInterest}`,
+      subject: `New product lead: ${parsedInput.productInterest}`,
       html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
+      text: [
+        "New product lead",
+        `Name: ${parsedInput.name}`,
+        `Email: ${parsedInput.email}`,
+        `Phone: ${parsedInput.phone}`,
+        `Product interest: ${parsedInput.productInterest}`,
+        `Preferred contact: ${parsedInput.preferredContact}`,
+      ].join("\n"),
       context: "product-lead-admin",
     });
     revalidatePath("/admin/leads");
@@ -145,12 +158,14 @@ export const submitDistributorLead = actionClient
           to: [adminEmail],
           subject: adminMail.subject,
           html: adminMail.html,
+          text: adminMail.text,
           context: "distributor-lead-admin",
         }),
         sendEmailSafe({
           to: [parsedInput.email],
           subject: applicantMail.subject,
           html: applicantMail.html,
+          text: applicantMail.text,
           context: "distributor-lead-applicant",
         }),
       ]);
@@ -275,6 +290,7 @@ export const createCheckoutSession = actionClient
       to: [parsedInput.customerEmail],
       subject: customerMail.subject,
       html: customerMail.html,
+      text: customerMail.text,
       context: "checkout-customer",
     });
 
