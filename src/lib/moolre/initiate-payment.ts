@@ -72,12 +72,16 @@ function pickAuthUrl(data: unknown): string | null {
 }
 
 export function moolreConfigured(): boolean {
-  const user = process.env.MOOLRE_API_USER;
-  const key = process.env.MOOLRE_API_KEY;
-  const pub = process.env.MOOLRE_API_PUBKEY;
-  const vas = process.env.MOOLRE_API_VASKEY;
   const url = process.env.MOOLRE_COLLECT_URL;
-  return Boolean(user && key && pub && vas && url);
+  const privateKey = process.env.MOOLRE_PRIVATE_API_KEY?.trim();
+  const publicKey = process.env.MOOLRE_PUBLIC_API_KEY?.trim();
+  const user = process.env.MOOLRE_API_USER?.trim();
+  const key = process.env.MOOLRE_API_KEY?.trim();
+  const pub = process.env.MOOLRE_API_PUBKEY?.trim();
+  const vas = process.env.MOOLRE_API_VASKEY?.trim();
+  const legacyReady = Boolean(user && key && pub && vas);
+  const twoKeyReady = Boolean(privateKey && publicKey);
+  return Boolean(url && (twoKeyReady || legacyReady));
 }
 
 export async function initiateMoolrePayment(
@@ -88,10 +92,21 @@ export async function initiateMoolrePayment(
     return { error: "MOOLRE_COLLECT_URL is not set." };
   }
 
-  const user = process.env.MOOLRE_API_USER!;
-  const key = process.env.MOOLRE_API_KEY!;
-  const pub = process.env.MOOLRE_API_PUBKEY!;
-  const vas = process.env.MOOLRE_API_VASKEY!;
+  const privateKey = process.env.MOOLRE_PRIVATE_API_KEY?.trim();
+  const publicKey = process.env.MOOLRE_PUBLIC_API_KEY?.trim();
+
+  const user = process.env.MOOLRE_API_USER?.trim();
+  const key = process.env.MOOLRE_API_KEY?.trim();
+  const pub = process.env.MOOLRE_API_PUBKEY?.trim();
+  const vas = process.env.MOOLRE_API_VASKEY?.trim();
+
+  const usingTwoKeyAuth = Boolean(privateKey && publicKey);
+  if (!usingTwoKeyAuth && !(user && key && pub && vas)) {
+    return {
+      error:
+        "Moolre credentials missing. Set either MOOLRE_PRIVATE_API_KEY + MOOLRE_PUBLIC_API_KEY, or legacy MOOLRE_API_USER/MOOLRE_API_KEY/MOOLRE_API_PUBKEY/MOOLRE_API_VASKEY.",
+    };
+  }
 
   const amountUnit = process.env.MOOLRE_AMOUNT_UNIT?.trim().toLowerCase();
   /** Default: pesewas (amount × 100), same as Paystack. Set MOOLRE_AMOUNT_UNIT=ghs if your Moolre endpoint expects cedis. */
@@ -121,15 +136,25 @@ export async function initiateMoolrePayment(
     body.description = input.description;
   }
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (usingTwoKeyAuth) {
+    // Two-key mode used by some Moolre accounts.
+    headers.Authorization = `Bearer ${privateKey}`;
+    headers["X-API-KEY"] = privateKey!;
+    headers["X-API-PUBKEY"] = publicKey!;
+  } else {
+    // Legacy four-header mode retained for compatibility.
+    headers["X-API-USER"] = user!;
+    headers["X-API-KEY"] = key!;
+    headers["X-API-PUBKEY"] = pub!;
+    headers["X-API-VASKEY"] = vas!;
+  }
+
   const res = await fetch(collectUrl, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-USER": user,
-      "X-API-KEY": key,
-      "X-API-PUBKEY": pub,
-      "X-API-VASKEY": vas,
-    },
+    headers,
     body: JSON.stringify(body),
   });
 
