@@ -105,8 +105,16 @@ export async function initiateMoolrePayment(
     email: input.email,
     currency: "GHS",
     reference: input.reference,
+    tx_ref: input.reference,
+    transactionRef: input.reference,
     callbackUrl: input.callbackUrl,
+    callback_url: input.callbackUrl,
+    webhookUrl: input.callbackUrl,
+    webhook_url: input.callbackUrl,
     redirectUrl: input.redirectUrl,
+    redirect_url: input.redirectUrl,
+    returnUrl: input.redirectUrl,
+    return_url: input.redirectUrl,
     metadata: input.metadata ?? {},
   };
   if (input.description) {

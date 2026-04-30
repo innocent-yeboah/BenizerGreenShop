@@ -24,16 +24,35 @@ export async function POST(request: Request) {
 
   const data = (body.data as Record<string, unknown> | undefined) || body;
   const reference = String(
-    data.reference ?? data.transactionRef ?? body.reference ?? "",
+    data.reference ??
+      data.transactionRef ??
+      data.tx_ref ??
+      data.txRef ??
+      body.reference ??
+      body.transactionRef ??
+      body.tx_ref ??
+      "",
   );
-  const statusRaw = String(
-    data.status ?? data.state ?? body.status ?? "",
-  ).toLowerCase();
+
+  const rawStatus =
+    data.status ??
+    data.state ??
+    data.payment_status ??
+    data.paymentStatus ??
+    body.status ??
+    body.state ??
+    body.payment_status ??
+    body.paymentStatus;
+  const statusRaw = String(rawStatus ?? "").trim().toLowerCase();
   const success =
+    rawStatus === true ||
+    rawStatus === 1 ||
+    rawStatus === "1" ||
     statusRaw.includes("success") ||
+    statusRaw.includes("successful") ||
     statusRaw.includes("paid") ||
-    statusRaw.includes("complete") ||
-    body.status === 1;
+    statusRaw.includes("approve") ||
+    statusRaw.includes("complete");
 
   if (!reference || !success) {
     return NextResponse.json({ ok: true, ignored: true });
@@ -58,13 +77,12 @@ export async function POST(request: Request) {
     .eq("payment_reference", reference)
     .maybeSingle();
 
+  const metadata =
+    (data.metadata as Record<string, unknown> | undefined) ||
+    (body.metadata as Record<string, unknown> | undefined);
   const distributorCode =
     orderRow?.distributor_referral_code ||
-    String(
-      (data.metadata as Record<string, unknown> | undefined)?.distributor_code ??
-        (data.metadata as Record<string, unknown> | undefined)?.distributorCode ??
-        "",
-    );
+    String(metadata?.distributor_code ?? metadata?.distributorCode ?? "");
   const paidAmount = orderRow?.total_amount != null ? Number(orderRow.total_amount) : 0;
 
   if (distributorCode && paidAmount > 0) {
