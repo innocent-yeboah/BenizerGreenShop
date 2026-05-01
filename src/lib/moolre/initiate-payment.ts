@@ -180,11 +180,18 @@ export async function initiateMoolrePayment(
   }
 
   const amountUnit = process.env.MOOLRE_AMOUNT_UNIT?.trim().toLowerCase();
-  /** Default: pesewas (amount × 100), same as Paystack. Set MOOLRE_AMOUNT_UNIT=ghs if your Moolre endpoint expects cedis. */
-  const amountPayload =
-    amountUnit === "ghs" || amountUnit === "cedis"
-      ? Number(input.amountGhs.toFixed(2))
-      : Math.round(input.amountGhs * 100);
+  /** Hosted Open API + embed/link expect major units (GH₵). Custom collect URLs may use pesewas (×100) like Paystack. */
+  const majorUnitsDefault = isEmbedLink || isOpenTransactPayment;
+  let amountPayload: number;
+  if (amountUnit === "ghs" || amountUnit === "cedis") {
+    amountPayload = Number(input.amountGhs.toFixed(2));
+  } else if (amountUnit === "pesewas" || amountUnit === "minor") {
+    amountPayload = Math.round(input.amountGhs * 100);
+  } else if (majorUnitsDefault) {
+    amountPayload = Number(input.amountGhs.toFixed(2));
+  } else {
+    amountPayload = Math.round(input.amountGhs * 100);
+  }
 
   const body: Record<string, unknown> = isEmbedLink
     ? {
