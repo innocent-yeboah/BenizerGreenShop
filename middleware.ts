@@ -1,6 +1,7 @@
 import type { CookieMethodsServer } from "@supabase/ssr";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isExpectedUnauthenticatedError } from "@/lib/supabase/expected-auth-error";
 import { normalizeSupabaseProjectUrl } from "@/lib/supabase/project-url";
 
 async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
@@ -41,7 +42,9 @@ async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
   } = await supabase.auth.getUser();
 
   if (sessionErr) {
-    console.error("[middleware] getUser:", sessionErr.message);
+    if (!isExpectedUnauthenticatedError(sessionErr.message)) {
+      console.error("[middleware] getUser:", sessionErr.message);
+    }
     return response;
   }
 

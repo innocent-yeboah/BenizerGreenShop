@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { isExpectedUnauthenticatedError } from "@/lib/supabase/expected-auth-error";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export const getCurrentUserWithRole = cache(async () => {
@@ -13,7 +14,9 @@ export const getCurrentUserWithRole = cache(async () => {
     } = await supabase.auth.getUser();
 
     if (sessionErr) {
-      console.error("[auth] getUser:", sessionErr.message);
+      if (!isExpectedUnauthenticatedError(sessionErr.message)) {
+        console.error("[auth] getUser:", sessionErr.message);
+      }
       return null;
     }
 
