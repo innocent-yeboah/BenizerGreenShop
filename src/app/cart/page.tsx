@@ -11,6 +11,10 @@ import {
   readCartFromStorage,
   type CartItem,
 } from "@/lib/cart";
+import {
+  REFERRAL_UPDATED_EVENT,
+  getPersistedReferralCode,
+} from "@/lib/referral-storage";
 import { products } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 
@@ -20,16 +24,26 @@ function readCart(): CartItem[] {
 
 function writeCart(next: CartItem[]) {
   localStorage.setItem(CART_KEY, JSON.stringify(next));
-  dispatchCartUpdated();
+  queueMicrotask(() => {
+    dispatchCartUpdated();
+  });
 }
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [message, setMessage] = useState("");
+  const [referralPrefill, setReferralPrefill] = useState("");
   const checkout = useAction(createCheckoutSession);
 
   useEffect(() => {
     setCart(readCart());
+  }, []);
+
+  useEffect(() => {
+    setReferralPrefill(getPersistedReferralCode());
+    const sync = () => setReferralPrefill(getPersistedReferralCode());
+    window.addEventListener(REFERRAL_UPDATED_EVENT, sync);
+    return () => window.removeEventListener(REFERRAL_UPDATED_EVENT, sync);
   }, []);
 
   const adjustQuantity = useCallback((slug: string, delta: number) => {
@@ -195,7 +209,13 @@ export default function CartPage() {
             <input name="customerName" placeholder="Full name" className="w-full rounded-lg border border-brand-green/20 p-3" required />
             <input name="customerEmail" type="email" placeholder="Email" className="w-full rounded-lg border border-brand-green/20 p-3" required />
             <input name="customerPhone" placeholder="Phone" className="w-full rounded-lg border border-brand-green/20 p-3" required />
-            <input name="distributorCode" placeholder="Distributor referral code (optional)" className="w-full rounded-lg border border-brand-green/20 p-3" />
+            <input
+              name="distributorCode"
+              placeholder="Distributor referral code (optional)"
+              className="w-full rounded-lg border border-brand-green/20 p-3"
+              value={referralPrefill}
+              onChange={(e) => setReferralPrefill(e.target.value)}
+            />
             <button type="submit" className="btn-primary w-full justify-center rounded-lg px-4 py-3 font-semibold shadow-sm disabled:opacity-60" disabled={!detailed.length || checkout.status === "executing"}>
               {checkout.status === "executing" ? "Processing…" : "Proceed to Payment"}
             </button>

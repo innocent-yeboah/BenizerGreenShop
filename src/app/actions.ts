@@ -3,10 +3,11 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
-import { canSendWithCurrentResendSender, getResend, getResendFrom, isResendDebugEnabled } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 import {
   checkoutSchema,
   distributorLeadSchema,
+  orderLookupSchema,
   productLeadSchema,
 } from "@/lib/schemas";
 import { initiateMoolrePayment, moolreConfigured } from "@/lib/moolre/initiate-payment";
@@ -19,13 +20,12 @@ import {
   distributorApplicationConfirmationEmail,
   orderCheckoutConfirmationEmail,
 } from "@/lib/email-templates";
+import { parseOrderItemsJson } from "@/lib/order-email-notify";
+import { getTransactionalAdminEmail, sendTransactionalEmail } from "@/lib/transactional-email";
 
 const resend = getResend();
-const resendFrom = getResendFrom();
-const resendDebug = isResendDebugEnabled();
-const resendReplyTo = (process.env.RESEND_REPLY_TO || process.env.ADMIN_EMAIL || siteConfig.email).trim();
 
-const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
+const adminEmail = getTransactionalAdminEmail();
 
 function requireAdminDb() {
   const supabase = createAdminClient();
@@ -37,56 +37,37 @@ function requireAdminDb() {
   return supabase;
 }
 
-async function sendEmailSafe(params: {
-  to: string[];
-  subject: string;
-  html: string;
-  text?: string;
-  context: string;
-}) {
-  if (!resend) {
-    if (resendDebug) {
-      console.info(`[${params.context}] Resend disabled: RESEND_API_KEY is missing.`);
+export const lookupOrder = actionClient
+  .schema(orderLookupSchema)
+  .action(async ({ parsedInput }: { parsedInput: z.infer<typeof orderLookupSchema> }) => {
+    const supabase = requireAdminDb();
+    const ref = parsedInput.reference.trim();
+    const email = parsedInput.email.trim().toLowerCase();
+    const { data: order, error } = await supabase
+      .from("orders")
+      .select("payment_reference,status,customer_name,total_amount,items,created_at,payment_gateway")
+      .eq("payment_reference", ref)
+      .ilike("customer_email", email)
+      .maybeSingle();
+
+    if (error || !order?.payment_reference) {
+      return { found: false as const };
     }
-    return;
-  }
 
-  if (resendDebug) {
-    console.info(`[${params.context}] Email attempt`, {
-      from: resendFrom,
-      replyTo: resendReplyTo,
-      to: params.to,
-      subject: params.subject,
-    });
-  }
-
-  if (!canSendWithCurrentResendSender({ from: resendFrom, to: params.to })) {
-    console.warn(
-      `[${params.context}] Email skipped: sandbox sender ${resendFrom} cannot deliver to ${params.to.join(", ")}. ` +
-        "Set RESEND_FROM to a verified domain or add RESEND_SANDBOX_ALLOWLIST for testing.",
-    );
-    return;
-  }
-
-  try {
-    const result = await resend.emails.send({
-      from: resendFrom,
-      to: params.to,
-      subject: params.subject,
-      html: params.html,
-      text: params.text,
-      replyTo: resendReplyTo,
-    });
-    if (resendDebug) {
-      console.info(`[${params.context}] Email accepted by Resend`, {
-        id: result?.data?.id ?? null,
-        error: result?.error?.message ?? null,
-      });
-    }
-  } catch (e) {
-    console.error(`[${params.context}] Resend send failed:`, e);
-  }
-}
+    const items = parseOrderItemsJson(order.items);
+    return {
+      found: true as const,
+      order: {
+        reference: order.payment_reference as string,
+        status: order.status as string,
+        customerName: String(order.customer_name ?? ""),
+        totalAmount: Number(order.total_amount ?? 0),
+        items,
+        createdAt: order.created_at as string,
+        paymentGateway: (order.payment_gateway as string | null) ?? null,
+      },
+    };
+  });
 
 export const submitProductLead = actionClient
   .schema(productLeadSchema)
@@ -102,7 +83,7 @@ export const submitProductLead = actionClient
       status: "new",
     });
 
-    await sendEmailSafe({
+    await sendTransactionalEmail({
       to: [adminEmail],
       subject: `New product lead: ${parsedInput.productInterest}`,
       html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
@@ -155,14 +136,14 @@ export const submitDistributorLead = actionClient
       });
 
       await Promise.all([
-        sendEmailSafe({
+        sendTransactionalEmail({
           to: [adminEmail],
           subject: adminMail.subject,
           html: adminMail.html,
           text: adminMail.text,
           context: "distributor-lead-admin",
         }),
-        sendEmailSafe({
+        sendTransactionalEmail({
           to: [parsedInput.email],
           subject: applicantMail.subject,
           html: applicantMail.html,
@@ -287,7 +268,7 @@ export const createCheckoutSession = actionClient
       checkoutUrl,
       appUrl,
     });
-    await sendEmailSafe({
+    await sendTransactionalEmail({
       to: [parsedInput.customerEmail],
       subject: customerMail.subject,
       html: customerMail.html,

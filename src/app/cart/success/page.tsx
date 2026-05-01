@@ -18,8 +18,24 @@ export default async function CartSuccessPage({
           Thank you for choosing Benizer Green Shop. Your reference is{" "}
           <span className="font-semibold">{reference || "BGS-PENDING"}</span>.
         </p>
-        <div className="mt-6 flex justify-center gap-3">
-          <Link href="/products" className="btn-primary">
+        <p className="mt-4 text-sm text-brand-charcoal/70">
+          Want updates? Track progress anytime with your reference — we&apos;ll also email you when your
+          order is paid or out for delivery.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {reference ? (
+            <Link
+              href={`/order-status?reference=${encodeURIComponent(reference)}`}
+              className="btn-primary"
+            >
+              Track this order
+            </Link>
+          ) : (
+            <Link href="/order-status" className="btn-primary">
+              Track an order
+            </Link>
+          )}
+          <Link href="/products" className="btn-secondary">
             Continue Shopping
           </Link>
           <Link href="/" className="btn-secondary">

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { DistributorReferralShare } from "@/components/distributor-referral-share";
 import { currencyFormatter } from "@/lib/utils";
 import { getPublicAppUrl } from "@/lib/app-url";
 
@@ -24,9 +25,9 @@ export default async function DistributorDashboardPage() {
     : { data: [] };
 
   const appUrl = getPublicAppUrl();
-  const referralLink = distributor?.referral_code
-    ? `${appUrl}/products?ref=${distributor.referral_code}`
-    : "Referral code unavailable";
+  const referralCode = (distributor?.referral_code ?? "").trim();
+  const referralUrl =
+    referralCode !== "" ? `${appUrl}/products?ref=${encodeURIComponent(referralCode)}` : "";
 
   return (
     <main className="container-shell py-14">
@@ -44,10 +45,17 @@ export default async function DistributorDashboardPage() {
         <Card title="Referred Orders" value={String(orders?.length || 0)} />
         <Card title="Approval Status" value={distributor?.approved ? "Approved" : "Pending"} />
       </section>
-      <div className="surface-card mt-8 rounded-xl p-5">
-        <p className="text-sm font-semibold text-brand-green-dark">Referral Link</p>
-        <p className="mt-2 break-all text-sm">{referralLink}</p>
-      </div>
+      {referralUrl ? (
+        <DistributorReferralShare referralUrl={referralUrl} referralCode={referralCode} />
+      ) : (
+        <div className="surface-card mt-8 rounded-xl p-5 text-sm text-brand-charcoal/75">
+          <p className="font-semibold text-brand-green-dark">Referral link</p>
+          <p className="mt-2">
+            No referral code on your account yet. If you recently joined, your admin contact can finish
+            setup.
+          </p>
+        </div>
+      )}
     </main>
   );
 }

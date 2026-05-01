@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateReferralCode, normalizeReferralCode } from "@/lib/distributor-account";
+import { notifyCustomerOrderFulfillment } from "@/lib/order-email-notify";
 
 async function assertAdmin() {
   const supabase = await createClient();
@@ -32,7 +33,41 @@ export async function updateOrderStatusAction(formData: FormData) {
   const status = String(formData.get("status") || "pending");
   const supabase = requireAdminClient();
 
+  const { data: before } = await supabase
+    .from("orders")
+    .select("status, payment_reference, customer_email, customer_name")
+    .eq("id", orderId)
+    .maybeSingle();
+
   await supabase.from("orders").update({ status }).eq("id", orderId);
+
+  const prevStatus = before?.status != null ? String(before.status) : "";
+  const paymentRef =
+    typeof before?.payment_reference === "string" ? before.payment_reference.trim() : "";
+  const email =
+    typeof before?.customer_email === "string" ? before.customer_email.trim() : "";
+  const name = typeof before?.customer_name === "string" ? String(before.customer_name) : "";
+
+  const becameShipped = prevStatus !== "shipped" && status === "shipped";
+  const becameDelivered = prevStatus !== "delivered" && status === "delivered";
+
+  if (paymentRef && email && becameShipped) {
+    await notifyCustomerOrderFulfillment({
+      customerEmail: email,
+      customerName: name,
+      reference: paymentRef,
+      stage: "shipped",
+    });
+  }
+  if (paymentRef && email && becameDelivered) {
+    await notifyCustomerOrderFulfillment({
+      customerEmail: email,
+      customerName: name,
+      reference: paymentRef,
+      stage: "delivered",
+    });
+  }
+
   revalidatePath("/admin/orders");
 }
 

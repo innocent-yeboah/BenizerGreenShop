@@ -24,6 +24,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "src/types/shims.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",

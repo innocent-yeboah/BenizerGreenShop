@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { notifyCustomerOrderPaid } from "@/lib/order-email-notify";
 
 export async function POST(request: Request) {
   const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -34,7 +35,9 @@ export async function POST(request: Request) {
 
   const { data: orderRow } = await supabase
     .from("orders")
-    .select("status, distributor_referral_code, total_amount")
+    .select(
+      "status, distributor_referral_code, total_amount, customer_email, customer_name, items, payment_reference",
+    )
     .eq("payment_reference", reference)
     .maybeSingle();
 
@@ -46,6 +49,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
+  const paidAmount =
+    orderRow.total_amount != null
+      ? Number(orderRow.total_amount)
+      : Number(payload?.data?.amount || 0) / 100;
+
   await supabase
     .from("orders")
     .update({
@@ -54,14 +62,20 @@ export async function POST(request: Request) {
     })
     .eq("payment_reference", reference);
 
+  if (orderRow.customer_email && reference) {
+    await notifyCustomerOrderPaid({
+      customerEmail: orderRow.customer_email as string,
+      customerName: String(orderRow.customer_name ?? ""),
+      reference,
+      totalAmount: paidAmount,
+      itemsRaw: orderRow.items,
+    });
+  }
+
   const distributorCode =
     (payload?.data?.metadata?.distributor_code as string | undefined) ||
     orderRow.distributor_referral_code ||
     undefined;
-  const paidAmount =
-    orderRow.total_amount != null
-      ? Number(orderRow.total_amount)
-      : Number(payload?.data?.amount || 0) / 100;
 
   if (distributorCode && paidAmount > 0) {
     const commission = paidAmount * 0.1;

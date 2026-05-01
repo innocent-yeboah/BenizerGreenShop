@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { notifyCustomerOrderPaid } from "@/lib/order-email-notify";
 
 /**
  * Moolre server-to-server callback (configure in Moolre dashboard as callbackUrl).
@@ -80,7 +81,9 @@ export async function POST(request: Request) {
 
   const { data: orderRow } = await supabase
     .from("orders")
-    .select("status, total_amount, distributor_referral_code")
+    .select(
+      "status, total_amount, distributor_referral_code, customer_email, customer_name, items, payment_reference",
+    )
     .eq("payment_reference", reference)
     .maybeSingle();
 
@@ -92,6 +95,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
+  const paidAmount = orderRow.total_amount != null ? Number(orderRow.total_amount) : 0;
+
   await supabase
     .from("orders")
     .update({
@@ -100,13 +105,22 @@ export async function POST(request: Request) {
     })
     .eq("payment_reference", reference);
 
+  if (orderRow.customer_email && reference) {
+    await notifyCustomerOrderPaid({
+      customerEmail: orderRow.customer_email as string,
+      customerName: String(orderRow.customer_name ?? ""),
+      reference,
+      totalAmount: paidAmount,
+      itemsRaw: orderRow.items,
+    });
+  }
+
   const metadata =
     (data.metadata as Record<string, unknown> | undefined) ||
     (body.metadata as Record<string, unknown> | undefined);
   const distributorCode =
     orderRow.distributor_referral_code ||
     String(metadata?.distributor_code ?? metadata?.distributorCode ?? "");
-  const paidAmount = orderRow.total_amount != null ? Number(orderRow.total_amount) : 0;
 
   if (distributorCode && paidAmount > 0) {
     const commission = paidAmount * 0.1;

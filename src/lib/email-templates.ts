@@ -199,3 +199,107 @@ export function distributorApplicationAdminNotificationEmail(params: {
     ].join("\n"),
   };
 }
+
+export function orderPaymentReceivedEmail(params: {
+  customerName: string;
+  reference: string;
+  amountGhs: number;
+  items: { title: string; quantity: number; total: number }[];
+  trackOrderUrl: string;
+}): { subject: string; html: string; text: string } {
+  const first = firstNameFromFullName(params.customerName);
+  const rows = params.items
+    .map(
+      (row) =>
+        `<tr><td style="padding:10px 12px;border-bottom:1px solid #eee;">${escapeHtml(row.title)} × ${row.quantity}</td><td align="right" style="padding:10px 12px;border-bottom:1px solid #eee;white-space:nowrap;">${currencyFormatter.format(row.total)}</td></tr>`,
+    )
+    .join("");
+  const inner = `
+<tr><td style="background:linear-gradient(135deg,${EMAIL_BRAND.greenDark} 0%,${EMAIL_BRAND.green} 100%);padding:22px 24px;text-align:center;">
+<p style="margin:0;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:${EMAIL_BRAND.gold};">${escapeHtml(siteConfig.tagline)}</p>
+<h1 style="margin:8px 0 0;font-size:22px;font-weight:700;color:${EMAIL_BRAND.white};">Payment confirmed</h1>
+</td></tr>
+<tr><td style="padding:24px 24px 8px;">
+<p style="margin:0 0 16px;font-size:17px;color:${EMAIL_BRAND.charcoal};">Hi <strong>${escapeHtml(first)}</strong>,</p>
+<p style="margin:0 0 16px;">We&apos;ve received your payment for order <strong style="color:${EMAIL_BRAND.green};">${escapeHtml(params.reference)}</strong>. Thank you.</p>
+<p style="margin:0 0 20px;">Our team will prepare your shipment and notify you when it&apos;s on the way.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;"><tr><td style="border-radius:999px;background:${EMAIL_BRAND.green};">
+<a href="${escapeHtml(params.trackOrderUrl)}" style="display:inline-block;padding:14px 28px;font-weight:700;font-size:15px;color:${EMAIL_BRAND.white};text-decoration:none;border-radius:999px;">Track your order</a>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:0 24px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:${EMAIL_BRAND.cream};border-radius:8px;overflow:hidden;">
+<tr><td colspan="2" style="padding:12px 14px;background:rgba(27,94,32,0.08);font-weight:700;color:${EMAIL_BRAND.greenDark};">Order summary</td></tr>
+${rows}
+<tr><td style="padding:12px 14px;font-weight:700;">Total paid</td><td align="right" style="padding:12px 14px;font-weight:700;color:${EMAIL_BRAND.green};">${currencyFormatter.format(params.amountGhs)}</td></tr>
+</table>
+</td></tr>
+<tr><td style="padding:24px;font-size:14px;color:#555;">
+<p style="margin:0;">Questions? <a href="mailto:${escapeHtml(siteConfig.email)}" style="color:${EMAIL_BRAND.green};font-weight:600;">${escapeHtml(siteConfig.email)}</a></p>
+</td></tr>`;
+
+  return {
+    subject: `Payment confirmed — ${params.reference}`,
+    html: wrapEmail(inner),
+    text: [
+      `Hi ${first},`,
+      "",
+      `We've received your payment for order ${params.reference}.`,
+      `Total: ${currencyFormatter.format(params.amountGhs)}`,
+      "",
+      "Items:",
+      ...params.items.map((i) => `- ${i.title} x ${i.quantity}: ${currencyFormatter.format(i.total)}`),
+      "",
+      `Track your order: ${params.trackOrderUrl}`,
+      "",
+      `Questions? ${siteConfig.email}`,
+    ].join("\n"),
+  };
+}
+
+export function orderFulfillmentEmail(params: {
+  customerName: string;
+  reference: string;
+  stage: "shipped" | "delivered";
+  trackOrderUrl: string;
+}): { subject: string; html: string; text: string } {
+  const first = firstNameFromFullName(params.customerName);
+  const isDelivered = params.stage === "delivered";
+  const headline = isDelivered ? "Delivered" : "On its way";
+  const body = isDelivered
+    ? "Your order has been marked as delivered. We hope you enjoy your Benizer wellness products."
+    : "Great news — your order has shipped. You&apos;ll receive tracking details from our team if applicable.";
+
+  const inner = `
+<tr><td style="background:linear-gradient(135deg,${EMAIL_BRAND.greenDark} 0%,${EMAIL_BRAND.green} 100%);padding:22px 24px;text-align:center;">
+<h1 style="margin:0;font-size:22px;font-weight:700;color:${EMAIL_BRAND.white};">${headline}</h1>
+<p style="margin:10px 0 0;font-size:13px;color:${EMAIL_BRAND.gold};">Order ${escapeHtml(params.reference)}</p>
+</td></tr>
+<tr><td style="padding:24px 24px;">
+<p style="margin:0 0 14px;font-size:17px;color:${EMAIL_BRAND.charcoal};">Hi <strong>${escapeHtml(first)}</strong>,</p>
+<p style="margin:0 0 20px;line-height:1.55;">${body}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr><td style="border-radius:999px;background:${EMAIL_BRAND.gold};">
+<a href="${escapeHtml(params.trackOrderUrl)}" style="display:inline-block;padding:14px 28px;font-weight:700;font-size:15px;color:${EMAIL_BRAND.charcoal};text-decoration:none;border-radius:999px;">View order status</a>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:12px 24px 24px;font-size:14px;color:#555;">
+<p style="margin:0;">${escapeHtml(siteConfig.name)} · <a href="mailto:${escapeHtml(siteConfig.email)}" style="color:${EMAIL_BRAND.green};">${escapeHtml(siteConfig.email)}</a></p>
+</td></tr>`;
+
+  const subj = isDelivered ? `Delivered: ${params.reference}` : `Shipped: ${params.reference}`;
+  return {
+    subject: subj,
+    html: wrapEmail(inner),
+    text: [
+      `Hi ${first},`,
+      "",
+      isDelivered
+        ? `Your order ${params.reference} has been delivered.`
+        : `Your order ${params.reference} has shipped.`,
+      "",
+      `Track / status: ${params.trackOrderUrl}`,
+      "",
+      siteConfig.email,
+    ].join("\n"),
+  };
+}

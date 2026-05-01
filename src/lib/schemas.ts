@@ -33,3 +33,8 @@ export const checkoutSchema = z.object({
     .min(1),
   distributorCode: z.string().optional(),
 });
+
+export const orderLookupSchema = z.object({
+  reference: z.string().min(4, "Enter your order reference."),
+  email: z.string().email("Enter the email used at checkout."),
+});

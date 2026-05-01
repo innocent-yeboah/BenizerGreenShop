@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { ReferralLinkCapture } from "@/components/referral-link-capture";
+import { ReferralShoppingBanner } from "@/components/referral-shopping-banner";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { CartNavLink } from "@/components/cart-nav-link";
 import { SocialLinks } from "@/components/social-links";
@@ -116,6 +119,10 @@ export default async function RootLayout({
             )}
           </nav>
         </header>
+        <Suspense fallback={null}>
+          <ReferralLinkCapture />
+        </Suspense>
+        <ReferralShoppingBanner />
         {children}
         <section className="border-t border-brand-green/10 bg-white py-8">
           <TrustIndicatorGrid />
@@ -147,6 +154,9 @@ export default async function RootLayout({
                 </Link>
                 <Link href="/cart" className="hover:text-brand-gold-light">
                   Cart & Checkout
+                </Link>
+                <Link href="/order-status" className="hover:text-brand-gold-light">
+                  Track order
                 </Link>
               </div>
             </div>
