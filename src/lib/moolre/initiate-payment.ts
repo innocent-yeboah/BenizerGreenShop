@@ -163,7 +163,12 @@ export async function initiateMoolrePayment(
   try {
     json = JSON.parse(text) as unknown;
   } catch {
-    return { error: `Moolre returned non-JSON (${res.status}): ${text.slice(0, 200)}` };
+    const looksLikeHtml = /^\s*<!doctype|^\s*<html/i.test(text);
+    const endpointHint =
+      res.status === 404 || looksLikeHtml
+        ? " Check MOOLRE_COLLECT_URL; it likely points to a non-API route."
+        : "";
+    return { error: `Moolre returned non-JSON (${res.status}): ${text.slice(0, 200)}${endpointHint}` };
   }
 
   const envelope = typeof json === "object" && json !== null ? (json as Record<string, unknown>) : null;
