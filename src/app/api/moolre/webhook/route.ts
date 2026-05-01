@@ -4,8 +4,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 /**
  * Moolre server-to-server callback (configure in Moolre dashboard as callbackUrl).
  * Payload shape may vary — we accept common reference + success fields.
- * Add MOOLRE_WEBHOOK_SECRET and signature verification when your Moolre docs specify it.
+ * Production: set MOOLRE_WEBHOOK_SECRET and configure Moolre to send the same value (header varies by integration).
  */
+/** Require shared secret for webhooks on Vercel and when running `next start` in production. */
+function mustVerifyMoolreWebhook(): boolean {
+  if (process.env.MOOLRE_WEBHOOK_OPTIONAL === "true") return false;
+  return Boolean(process.env.VERCEL) || process.env.NODE_ENV === "production";
+}
+
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
   try {
@@ -14,12 +20,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const secret = process.env.MOOLRE_WEBHOOK_SECRET;
+  const secret = process.env.MOOLRE_WEBHOOK_SECRET?.trim();
+  if (mustVerifyMoolreWebhook() && !secret) {
+    console.error("[moolre webhook] MOOLRE_WEBHOOK_SECRET is required in production");
+    return NextResponse.json(
+      { error: "Webhook not configured (MOOLRE_WEBHOOK_SECRET)" },
+      { status: 503 },
+    );
+  }
   if (secret) {
     const sig = request.headers.get("x-moolre-signature") || request.headers.get("x-signature");
     if (!sig || sig !== secret) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
+  } else if (process.env.NODE_ENV !== "production") {
+    console.warn("[moolre webhook] MOOLRE_WEBHOOK_SECRET unset — accepting unsigned callbacks (dev only)");
   }
 
   const data = (body.data as Record<string, unknown> | undefined) || body;
@@ -63,6 +78,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Supabase not configured" }, { status: 500 });
   }
 
+  const { data: orderRow } = await supabase
+    .from("orders")
+    .select("status, total_amount, distributor_referral_code")
+    .eq("payment_reference", reference)
+    .maybeSingle();
+
+  if (!orderRow) {
+    return NextResponse.json({ ok: true, ignored: true, reason: "unknown_reference" });
+  }
+
+  if (orderRow.status === "paid") {
+    return NextResponse.json({ ok: true, duplicate: true });
+  }
+
   await supabase
     .from("orders")
     .update({
@@ -71,19 +100,13 @@ export async function POST(request: Request) {
     })
     .eq("payment_reference", reference);
 
-  const { data: orderRow } = await supabase
-    .from("orders")
-    .select("total_amount, distributor_referral_code")
-    .eq("payment_reference", reference)
-    .maybeSingle();
-
   const metadata =
     (data.metadata as Record<string, unknown> | undefined) ||
     (body.metadata as Record<string, unknown> | undefined);
   const distributorCode =
-    orderRow?.distributor_referral_code ||
+    orderRow.distributor_referral_code ||
     String(metadata?.distributor_code ?? metadata?.distributorCode ?? "");
-  const paidAmount = orderRow?.total_amount != null ? Number(orderRow.total_amount) : 0;
+  const paidAmount = orderRow.total_amount != null ? Number(orderRow.total_amount) : 0;
 
   if (distributorCode && paidAmount > 0) {
     const commission = paidAmount * 0.1;

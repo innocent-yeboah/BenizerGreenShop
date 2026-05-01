@@ -1,8 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
 @import "tailwindcss";
 
 :root {
   --background: #fff8e1;
   --foreground: #212121;
+  /* Loaded via <link> in layout.tsx so `next build` does not require fetching fonts at compile time. */
+  --font-montserrat: "Montserrat", system-ui, sans-serif;
+  --font-open-sans: "Open Sans", system-ui, sans-serif;
+  --font-playfair: "Playfair Display", Georgia, serif;
 }
 
 @theme inline {

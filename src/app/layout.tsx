@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Montserrat, Open_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,21 +9,6 @@ import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
 import { siteConfig } from "@/lib/site-data";
 import { getCurrentUserWithRole } from "@/lib/auth";
 import { signOutAction } from "@/app/auth/actions";
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-});
-
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -41,10 +25,7 @@ export default async function RootLayout({
     siteConfig.promoMarquee.split("Wealth!");
 
   return (
-    <html
-      lang="en"
-      className={`${montserrat.variable} ${openSans.variable} ${playfair.variable} h-full antialiased`}
-    >
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal">
         <div className="relative overflow-hidden border-b border-white/15 bg-brand-green py-2.5 shadow-sm">
           <p className="sr-only">{siteConfig.promoMarquee}</p>

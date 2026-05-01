@@ -5,7 +5,7 @@ import { createSafeActionClient } from "next-safe-action";
  * (next-safe-action defaults to a generic string otherwise).
  */
 export const actionClient = createSafeActionClient({
-  handleServerError(e) {
+  handleServerError(e: unknown) {
     if (e instanceof Error) {
       console.error("[safe-action]", e.message);
       return e.message;

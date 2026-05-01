@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
 import { canSendWithCurrentResendSender, getResend, getResendFrom, isResendDebugEnabled } from "@/lib/resend";
@@ -89,7 +90,7 @@ async function sendEmailSafe(params: {
 
 export const submitProductLead = actionClient
   .schema(productLeadSchema)
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput }: { parsedInput: z.infer<typeof productLeadSchema> }) => {
     const supabase = requireAdminDb();
     await supabase.from("leads").insert({
       name: parsedInput.name,
@@ -121,7 +122,7 @@ export const submitProductLead = actionClient
 
 export const submitDistributorLead = actionClient
   .schema(distributorLeadSchema)
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput }: { parsedInput: z.infer<typeof distributorLeadSchema> }) => {
     const pkg = distributorPackages.find((p) => p.tier === parsedInput.packageTier);
     const qtyPart = pkg?.quantityNote ?? (pkg ? `${pkg.boxes} box${pkg.boxes === 1 ? "" : "es"}` : "");
     const packageLine = pkg
@@ -176,7 +177,7 @@ export const submitDistributorLead = actionClient
 
 export const createCheckoutSession = actionClient
   .schema(checkoutSchema)
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput }: { parsedInput: z.infer<typeof checkoutSchema> }) => {
     const enrichedItems = parsedInput.items.map((item) => {
       const product = products.find((p) => p.slug === item.itemSlug);
       if (!product) throw new Error(`Product not found: ${item.itemSlug}`);

@@ -32,6 +32,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Supabase service role not configured" }, { status: 500 });
   }
 
+  const { data: orderRow } = await supabase
+    .from("orders")
+    .select("status, distributor_referral_code, total_amount")
+    .eq("payment_reference", reference)
+    .maybeSingle();
+
+  if (!orderRow) {
+    return NextResponse.json({ ok: true, ignored: true, reason: "unknown_reference" });
+  }
+
+  if (orderRow.status === "paid") {
+    return NextResponse.json({ ok: true, duplicate: true });
+  }
+
   await supabase
     .from("orders")
     .update({
@@ -40,8 +54,14 @@ export async function POST(request: Request) {
     })
     .eq("payment_reference", reference);
 
-  const distributorCode = payload?.data?.metadata?.distributor_code as string | undefined;
-  const paidAmount = Number(payload?.data?.amount || 0) / 100;
+  const distributorCode =
+    (payload?.data?.metadata?.distributor_code as string | undefined) ||
+    orderRow.distributor_referral_code ||
+    undefined;
+  const paidAmount =
+    orderRow.total_amount != null
+      ? Number(orderRow.total_amount)
+      : Number(payload?.data?.amount || 0) / 100;
 
   if (distributorCode && paidAmount > 0) {
     const commission = paidAmount * 0.1;
