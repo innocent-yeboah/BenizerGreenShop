@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/lib/site-data";
+import { products, siteConfig } from "@/lib/site-data";
+import { clampMetaDescription } from "@/lib/seo";
 import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+
+export const metadata: Metadata = {
+  title: "Wellness shop",
+  description: clampMetaDescription(
+    `Browse trusted organic supplements and daily wellness formulas from ${siteConfig.name}. Natural vitality, cellular support, and premium quality — ship-ready in Ghana and beyond.`,
+  ),
+  alternates: { canonical: "/products" },
+};
 
 export default function ProductsPage() {
   return (

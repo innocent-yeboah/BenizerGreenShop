@@ -1,0 +1,22 @@
+import type { MetadataRoute } from "next";
+import { getPublicAppUrl } from "@/lib/app-url";
+
+export default function robots(): MetadataRoute.Robots {
+  const base = getPublicAppUrl();
+
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: [
+        "/admin",
+        "/api/",
+        "/auth/",
+        "/distributor/",
+        "/cart/",
+        "/order-status",
+      ],
+    },
+    sitemap: `${base}/sitemap.xml`,
+  };
+}

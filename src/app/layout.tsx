@@ -9,13 +9,57 @@ import { BrandWordmark } from "@/components/brand-wordmark";
 import { CartNavLink } from "@/components/cart-nav-link";
 import { SocialLinks } from "@/components/social-links";
 import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
+import { SeoJsonLd } from "@/components/seo-json-ld";
 import { siteConfig } from "@/lib/site-data";
+import { getPublicAppUrl } from "@/lib/app-url";
+import { clampMetaDescription, seoKeywords } from "@/lib/seo";
 import { getCurrentUserWithRole } from "@/lib/auth";
 import { signOutAction } from "@/app/auth/actions";
 
+const siteUrl = getPublicAppUrl();
+const metaDescription = clampMetaDescription(siteConfig.description);
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteConfig.name,
+    template: `%s · ${siteConfig.name}`,
+  },
+  description: metaDescription,
+  applicationName: siteConfig.name,
+  keywords: seoKeywords,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  formatDetection: { email: true, telephone: true },
+  ...(googleVerification
+    ? {
+        verification: {
+          google: googleVerification,
+        },
+      }
+    : {}),
+  openGraph: {
+    type: "website",
+    locale: "en_GH",
+    siteName: siteConfig.name,
+    title: siteConfig.name,
+    description: metaDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: metaDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default async function RootLayout({
@@ -30,6 +74,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal">
+        <SeoJsonLd />
         <div className="relative overflow-hidden border-b border-white/15 bg-brand-green py-2.5 shadow-sm">
           <p className="sr-only">{siteConfig.promoMarquee}</p>
           <div className="promo-marquee-track" aria-hidden>
@@ -177,6 +222,22 @@ export default async function RootLayout({
                 <SocialLinks variant="footer" />
               </div>
             </div>
+          </div>
+
+          <div className="container-shell mt-10 border-t border-white/15 pt-8">
+            <p className="text-center text-xs font-semibold tracking-wide text-white/80">
+              © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            </p>
+            <p className="mx-auto mt-4 max-w-3xl text-center text-[11px] leading-relaxed text-white/55 md:text-xs">
+              The information on this site is provided for general wellness and product awareness only.
+              It is not medical advice and does not replace consultation with a qualified healthcare
+              professional. Dietary supplements are not intended to diagnose, treat, cure, or prevent any
+              disease. Use products as directed and read labels carefully before purchase.
+            </p>
+            <p className="mx-auto mt-3 max-w-3xl text-center text-[11px] leading-relaxed text-white/55 md:text-xs">
+              Product availability, formulations, and prices may change without notice. Distributor
+              incentives apply only according to program rules shared with enrolled partners.
+            </p>
           </div>
         </footer>
         <a

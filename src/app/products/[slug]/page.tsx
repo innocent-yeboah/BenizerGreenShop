@@ -3,9 +3,11 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
-import { products, siteConfig } from "@/lib/site-data";
+import { products } from "@/lib/site-data";
+import { clampMetaDescription } from "@/lib/seo";
 import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { ProductJsonLd } from "@/components/product-json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,9 +16,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = products.find((item) => item.slug === slug);
   if (!product) return {};
 
+  const description = clampMetaDescription(
+    [product.shortBenefit, product.tagline].filter(Boolean).join(" · "),
+  );
+
   return {
-    title: `${product.shortTitle} | ${siteConfig.name}`,
-    description: product.tagline,
+    title: product.shortTitle,
+    description,
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    openGraph: {
+      title: product.title,
+      description,
+      type: "website",
+      url: `/products/${product.slug}`,
+      images: [
+        {
+          url: product.images[0],
+          alt: product.shortTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.title,
+      description,
+      images: [product.images[0]],
+    },
   };
 }
 
@@ -27,6 +54,7 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <main className="container-shell py-14">
+      <ProductJsonLd product={product} />
       <section className="grid gap-8 rounded-3xl border border-brand-green/10 bg-white p-8 shadow-sm lg:grid-cols-2">
         <div className="flex flex-col gap-6">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-brand-green/10 bg-brand-cream">

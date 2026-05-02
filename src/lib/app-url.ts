@@ -1,11 +1,12 @@
 /**
  * Public URL for redirects and payment callbacks (Moolre, Paystack, Supabase).
  * Priority:
- * 1. NEXT_PUBLIC_APP_URL — canonical site URL (set on Vercel to your real domain, e.g. https://yoursite.com)
- * 2. VERCEL_PROJECT_PRODUCTION_URL — on Vercel Production only, your production hostname
- * 3. NEXT_PUBLIC_SITE_URL — local dev; on Vercel, ignored if it still points to localhost (common misconfig)
- * 4. VERCEL_URL — automatic on Vercel (preview/production deployment host, often *.vercel.app)
- * 5. localhost for development
+ * 1. NEXT_PUBLIC_APP_URL — canonical site URL (set on Vercel to your real domain, e.g. https://benizergreenshop.com)
+ * 2. PRODUCTION_CANONICAL_HOST — optional (Vercel Production only), when NEXT_PUBLIC_APP_URL is unset
+ * 3. VERCEL_PROJECT_PRODUCTION_URL — on Vercel Production only; if *.vercel.app, we fall back to benizergreenshop.com for metadata/payments
+ * 4. NEXT_PUBLIC_SITE_URL — local dev; on Vercel, ignored if it still points to localhost
+ * 5. VERCEL_URL — automatic on Vercel (preview/production deployment host)
+ * 6. localhost for development
  */
 
 function stripTrailingSlash(url: string): string {
@@ -30,11 +31,31 @@ export function getPublicAppUrl(): string {
     );
   }
 
-  // Production deployment’s primary hostname (Vercel) — often your custom domain.
+  // Vercel exposes VERCEL_PROJECT_PRODUCTION_URL as *.vercel.app; metadataBase must use the
+  // public custom domain or tab favicons and OG URLs point at the wrong host.
+  const canonicalHost = process.env.PRODUCTION_CANONICAL_HOST?.trim();
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    canonicalHost &&
+    !isLocalhostish(canonicalHost)
+  ) {
+    return stripTrailingSlash(
+      canonicalHost.startsWith("http") ? canonicalHost : `https://${canonicalHost}`,
+    );
+  }
+
   if (process.env.VERCEL_ENV === "production") {
     const production = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
     if (production) {
-      return withHttpsIfNeeded(production);
+      const u = withHttpsIfNeeded(production);
+      try {
+        if (/\.vercel\.app$/i.test(new URL(u).hostname)) {
+          return "https://benizergreenshop.com";
+        }
+      } catch {
+        /* ignore */
+      }
+      return u;
     }
   }
 

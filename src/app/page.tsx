@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,6 +16,10 @@ import { BrandWordmark } from "@/components/brand-wordmark";
 import { HeroSlider } from "@/components/hero-slider";
 import { HomeHighlightStats } from "@/components/home-highlight-stats";
 import { TestimonialsSection } from "@/components/testimonials-section";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const featured = products.filter((product) => product.featured);
@@ -147,7 +152,7 @@ export default async function Home() {
               <p className="mt-1 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
               <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
               <div className="mt-4 flex gap-2">
-                <Link href={`/products/${product.slug}`} className="btn-ghost">
+                <Link href={`/products/${product.slug}`} className="btn-primary px-4 py-2">
                   View Details
                 </Link>
                 <AddToCartButton slug={product.slug} />

@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { noIndexFollow } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  title: "Cart",
   robots: noIndexFollow(),
 };
 
-export default function AuthLayout({
+export default function CartLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="flex flex-1 flex-col">{children}</div>;
+  return children;
 }

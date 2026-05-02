@@ -3,10 +3,14 @@ import Link from "next/link";
 import { BookOpen, HeartHandshake, Landmark, ShieldCheck, Users } from "lucide-react";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { siteConfig } from "@/lib/site-data";
+import { clampMetaDescription } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: `${siteConfig.name} — wellness and wealth together. Trusted organic supplements, partner development, and distributor success.`,
+  description: clampMetaDescription(
+    `${siteConfig.name} — wellness and wealth together. Trusted organic supplements, partner development, and distributor success.`,
+  ),
+  alternates: { canonical: "/about" },
 };
 
 const values = [
