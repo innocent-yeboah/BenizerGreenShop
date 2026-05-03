@@ -95,70 +95,172 @@ export default async function RootLayout({
             ))}
           </div>
         </div>
-        <header className="sticky top-0 z-50 border-b border-brand-green/10 bg-brand-cream/95 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
-            <Link href="/" className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-              <Image
-                src="/benizer-logo.png"
-                alt=""
-                width={84}
-                height={84}
-                className="h-14 w-14 shrink-0 object-contain md:h-16 md:w-16"
-                priority
-              />
-              <BrandWordmark className="leading-none" />
+        <header className="sticky top-0 z-50 border-b border-brand-green/15 bg-brand-cream/92 shadow-[inset_0_-1px_0_rgba(13,59,15,0.06)] backdrop-blur-md backdrop-saturate-150">
+          <div className="h-1 shrink-0 bg-brand-green-dark" aria-hidden />
+          <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6 sm:py-4 md:gap-12">
+            <Link
+              href="/"
+              className="flex min-w-0 flex-wrap items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
+            >
+              <span
+                className="relative isolate flex size-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-cream ring-1 ring-brand-green/8 md:size-14 lg:size-[60px]"
+                aria-hidden
+              >
+                <Image
+                  src="/benizer-logo.png"
+                  alt=""
+                  width={84}
+                  height={84}
+                  className="h-full w-full scale-[1.02] object-contain mix-blend-darken"
+                  priority
+                />
+              </span>
+              <BrandWordmark className="min-w-0 leading-tight tracking-tight" />
             </Link>
-            <nav className="hidden gap-6 text-sm font-semibold md:flex">
-              <Link href="/products">Products</Link>
-              <Link href="/about">About Us</Link>
-              <CartNavLink />
-              <Link href="/become-distributor">Become a Distributor</Link>
-              {currentUser?.role === "admin" ? (
-                <Link href="/admin">Admin</Link>
-              ) : null}
-              {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
-                <Link href="/distributor">Distributor</Link>
-              ) : null}
-              {currentUser ? (
-                <form action={signOutAction}>
-                  <button type="submit" className="cursor-pointer">
-                    Sign Out
-                  </button>
-                </form>
-              ) : (
-                <Link href="/auth/sign-in">Sign In</Link>
-              )}
+            <nav
+              className="hidden h-11 shrink-0 items-center gap-0 md:flex lg:gap-1"
+              aria-label="Primary"
+            >
+              <div className="flex items-center lg:gap-0.5">
+                <Link
+                  href="/products"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                >
+                  Products
+                </Link>
+                <Link
+                  href="/about"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                >
+                  About Us
+                </Link>
+                {currentUser?.role === "admin" ? (
+                  <Link
+                    href="/admin"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                  >
+                    Admin
+                  </Link>
+                ) : null}
+                {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
+                  <Link
+                    href="/distributor"
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                  >
+                    Partner
+                  </Link>
+                ) : null}
+              </div>
+              <span
+                className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
+                aria-hidden
+              />
+              <CartNavLink className="-mx-0.5" />
+              <span
+                className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
+                aria-hidden
+              />
+              <div className="flex items-center gap-2 pl-0.5 sm:gap-3">
+                <Link
+                  href="/become-distributor"
+                  className="inline-flex shrink-0 items-center justify-center rounded-lg bg-brand-green px-4 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-brand-green-dark/10 transition-colors hover:bg-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                >
+                  Become a Distributor
+                </Link>
+                {currentUser ? (
+                  <form action={signOutAction} className="shrink-0">
+                    <button
+                      type="submit"
+                      className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                    >
+                      Sign Out
+                    </button>
+                  </form>
+                ) : (
+                  <Link
+                    href="/auth/sign-in"
+                    className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
             </nav>
           </div>
-          <nav className="mx-auto flex w-full max-w-7xl gap-4 overflow-x-auto px-6 pb-3 text-xs font-semibold md:hidden">
-            <Link href="/products" className="whitespace-nowrap">
-              Products
-            </Link>
-            <Link href="/about" className="whitespace-nowrap">
-              About
-            </Link>
-            <CartNavLink />
-            <Link href="/become-distributor" className="whitespace-nowrap">
-              Distributor
-            </Link>
-            {currentUser?.role === "admin" ? (
-              <Link href="/admin" className="whitespace-nowrap">
-                Admin
+          <nav
+            className="mx-auto flex w-full max-w-7xl items-center gap-2 overflow-x-auto border-t border-brand-green/10 bg-brand-cream/70 px-4 py-2.5 text-xs font-semibold backdrop-blur-sm sm:px-6 md:hidden"
+            aria-label="Primary mobile"
+          >
+            <div className="flex min-w-0 flex-1 items-center gap-1.5">
+              <Link
+                href="/products"
+                className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
+              >
+                Products
               </Link>
-            ) : null}
-            {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
-              <Link href="/distributor" className="whitespace-nowrap">
-                Distributor
+              <span className="text-brand-green-dark/25" aria-hidden>
+                |
+              </span>
+              <Link
+                href="/about"
+                className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
+              >
+                About
               </Link>
-            ) : null}
+              {currentUser?.role === "admin" ? (
+                <>
+                  <span className="text-brand-green-dark/25" aria-hidden>
+                    |
+                  </span>
+                  <Link
+                    href="/admin"
+                    className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
+                  >
+                    Admin
+                  </Link>
+                </>
+              ) : null}
+              {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
+                <>
+                  <span className="text-brand-green-dark/25" aria-hidden>
+                    |
+                  </span>
+                  <Link
+                    href="/distributor"
+                    className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
+                  >
+                    Partner
+                  </Link>
+                </>
+              ) : null}
+            </div>
+            <span className="text-brand-green-dark/25" aria-hidden>
+              |
+            </span>
+            <CartNavLink className="shrink-0" />
+            <span className="text-brand-green-dark/25" aria-hidden>
+              |
+            </span>
+            <Link
+              href="/become-distributor"
+              className="shrink-0 whitespace-nowrap rounded-md bg-brand-green px-3 py-1.5 text-white hover:bg-brand-green-dark"
+            >
+              Join program
+            </Link>
             {currentUser ? (
-              <form action={signOutAction}>
-                <button type="submit" className="cursor-pointer whitespace-nowrap">
+              <form action={signOutAction} className="shrink-0">
+                <button
+                  type="submit"
+                  className="cursor-pointer whitespace-nowrap rounded-md border border-brand-green-dark/30 bg-white px-3 py-1.5 text-[11px] font-semibold text-brand-green-dark hover:border-brand-green sm:text-xs"
+                >
                   Sign Out
                 </button>
               </form>
             ) : (
-              <Link href="/auth/sign-in" className="whitespace-nowrap">
+              <Link
+                href="/auth/sign-in"
+                className="shrink-0 rounded-md border border-brand-green-dark/30 bg-white px-3 py-1.5 font-semibold text-brand-green-dark hover:border-brand-green"
+              >
                 Sign In
               </Link>
             )}
@@ -242,7 +344,7 @@ export default async function RootLayout({
         </footer>
         <a
           href={`https://wa.me/${siteConfig.whatsappAi.replace("+", "")}?text=${encodeURIComponent("Hello! I'm interested in your products.")}`}
-          className="fixed bottom-5 right-5 z-50 inline-flex items-center justify-center rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition-colors hover:bg-[#20BA5A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+          className="fixed bottom-5 right-5 z-50 inline-flex items-center justify-center rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition-colors hover:bg-[#20BA5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
           target="_blank"
           rel="noopener noreferrer"
         >

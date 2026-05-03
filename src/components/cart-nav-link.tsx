@@ -41,7 +41,7 @@ export function CartNavLink({ className }: Props) {
       aria-label={ariaLabel}
       title={ariaLabel}
       className={cn(
-        "relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-brand-green-dark transition-colors hover:bg-brand-green/12 hover:text-brand-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
+        "relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-brand-green-dark ring-1 ring-transparent transition-colors hover:bg-brand-green/8 hover:text-brand-green hover:ring-brand-green/12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
         className,
       )}
     >

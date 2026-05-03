@@ -84,25 +84,6 @@ export function HeroSlider() {
         </div>
       </div>
 
-      <button
-        type="button"
-        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full border border-brand-green/20 bg-white/90 px-3 py-2 text-xl font-bold text-brand-green-dark shadow-sm backdrop-blur-sm hover:bg-white md:left-4"
-        onClick={() =>
-          setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides)
-        }
-        aria-label="Previous slide"
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full border border-brand-green/20 bg-white/90 px-3 py-2 text-xl font-bold text-brand-green-dark shadow-sm backdrop-blur-sm hover:bg-white md:right-4"
-        onClick={() => setActiveIndex((prev) => (prev + 1) % totalSlides)}
-        aria-label="Next slide"
-      >
-        ›
-      </button>
-
       <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {slides.map((slide, index) => (
           <button
