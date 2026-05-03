@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/lib/site-data";
+import { products, siteConfig } from "@/lib/site-data";
 
 const slides = products.map((p) => ({
   key: p.slug,
@@ -36,6 +36,15 @@ export function HeroSlider() {
       aria-label="Featured products"
     >
       <div className="container-shell relative z-10 py-10 pb-16 md:py-12 md:pb-16 lg:py-14 lg:pb-20">
+        <header className="mb-10 text-center md:mb-12">
+          <p className="text-xs font-bold uppercase tracking-[0.28em] text-brand-green">
+            {siteConfig.homePage.transformTitle}
+          </p>
+          <h2 className="mt-4 font-accent text-2xl font-semibold tracking-tight text-brand-green-dark sm:text-3xl md:text-4xl">
+            {siteConfig.name}
+          </h2>
+        </header>
+
         <div className="grid min-h-[min(72vw,380px)] items-center gap-10 md:min-h-[400px] md:gap-12 lg:min-h-[440px] lg:grid-cols-[1fr_minmax(260px,420px)] lg:gap-14 xl:grid-cols-[1.05fr_440px]">
           <div className="order-2 max-w-xl lg:order-1">
             <p className="text-xs font-semibold uppercase tracking-wider text-brand-green">
@@ -52,14 +61,14 @@ export function HeroSlider() {
                 href="/products"
                 className="inline-flex items-center gap-2 rounded-full bg-brand-green px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_24px_-12px_rgba(27,94,32,0.55)] hover:bg-brand-green-dark"
               >
-                Shop collections
+                {siteConfig.homePage.primaryCta}
                 <span aria-hidden>→</span>
               </Link>
               <Link
-                href="/about"
+                href="/become-distributor"
                 className="inline-flex items-center justify-center rounded-full border border-brand-green-dark/35 bg-transparent px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-green-dark hover:border-brand-green hover:bg-brand-green/6"
               >
-                Our story
+                {siteConfig.homePage.secondaryCta}
               </Link>
             </div>
             <Link

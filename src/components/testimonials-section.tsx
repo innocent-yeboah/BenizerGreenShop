@@ -16,9 +16,9 @@ export function TestimonialsSection({ items }: { items: SiteTestimonial[] }) {
   return (
     <section className="bg-white py-14">
       <div className="container-shell">
-        <h2 className="text-3xl font-bold text-brand-green-dark">Customer Reviews</h2>
-        <p className="mt-2 max-w-2xl text-sm text-brand-charcoal/75">
-          Feedback from people who shop and partner with us.
+        <h2 className="text-3xl font-bold capitalize text-brand-green-dark md:text-4xl">Customers reviews</h2>
+        <p className="mt-3 max-w-2xl text-sm text-brand-charcoal/75 md:text-[15px]">
+          Rated 5 out of 5 from shoppers and distributors who love the Benizer lineup.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           {items.map((t) => (
@@ -34,10 +34,13 @@ export function TestimonialsSection({ items }: { items: SiteTestimonial[] }) {
                   {t.initial}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                     <StarRow />
+                    <span className="text-[11px] font-bold uppercase tracking-wide text-brand-charcoal/65">
+                      Rated 5 out of 5
+                    </span>
                     <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-800 ring-1 ring-emerald-200/80">
-                      Verified
+                      Trusted
                     </span>
                   </div>
                   <p className="mt-3 text-[15px] leading-relaxed text-brand-charcoal/90">

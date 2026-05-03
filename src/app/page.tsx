@@ -5,6 +5,7 @@ import {
   distributorPackages,
   type DistributorPackageTier,
   products,
+  siteConfig,
   siteTestimonials,
 } from "@/lib/site-data";
 import { cn, currencyFormatter } from "@/lib/utils";
@@ -22,7 +23,6 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const featured = products.filter((product) => product.featured);
-  const heroProduct = featured[0];
 
   let shareEarnHref: string = "/become-distributor";
   const userCtx = await getCurrentUserWithRole();
@@ -82,18 +82,17 @@ export default async function Home() {
   };
   return (
     <main className="flex-1">
-      <HomeHero heroProduct={heroProduct} />
+      <HomeHero />
 
       <HeroSlider />
 
       <HomeHighlightStats />
 
-      <section className="container-shell pb-16">
-        <div className="mb-8 flex items-end justify-between">
-          <h2 className="text-3xl font-bold text-brand-green-dark">
-            Best Selling Products
-          </h2>
-          <Link href="/products" className="font-semibold text-brand-green">
+      <section className="container-shell py-14 md:py-16">
+        <div className="mb-10 flex flex-col items-center text-center md:mb-12">
+          <h2 className="text-3xl font-bold capitalize text-brand-green-dark md:text-4xl">Best selling products</h2>
+          <p className="mt-2 max-w-lg text-sm text-brand-charcoal/65">Customer favorites with fast delivery across Ghana.</p>
+          <Link href="/products" className="btn-ghost mt-4 text-sm font-bold">
             View all products
           </Link>
         </div>
@@ -101,7 +100,7 @@ export default async function Home() {
           {featured.map((product) => (
             <article
               key={product.slug}
-              className="surface-card lift-on-hover flex flex-col overflow-hidden rounded-2xl p-0"
+              className="surface-card lift-on-hover flex flex-col overflow-hidden rounded-2xl border border-brand-charcoal/8 p-0 shadow-[0_16px_44px_-28px_rgba(13,59,15,0.35)]"
             >
               <div className="relative aspect-square w-full bg-brand-cream">
                 <Image
@@ -112,14 +111,30 @@ export default async function Home() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
-              <div className="flex flex-1 flex-col p-6">
-                <p className="text-sm text-brand-green">{product.category}</p>
-                <h3 className="mt-2 text-xl font-bold">{product.shortTitle}</h3>
-                <p className="mt-1 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
-                <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
-                <div className="mt-4 flex gap-2">
-                  <Link href={`/products/${product.slug}`} className="btn-primary px-4 py-2">
-                    View Details
+              <div className="flex flex-1 flex-col p-6 pt-5">
+                <h3 className="text-lg font-bold leading-snug text-brand-green-dark md:text-xl">{product.shortTitle}</h3>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <div className="flex gap-0.5 text-amber-400" aria-label="Rated 5 out of 5 stars">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <svg
+                        key={i}
+                        className="size-4 shrink-0 fill-amber-400"
+                        viewBox="0 0 20 20"
+                        aria-hidden
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-brand-charcoal/55">
+                    Rated 5.00 out of 5
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
+                <p className="mt-4 text-xl font-bold tabular-nums text-brand-green">{currencyFormatter.format(product.price)}</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <Link href={`/products/${product.slug}`} className="btn-primary flex-1 px-4 py-2.5 text-center text-sm">
+                    View details
                   </Link>
                   <AddToCartButton slug={product.slug} />
                 </div>
@@ -130,37 +145,38 @@ export default async function Home() {
       </section>
 
       <section className="bg-brand-green px-6 py-14 text-white">
-        <div className="container-shell rounded-3xl border border-white/20 bg-brand-green-dark/35 p-8 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
-            Get More For Less
+        <div className="container-shell rounded-3xl border border-white/20 bg-brand-green-dark/35 p-8 text-center md:p-10">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-gold-light">
+            {siteConfig.homePage.discountBandEyebrow}
           </p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-            Get 40% Distributor Pricing On Product Bundles
+          <h2 className="mt-4 text-2xl font-bold capitalize leading-tight md:text-3xl lg:text-4xl">
+            {siteConfig.homePage.discountBandTitle}
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-white/85">
-            Become a registered Benizer distributor to unlock lower package rates
-            and recurring earnings.
+          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-white/88">
+            {siteConfig.homePage.discountBandSubtitle}
           </p>
           <Link
             href="/become-distributor"
-            className="btn-secondary mt-6 bg-white text-brand-green border-white hover:bg-brand-cream hover:text-brand-green-dark hover:border-brand-cream"
+            className="btn-secondary mt-8 bg-brand-gold px-10 py-3.5 text-sm font-bold uppercase tracking-wider text-brand-green-dark border-brand-gold hover:bg-brand-gold-light hover:text-brand-green-dark hover:border-brand-gold-light"
           >
-            Join The Distributor Program
+            {siteConfig.homePage.discountBandCta}
           </Link>
         </div>
       </section>
 
-      <section className="container-shell py-14">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold text-brand-green-dark">Distributor Packages</h2>
-            <p className="mt-4 text-base font-semibold leading-snug text-brand-charcoal md:text-lg">
-              Pick the tier that fits you—earn more on every sale, with training, tools, and support included.
+      <section className="container-shell py-14 md:py-16">
+        <div className="flex flex-col gap-5 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
+          <div className="max-w-2xl lg:mx-0 mx-auto">
+            <h2 className="text-3xl font-bold capitalize text-brand-green-dark md:text-4xl">
+              {siteConfig.homePage.packagesIntroTitle}
+            </h2>
+            <p className="mt-4 text-base font-medium leading-snug text-brand-charcoal/80 md:text-lg">
+              {siteConfig.homePage.packagesIntroSubtitle}
             </p>
           </div>
           <Link
             href={shareEarnHref}
-            className="btn-ghost inline-flex shrink-0 items-center justify-center px-8 py-3.5 text-center text-sm font-bold shadow-md ring-1 ring-brand-charcoal/10 whitespace-nowrap"
+            className="btn-ghost mx-auto inline-flex shrink-0 items-center justify-center px-8 py-3.5 text-center text-sm font-bold shadow-md ring-1 ring-brand-charcoal/10 whitespace-nowrap lg:mx-0"
           >
             Share &amp; earn
           </Link>

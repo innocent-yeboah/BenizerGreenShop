@@ -11,7 +11,6 @@ import { MobileStoreToolbar } from "@/components/mobile-store-toolbar";
 import { SocialLinks } from "@/components/social-links";
 import { WishlistNavLink } from "@/components/wishlist-nav-link";
 import { SeoJsonLd } from "@/components/seo-json-ld";
-import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
 import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
 import { clampMetaDescription, seoKeywords } from "@/lib/seo";
@@ -268,9 +267,6 @@ export default async function RootLayout({
         <ReferralShoppingBanner />
         <div className="flex flex-1 flex-col pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0">
           {children}
-          <section className="border-t border-brand-green/10 bg-white py-8">
-            <TrustIndicatorGrid />
-          </section>
           <footer className="bg-brand-green-dark py-10 text-white">
           <div className="container-shell grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             <div>

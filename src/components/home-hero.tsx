@@ -1,122 +1,89 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-data";
-import { BrandWordmark } from "@/components/brand-wordmark";
 
-type Props = {
-  /** First featured product drives the right-hand visual; optional. */
-  heroProduct?: Product;
-};
+/** Top homepage hero — Revobit-style headline band + welcome bar (Benizer brand & copy). */
+export function HomeHero() {
+  const h = siteConfig.homePage;
 
-export function HomeHero({ heroProduct }: Props) {
   return (
-    <section className="relative overflow-hidden border-b border-brand-green/10">
-      <div className="absolute inset-0 bg-[#f3f1eb]" aria-hidden />
+    <section className="relative overflow-hidden border-b border-brand-green/15">
+      <div className="absolute inset-0 bg-linear-to-b from-[#0d280f] via-brand-green-dark to-[#153a18]" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_90%_at_100%_-10%,rgba(13,59,15,0.09),transparent_50%)]"
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_0%_100%,rgba(196,184,150,0.12),transparent_50%)]"
+        className="pointer-events-none absolute -right-20 top-1/2 h-[min(80vw,520px)] w-[min(80vw,520px)] -translate-y-1/2 rounded-full bg-brand-gold/12 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -left-16 bottom-0 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl"
         aria-hidden
       />
 
-      <div className="container-shell relative py-12 md:py-16 lg:py-20">
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0">
-          <header className="lg:col-span-7">
-            <h1 className="sr-only">
-              {siteConfig.name} — {siteConfig.description}
-            </h1>
+      <div className="container-shell relative z-10 pt-12 pb-0 md:pt-16 md:pb-0 lg:pt-20">
+        <h1 className="sr-only">
+          {siteConfig.name} — {siteConfig.description}
+        </h1>
 
-            <div className="flex items-center gap-3 sm:gap-4">
-              <span
-                className="h-10 w-px shrink-0 bg-linear-to-b from-transparent via-[#a8956a]/65 to-transparent sm:h-11"
-                aria-hidden
-              />
-              <p className="text-[10px] font-medium uppercase tracking-[0.42em] text-brand-charcoal/38 sm:text-[11px]">
-                {siteConfig.tagline}
-              </p>
-            </div>
+        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.35em] text-brand-gold-light/90 md:text-xs">
+          {h.heroEyebrow}
+        </p>
 
-            <div className="mt-8 max-w-xl">
-              <div aria-hidden>
-                <BrandWordmark variant="editorial" className="[&_span]:leading-tight" />
-              </div>
-
-              <div className="mt-6 h-px max-w-[4.5rem] bg-linear-to-r from-[#8a7b5c]/70 to-transparent" aria-hidden />
-
-              <p className="mt-7 text-base font-normal leading-relaxed text-brand-charcoal/65 md:text-[1.05rem] md:leading-relaxed">
-                {siteConfig.description}
-              </p>
-
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch sm:gap-x-4 sm:gap-y-3">
-                <Link
-                  href="/products"
-                  className="inline-flex min-h-12 items-center justify-center rounded-md bg-brand-green-dark px-8 text-sm font-semibold tracking-wide text-white shadow-[0_18px_42px_-22px_rgba(13,59,15,0.55)] transition-colors hover:bg-brand-green"
-                >
-                  Explore the collection
-                </Link>
-                <Link
-                  href="/become-distributor"
-                  className="inline-flex min-h-12 items-center justify-center rounded-md border border-brand-green-dark/25 bg-white/70 px-7 text-sm font-semibold text-brand-green-dark shadow-sm backdrop-blur-sm transition-colors hover:border-brand-green-dark/45 hover:bg-white"
-                >
-                  Partner program
-                </Link>
-              </div>
-
-              <div className="mt-10 border-t border-brand-green-dark/[0.08] pt-8">
-                <a
-                  href={siteConfig.social.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-[11px] font-medium uppercase tracking-[0.22em] text-brand-charcoal/38 transition-colors hover:text-brand-green-dark"
-                >
-                  <span
-                    className="inline-flex size-8 items-center justify-center rounded-full border border-brand-green-dark/12 bg-white/80"
-                    aria-hidden
-                  >
-                    <Image
-                      src="/icons/social/instagram.svg"
-                      alt=""
-                      width={14}
-                      height={14}
-                      className="opacity-65"
-                    />
-                  </span>
-                  {siteConfig.social.instagramHandle}
-                </a>
-              </div>
-            </div>
-          </header>
-
-          <div className="lg:col-span-5">
-            {heroProduct ? (
-              <Link href={`/products/${heroProduct.slug}`} prefetch={false} className="group mx-auto block max-w-md lg:mr-0 lg:ml-auto lg:max-w-none">
-                <div className="relative overflow-hidden rounded-[1.625rem] bg-linear-to-br from-white to-brand-cream/40 p-6 shadow-[0_28px_64px_-36px_rgba(13,59,15,0.55)] ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 hover:shadow-[0_36px_72px_-32px_rgba(13,59,15,0.45)] sm:p-8">
-                  <div className="relative aspect-[4/5] w-full">
-                    <Image
-                      src={heroProduct.images[0]}
-                      alt={heroProduct.shortTitle}
-                      fill
-                      priority
-                      className="object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                      sizes="(max-width: 1024px) 92vw, 38vw"
-                    />
-                  </div>
-                  <p className="mt-5 border-t border-brand-green/10 pt-4 text-center font-heading text-[10px] font-bold uppercase tracking-[0.35em] text-brand-charcoal/35">
-                    Signature selection
-                  </p>
-                  <p className="mt-2 text-center text-sm font-semibold text-brand-green-dark">{heroProduct.shortTitle}</p>
-                </div>
-              </Link>
-            ) : (
-              <div
-                className="mx-auto aspect-[4/5] max-w-md rounded-[1.625rem] bg-linear-to-br from-brand-green/7 via-transparent to-brand-cream/35 ring-1 ring-brand-green/10 lg:ml-auto lg:mr-0"
-                aria-hidden
-              />
-            )}
+        <div className="mx-auto mt-6 max-w-4xl text-center">
+          <p className="font-accent text-3xl font-semibold leading-[1.15] text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.12]">
+            {h.heroTitle}{" "}
+            <span className="text-brand-gold-light">{h.heroTitleAccent}</span>
+          </p>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
+            {h.heroBody}
+          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <Link
+              href="/products"
+              className="inline-flex min-h-12 w-full min-w-[200px] items-center justify-center rounded-full bg-brand-gold px-10 text-sm font-bold uppercase tracking-wider text-brand-green-dark shadow-lg shadow-black/20 transition-colors hover:bg-brand-gold-light sm:w-auto"
+            >
+              {h.primaryCta}
+            </Link>
+            <Link
+              href="/become-distributor"
+              className="inline-flex min-h-12 w-full min-w-[200px] items-center justify-center rounded-full border-2 border-white/35 bg-white/5 px-10 text-sm font-bold uppercase tracking-wider text-white backdrop-blur-sm transition-colors hover:border-white/55 hover:bg-white/10 sm:w-auto"
+            >
+              {h.secondaryCta}
+            </Link>
           </div>
+        </div>
+
+        <div className="relative z-10 mt-12 flex justify-center md:mt-14">
+          <div className="inline-flex max-w-full items-center gap-2 rounded-t-2xl border border-b-0 border-white/15 bg-white/10 px-6 py-3 backdrop-blur-md md:px-10 md:py-3.5">
+            <span className="hidden h-1.5 w-1.5 shrink-0 rounded-full bg-brand-gold sm:block" aria-hidden />
+            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-white/95 sm:text-sm">
+              {h.welcomeBar}
+            </p>
+            <span className="hidden h-1.5 w-1.5 shrink-0 rounded-full bg-brand-gold sm:block" aria-hidden />
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-center border-t border-white/10 pt-6 pb-8 md:pb-10">
+          <a
+            href={siteConfig.social.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white/90 transition-colors hover:bg-white/15"
+          >
+            <Image
+              src="/icons/social/instagram.svg"
+              alt=""
+              width={16}
+              height={16}
+              className="opacity-95 brightness-0 invert"
+            />
+            {siteConfig.social.instagramHandle}
+          </a>
         </div>
       </div>
     </section>

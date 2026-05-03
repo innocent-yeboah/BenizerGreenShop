@@ -6,6 +6,25 @@ export const siteConfig = {
     "Your Health is your Wealth! Starts Now - Organic Wellness + Distributor Rewards",
   description:
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
+  /** Homepage structure inspired by professional supplement storefronts (e.g. Revobit-style funnels). */
+  homePage: {
+    welcomeBar: "Welcome to your wellness store!",
+    heroEyebrow: "Ready for formulations you trust—delivered fast?",
+    heroTitle: "Your wellness comeback starts now",
+    heroTitleAccent: "— with Benizer.",
+    heroBody:
+      "You're done with watered-down formulas and stalled deliveries—lock in trusted organic supplements with rapid fulfillment across Tamale & Accra. Ready to monetize momentum? Become a distributor: exclusive bundle pricing, hands-on guidance, and income on every repeat order your buyers place.",
+    primaryCta: "Shop products",
+    secondaryCta: "Become a distributor",
+    transformTitle: "Transform your future",
+    discountBandEyebrow: "Member pricing",
+    discountBandTitle: "Get 40% distributor pricing on product bundles!",
+    discountBandSubtitle:
+      "Become a registered Benizer distributor today and buy your boxes for less—plus earn on referrals.",
+    discountBandCta: "Join the distributor program",
+    packagesIntroTitle: "Become a distributor",
+    packagesIntroSubtitle: "Pick a starter package and unlock better rates on every restock.",
+  },
   /** E.164 for wa.me links (Ghana: 0545753721 → 233545753721) */
   whatsappAi: "+233545753721",
   /** Display format for footer / copy */

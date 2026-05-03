@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 
+/** Revobit-style four pillars — localized for Benizer (Ghana delivery, organic focus). */
 type Stat = {
   title: string;
   subtitle: string;
@@ -11,36 +12,36 @@ type Stat = {
 
 const STATS: Stat[] = [
   {
-    title: "400+ Conditions",
-    subtitle: "Health Support",
+    title: "Get back your health",
+    subtitle: "Wellness-focused formulas you can trust",
     icon: "heart",
-    iconColor: "text-rose-600",
-    iconBg: "bg-rose-600/12",
-    titleColor: "text-rose-900",
-  },
-  {
-    title: "100% Organic",
-    subtitle: "Certified Products",
-    icon: "shield",
     iconColor: "text-emerald-600",
-    iconBg: "bg-emerald-600/12",
-    titleColor: "text-emerald-900",
+    iconBg: "bg-emerald-600/14",
+    titleColor: "text-emerald-950",
   },
   {
-    title: "Nationwide",
-    subtitle: "Fast Delivery",
+    title: "Certified products",
+    subtitle: "100% organic formulas",
+    icon: "shield",
+    iconColor: "text-amber-700",
+    iconBg: "bg-amber-500/15",
+    titleColor: "text-amber-950",
+  },
+  {
+    title: "Fast shipping",
+    subtitle: "Tamale · Accra · nationwide Ghana",
     icon: "truck",
     iconColor: "text-sky-600",
-    iconBg: "bg-sky-600/12",
+    iconBg: "bg-sky-600/14",
     titleColor: "text-sky-950",
   },
   {
-    title: "Cash Rewards",
-    subtitle: "Distributor Bonuses",
+    title: "Get rewards",
+    subtitle: "Distributor bonuses & referral earnings",
     icon: "banknotes",
-    iconColor: "text-amber-600",
-    iconBg: "bg-amber-500/15",
-    titleColor: "text-amber-950",
+    iconColor: "text-rose-600",
+    iconBg: "bg-rose-600/14",
+    titleColor: "text-rose-950",
   },
 ];
 
@@ -52,7 +53,7 @@ function StatIcon({
   className?: string;
 }) {
   const common = {
-    xmlns: "http://www.w3.org/2000/svg",
+    xmlns: "http://www.w3.org/2000/svg" as const,
     fill: "none" as const,
     viewBox: "0 0 24 24",
     strokeWidth: 1.5,
@@ -107,28 +108,28 @@ function StatIcon({
 
 export function HomeHighlightStats() {
   return (
-    <section className="container-shell py-10">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STATS.map((item) => (
-          <div
-            key={item.title}
-            className="surface-card lift-on-hover flex flex-col items-center rounded-2xl p-5 text-center"
-          >
+    <section className="border-y border-brand-green/10 bg-white py-10 md:py-12">
+      <div className="container-shell">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((item) => (
             <div
-              className={cn(
-                "mb-3 flex size-14 items-center justify-center rounded-full",
-                item.iconBg,
-                item.iconColor,
-              )}
+              key={item.title}
+              className="surface-card flex flex-col items-center rounded-2xl border border-brand-charcoal/6 bg-white px-5 py-6 text-center shadow-[0_12px_40px_-28px_rgba(13,59,15,0.2)] transition-transform hover:-translate-y-px"
             >
-              <StatIcon name={item.icon} />
+              <div
+                className={cn(
+                  "mb-4 flex size-14 items-center justify-center rounded-full",
+                  item.iconBg,
+                  item.iconColor,
+                )}
+              >
+                <StatIcon name={item.icon} />
+              </div>
+              <p className={cn("text-lg font-bold capitalize", item.titleColor)}>{item.title}</p>
+              <p className="mt-1.5 text-sm font-medium leading-snug text-brand-charcoal/72">{item.subtitle}</p>
             </div>
-            <p className={cn("text-lg font-bold", item.titleColor)}>
-              {item.title}
-            </p>
-            <p className="mt-1 text-sm text-brand-charcoal/75">{item.subtitle}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
