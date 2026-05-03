@@ -50,6 +50,10 @@ create table if not exists public.orders (
 
 comment on table public.orders is 'Checkout rows; distributor_referral_code matches distributors.referral_code when set; user_id links logged-in shoppers for account order history.';
 
+-- Existing DBs may have been created before user_id existed; policies below require this column.
+alter table public.orders
+  add column if not exists user_id uuid references auth.users (id) on delete set null;
+
 create table if not exists public.leads (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
@@ -105,6 +109,8 @@ create index if not exists idx_orders_created_at on public.orders (created_at de
 create index if not exists idx_orders_distributor_referral
   on public.orders (distributor_referral_code)
   where distributor_referral_code is not null;
+
+create index if not exists idx_orders_user_id on public.orders (user_id) where user_id is not null;
 
 create index if not exists idx_leads_created_at on public.leads (created_at desc);
 
@@ -217,14 +223,8 @@ before update on public.profiles
 for each row execute function public.prevent_profile_role_change ();
 
 -- -----------------------------------------------------------------------------
--- Order history: shopper account link (backward compatible for older DBs),
--- and profiles for self-serve sign-ups.
+-- Profiles for self-serve sign-ups (new auth users).
 -- -----------------------------------------------------------------------------
-
-alter table public.orders
-  add column if not exists user_id uuid references auth.users (id) on delete set null;
-
-create index if not exists idx_orders_user_id on public.orders (user_id) where user_id is not null;
 
 -- Customers who sign up via /auth/sign-up get a profile automatically. Admin-created
 -- auth users include user_metadata.created_by_admin so this insert is skipped
