@@ -12,7 +12,7 @@ import { siteConfig } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: `Secure sign-in for ${siteConfig.name} partners and administrators.`,
+  description: `Sign in for ${siteConfig.name} shoppers, distributors, and administrators.`,
 };
 
 function signInErrorMessage(raw: string | undefined) {
@@ -68,10 +68,10 @@ export default async function SignInPage({
   return (
     <main className="flex flex-1 flex-col lg:grid lg:min-h-[calc(100svh-9rem)] lg:grid-cols-2 xl:grid-cols-[1.05fr_min(32rem,1fr)]">
       <AuthBrandAside>
-        <AuthBrandLead>Trusted wellness, professional tools for distributors and partners.</AuthBrandLead>
+        <AuthBrandLead>Trusted wellness for shoppers and professional tools for partners.</AuthBrandLead>
         <AuthBrandSupport>
-          This portal is for authorized team members. Customer shopping stays on the public storefront—no separate login
-          required.
+          Sign in with your shopper account or partner credentials—your session stays encrypted across the storefront,
+          dashboards, and account portal.
         </AuthBrandSupport>
       </AuthBrandAside>
 
@@ -87,8 +87,11 @@ export default async function SignInPage({
               Welcome back
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-brand-charcoal/70">
-              Sign in to manage your distributor workspace or administrative tools. Your session is protected with
-              industry-standard encryption.
+              Shoppers unlock order history inside{" "}
+              <Link href="/account" prefetch={false} className="font-semibold text-brand-green hover:text-brand-green-dark">
+                My account
+              </Link>
+              . Partners and admins continue straight to secure dashboards.
             </p>
 
             {passwordUpdated ? (
@@ -112,7 +115,7 @@ export default async function SignInPage({
             <form action={signInAction} className="mt-8 space-y-5">
               <div className="space-y-2">
                 <label htmlFor="signin-email" className="block text-sm font-medium text-brand-charcoal">
-                  Work email
+                  Email address
                 </label>
                 <input
                   id="signin-email"
@@ -157,8 +160,16 @@ export default async function SignInPage({
           </div>
 
           <p className="mt-8 text-center text-sm text-brand-charcoal/50">
-            <Link href="/" className="font-medium text-brand-green hover:text-brand-green-dark">
-              ← Back to store
+            New shopper?{" "}
+            <Link href="/auth/sign-up" className="font-semibold text-brand-green hover:text-brand-green-dark">
+              Create an account
+            </Link>
+            <span aria-hidden className="text-brand-charcoal/25">
+              {" "}
+              ·{" "}
+            </span>
+            <Link href="/" className="font-medium text-brand-charcoal/60 hover:text-brand-green-dark">
+              Back to store
             </Link>
           </p>
         </div>

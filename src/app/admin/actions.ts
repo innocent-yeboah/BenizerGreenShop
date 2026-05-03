@@ -196,7 +196,10 @@ export async function createDistributorAccountAction(formData: FormData) {
     email,
     password,
     email_confirm: true,
-    user_metadata: fullName ? { full_name: fullName } : undefined,
+    user_metadata: {
+      ...(fullName ? { full_name: fullName } : {}),
+      created_by_admin: true,
+    },
   });
 
   if (authErr || !authData.user) {

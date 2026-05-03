@@ -15,6 +15,7 @@ import { getPublicAppUrl } from "@/lib/app-url";
 import { distributorPackages, products, siteConfig } from "@/lib/site-data";
 import { currencyFormatter } from "@/lib/utils";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import {
   distributorApplicationAdminNotificationEmail,
   distributorApplicationConfirmationEmail,
@@ -175,6 +176,26 @@ export const createCheckoutSession = actionClient
     const ref = `BGS-${Date.now()}`;
     const supabase = requireAdminDb();
 
+    let customerUserId: string | undefined;
+    if (isSupabaseConfigured()) {
+      try {
+        const userClient = await createClient();
+        const {
+          data: { user },
+        } = await userClient.auth.getUser();
+        const emailCheckout = parsedInput.customerEmail.trim().toLowerCase();
+        if (
+          user?.id &&
+          user.email &&
+          user.email.toLowerCase() === emailCheckout
+        ) {
+          customerUserId = user.id;
+        }
+      } catch {
+        // Checkout must work when session lookup fails or cookies are unreadable server-side.
+      }
+    }
+
     const gateway = moolreConfigured()
       ? "moolre"
       : process.env.PAYSTACK_SECRET_KEY
@@ -191,9 +212,16 @@ export const createCheckoutSession = actionClient
       status: "pending",
       items: enrichedItems,
       distributor_referral_code: parsedInput.distributorCode || null,
+      ...(customerUserId ? { user_id: customerUserId } : {}),
     };
 
-    const { error } = await supabase.from("orders").insert(insertPayload);
+    let { error } = await supabase.from("orders").insert(insertPayload);
+
+    if (error?.message && customerUserId && /user_id/i.test(error.message)) {
+      const { user_id: _omitUser, ...withoutUserLink } = insertPayload;
+      ({ error } = await supabase.from("orders").insert(withoutUserLink));
+    }
+
     if (error) {
       // Backward compatibility for pre-migration databases.
       await supabase.from("orders").insert({

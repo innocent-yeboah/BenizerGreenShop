@@ -48,13 +48,26 @@ export function HeroSlider() {
               {activeSlide.subtitle}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/products" className="btn-primary">
-                All products
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-green px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-[0_8px_24px_-12px_rgba(27,94,32,0.55)] hover:bg-brand-green-dark"
+              >
+                Shop collections
+                <span aria-hidden>→</span>
               </Link>
-              <Link href={activeSlide.secondaryHref} className="btn-secondary">
-                {activeSlide.secondaryLabel}
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center rounded-full border border-brand-green-dark/35 bg-transparent px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-green-dark hover:border-brand-green hover:bg-brand-green/6"
+              >
+                Our story
               </Link>
             </div>
+            <Link
+              href={activeSlide.secondaryHref}
+              className="mt-4 inline-block text-sm font-semibold text-brand-green underline underline-offset-4 hover:text-brand-green-dark"
+            >
+              {activeSlide.secondaryLabel}
+            </Link>
           </div>
 
           <div className="order-1 flex justify-center lg:order-2 lg:justify-end">

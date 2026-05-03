@@ -44,10 +44,11 @@ create table if not exists public.orders (
   -- Typical values: pending, processing, paid (webhooks), shipped, delivered, failed
   status text not null default 'pending',
   items jsonb not null default '[]'::jsonb,
-  distributor_referral_code text
+  distributor_referral_code text,
+  user_id uuid references auth.users (id) on delete set null
 );
 
-comment on table public.orders is 'Checkout rows; distributor_referral_code matches distributors.referral_code when set.';
+comment on table public.orders is 'Checkout rows; distributor_referral_code matches distributors.referral_code when set; user_id links logged-in shoppers for account order history.';
 
 create table if not exists public.leads (
   id uuid primary key default gen_random_uuid(),
@@ -127,6 +128,7 @@ drop policy if exists "Service role full products" on public.products;
 
 drop policy if exists "Service role full orders" on public.orders;
 drop policy if exists "Distributor reads referred orders" on public.orders;
+drop policy if exists "Customer reads own orders" on public.orders;
 
 drop policy if exists "Service role full leads" on public.leads;
 
@@ -164,6 +166,10 @@ using (
       and d.referral_code = orders.distributor_referral_code
   )
 );
+
+create policy "Customer reads own orders" on public.orders
+for select to authenticated
+using (user_id is not null and user_id = auth.uid());
 
 create policy "Service role full leads" on public.leads
 for all using (auth.role() = 'service_role')
@@ -209,6 +215,47 @@ drop trigger if exists profile_no_role_change on public.profiles;
 create trigger profile_no_role_change
 before update on public.profiles
 for each row execute function public.prevent_profile_role_change ();
+
+-- -----------------------------------------------------------------------------
+-- Order history: shopper account link (backward compatible for older DBs),
+-- and profiles for self-serve sign-ups.
+-- -----------------------------------------------------------------------------
+
+alter table public.orders
+  add column if not exists user_id uuid references auth.users (id) on delete set null;
+
+create index if not exists idx_orders_user_id on public.orders (user_id) where user_id is not null;
+
+-- Customers who sign up via /auth/sign-up get a profile automatically. Admin-created
+-- auth users include user_metadata.created_by_admin so this insert is skipped
+-- (their profile is created with the correct role via service role).
+create or replace function public.handle_new_user ()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if coalesce(new.raw_user_meta_data->>'created_by_admin', '') = 'true' then
+    return new;
+  end if;
+
+  insert into public.profiles (id, full_name, role)
+  values (
+    new.id,
+    nullif(trim(coalesce(new.raw_user_meta_data->>'full_name', '')), ''),
+    'customer'
+  )
+  on conflict (id) do nothing;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user ();
 
 -- =============================================================================
 -- Existing databases created before this revision:

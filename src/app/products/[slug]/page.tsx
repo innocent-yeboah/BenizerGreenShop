@@ -7,6 +7,7 @@ import { products } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
 import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { WishlistToggleButton } from "@/components/wishlist-toggle-button";
 import { ProductJsonLd } from "@/components/product-json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -73,6 +74,7 @@ export default async function ProductDetailsPage({ params }: Props) {
             <p className="mt-3 italic text-brand-charcoal/80">{product.tagline}</p>
             <p className="mt-6 text-2xl font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
             <div className="mt-6 flex flex-wrap gap-3">
+              <WishlistToggleButton slug={product.slug} />
               <AddToCartButton slug={product.slug} />
               <Link href="/cart" className="btn-primary px-6 py-3">Go to Checkout</Link>
               <Link href={`/become-distributor?product=${product.slug}`} className="btn-secondary px-6 py-3">Request More Info</Link>

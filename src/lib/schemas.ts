@@ -38,3 +38,13 @@ export const orderLookupSchema = z.object({
   reference: z.string().min(4, "Enter your order reference."),
   email: z.string().email("Enter the email used at checkout."),
 });
+
+export const customerSignUpSchema = z.object({
+  fullName: z.string().min(2).max(120),
+  email: z.string().email(),
+  password: z.string().min(8).max(128),
+});
+
+export const updateCustomerProfileSchema = z.object({
+  fullName: z.string().min(2).max(120),
+});

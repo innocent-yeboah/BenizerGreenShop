@@ -5,11 +5,13 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ReferralLinkCapture } from "@/components/referral-link-capture";
 import { ReferralShoppingBanner } from "@/components/referral-shopping-banner";
-import { BrandWordmark } from "@/components/brand-wordmark";
 import { CartNavLink } from "@/components/cart-nav-link";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { MobileStoreToolbar } from "@/components/mobile-store-toolbar";
 import { SocialLinks } from "@/components/social-links";
-import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
+import { WishlistNavLink } from "@/components/wishlist-nav-link";
 import { SeoJsonLd } from "@/components/seo-json-ld";
+import { TrustIndicatorGrid } from "@/components/trust-indicator-grid";
 import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
 import { clampMetaDescription, seoKeywords } from "@/lib/seo";
@@ -71,36 +73,72 @@ export default async function RootLayout({
   const [promoBeforeWealth, promoAfterWealth] =
     siteConfig.promoMarquee.split("Wealth!");
 
+  const drawerExtras = (
+    <>
+      {currentUser?.role === "admin" ? (
+        <Link
+          href="/admin"
+          prefetch={false}
+          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-brand-green-dark ring-1 ring-brand-green/18 hover:bg-brand-cream"
+        >
+          Admin dashboard
+        </Link>
+      ) : null}
+      {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
+        <Link
+          href="/distributor"
+          prefetch={false}
+          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-brand-green-dark ring-1 ring-brand-green/18 hover:bg-brand-cream"
+        >
+          Partner hub
+        </Link>
+      ) : null}
+      {currentUser ? (
+        <>
+          <form action={signOutAction} className="w-full">
+            <button
+              type="submit"
+              className="w-full cursor-pointer rounded-xl border border-brand-green-dark/28 bg-brand-cream/50 px-4 py-3 text-sm font-semibold text-brand-green-dark hover:bg-brand-green/10"
+            >
+              Sign out
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          <Link
+            href="/auth/sign-up"
+            prefetch={false}
+            className="rounded-xl bg-brand-green px-4 py-3 text-center text-sm font-semibold text-white hover:bg-brand-green-dark"
+          >
+            Create shopper account
+          </Link>
+          <Link
+            href="/auth/sign-in"
+            prefetch={false}
+            className="rounded-xl border border-brand-green-dark/30 bg-white px-4 py-3 text-center text-sm font-semibold text-brand-green-dark hover:bg-brand-cream"
+          >
+            Sign in
+          </Link>
+        </>
+      )}
+    </>
+  );
+
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal">
         <SeoJsonLd />
-        <div className="relative overflow-hidden border-b border-white/15 bg-brand-green py-2.5 shadow-sm">
-          <p className="sr-only">{siteConfig.promoMarquee}</p>
-          <div className="promo-marquee-track" aria-hidden>
-            {[0, 1].map((copy) => (
-              <span
-                key={copy}
-                className="inline-flex shrink-0 items-center whitespace-nowrap px-10 text-xs font-semibold tracking-wide text-white sm:text-sm"
-              >
-                {promoBeforeWealth}
-                <strong className="px-0.5 font-bold text-brand-gold-light">
-                  Wealth!
-                </strong>
-                {promoAfterWealth}
-                <span className="pl-10 text-brand-gold-light/95" aria-hidden>
-                  ✦
-                </span>
-              </span>
-            ))}
-          </div>
-        </div>
         <header className="sticky top-0 z-50 border-b border-brand-green/15 bg-brand-cream/92 shadow-[inset_0_-1px_0_rgba(13,59,15,0.06)] backdrop-blur-md backdrop-saturate-150">
           <div className="h-1 shrink-0 bg-brand-green-dark" aria-hidden />
-          <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6 sm:py-4 md:gap-12">
+
+          <MobileStoreToolbar>{drawerExtras}</MobileStoreToolbar>
+
+          <div className="mx-auto hidden w-full max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6 sm:py-4 md:flex md:gap-12">
             <Link
               href="/"
-              className="flex min-w-0 flex-wrap items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
+              aria-label={`${siteConfig.name} — Home`}
+              className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90"
             >
               <span
                 className="relative isolate flex size-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-cream ring-1 ring-brand-green/8 md:size-14 lg:size-[60px]"
@@ -115,10 +153,9 @@ export default async function RootLayout({
                   priority
                 />
               </span>
-              <BrandWordmark className="min-w-0 leading-tight tracking-tight" />
             </Link>
             <nav
-              className="hidden h-11 shrink-0 items-center gap-0 md:flex lg:gap-1"
+              className="flex h-11 shrink-0 items-center gap-0 lg:gap-1"
               aria-label="Primary"
             >
               <div className="flex items-center lg:gap-0.5">
@@ -155,6 +192,7 @@ export default async function RootLayout({
                 className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
                 aria-hidden
               />
+              <WishlistNavLink className="-mx-0.5" />
               <CartNavLink className="-mx-0.5" />
               <span
                 className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
@@ -168,113 +206,72 @@ export default async function RootLayout({
                   Become a Distributor
                 </Link>
                 {currentUser ? (
-                  <form action={signOutAction} className="shrink-0">
-                    <button
-                      type="submit"
-                      className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                  <>
+                    <Link
+                      href="/account"
+                      prefetch={false}
+                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/28 bg-transparent px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-none transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
                     >
-                      Sign Out
-                    </button>
-                  </form>
+                      Account
+                    </Link>
+                    <form action={signOutAction} className="shrink-0">
+                      <button
+                        type="submit"
+                        className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                      >
+                        Sign Out
+                      </button>
+                    </form>
+                  </>
                 ) : (
-                  <Link
-                    href="/auth/sign-in"
-                    className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                  >
-                    Sign In
-                  </Link>
+                  <>
+                    <Link
+                      href="/auth/sign-up"
+                      prefetch={false}
+                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent px-4 py-2 text-sm font-semibold text-brand-green-dark underline-offset-4 hover:bg-brand-charcoal/4 hover:text-brand-green-dark hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                    >
+                      Join
+                    </Link>
+                    <Link
+                      href="/auth/sign-in"
+                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+                    >
+                      Sign In
+                    </Link>
+                  </>
                 )}
               </div>
             </nav>
           </div>
-          <nav
-            className="mx-auto flex w-full max-w-7xl items-center gap-2 overflow-x-auto border-t border-brand-green/10 bg-brand-cream/70 px-4 py-2.5 text-xs font-semibold backdrop-blur-sm sm:px-6 md:hidden"
-            aria-label="Primary mobile"
-          >
-            <div className="flex min-w-0 flex-1 items-center gap-1.5">
-              <Link
-                href="/products"
-                className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
-              >
-                Products
-              </Link>
-              <span className="text-brand-green-dark/25" aria-hidden>
-                |
-              </span>
-              <Link
-                href="/about"
-                className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
-              >
-                About
-              </Link>
-              {currentUser?.role === "admin" ? (
-                <>
-                  <span className="text-brand-green-dark/25" aria-hidden>
-                    |
-                  </span>
-                  <Link
-                    href="/admin"
-                    className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
-                  >
-                    Admin
-                  </Link>
-                </>
-              ) : null}
-              {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
-                <>
-                  <span className="text-brand-green-dark/25" aria-hidden>
-                    |
-                  </span>
-                  <Link
-                    href="/distributor"
-                    className="shrink-0 rounded-md px-2.5 py-1.5 font-medium text-brand-green-dark/90 hover:bg-brand-charcoal/5"
-                  >
-                    Partner
-                  </Link>
-                </>
-              ) : null}
-            </div>
-            <span className="text-brand-green-dark/25" aria-hidden>
-              |
-            </span>
-            <CartNavLink className="shrink-0" />
-            <span className="text-brand-green-dark/25" aria-hidden>
-              |
-            </span>
-            <Link
-              href="/become-distributor"
-              className="shrink-0 whitespace-nowrap rounded-md bg-brand-green px-3 py-1.5 text-white hover:bg-brand-green-dark"
-            >
-              Join program
-            </Link>
-            {currentUser ? (
-              <form action={signOutAction} className="shrink-0">
-                <button
-                  type="submit"
-                  className="cursor-pointer whitespace-nowrap rounded-md border border-brand-green-dark/30 bg-white px-3 py-1.5 text-[11px] font-semibold text-brand-green-dark hover:border-brand-green sm:text-xs"
+          <div className="relative overflow-hidden border-t border-white/15 bg-brand-green py-2 shadow-inner">
+            <p className="sr-only">{siteConfig.promoMarquee}</p>
+            <div className="promo-marquee-track" aria-hidden>
+              {[0, 1].map((copy) => (
+                <span
+                  key={copy}
+                  className="inline-flex shrink-0 items-center whitespace-nowrap px-10 text-[0.7rem] font-semibold tracking-wide text-white sm:text-xs"
                 >
-                  Sign Out
-                </button>
-              </form>
-            ) : (
-              <Link
-                href="/auth/sign-in"
-                className="shrink-0 rounded-md border border-brand-green-dark/30 bg-white px-3 py-1.5 font-semibold text-brand-green-dark hover:border-brand-green"
-              >
-                Sign In
-              </Link>
-            )}
-          </nav>
+                  {promoBeforeWealth}
+                  <strong className="px-0.5 font-bold text-brand-gold-light">Wealth!</strong>
+                  {promoAfterWealth}
+                  <span className="pl-10 text-brand-gold-light/95" aria-hidden>
+                    ✦
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
         </header>
         <Suspense fallback={null}>
           <ReferralLinkCapture />
         </Suspense>
         <ReferralShoppingBanner />
-        {children}
-        <section className="border-t border-brand-green/10 bg-white py-8">
-          <TrustIndicatorGrid />
-        </section>
-        <footer className="bg-brand-green-dark py-10 text-white">
+        <div className="flex flex-1 flex-col pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0">
+          {children}
+          <section className="border-t border-brand-green/10 bg-white py-8">
+            <TrustIndicatorGrid />
+          </section>
+          <footer className="bg-brand-green-dark py-10 text-white">
           <div className="container-shell grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
@@ -293,14 +290,17 @@ export default async function RootLayout({
                 <Link href="/products" className="hover:text-brand-gold-light">
                   Shop Products
                 </Link>
+                <Link href="/wishlist" prefetch={false} className="hover:text-brand-gold-light">
+                  Wishlist
+                </Link>
                 <Link href="/about" className="hover:text-brand-gold-light">
                   About Us
                 </Link>
                 <Link href="/become-distributor" className="hover:text-brand-gold-light">
                   Become A Distributor
                 </Link>
-                <Link href="/cart" className="hover:text-brand-gold-light">
-                  Cart & Checkout
+                <Link href="/account" prefetch={false} className="hover:text-brand-gold-light">
+                  My Account
                 </Link>
                 <Link href="/order-status" className="hover:text-brand-gold-light">
                   Track order
@@ -342,9 +342,11 @@ export default async function RootLayout({
             </p>
           </div>
         </footer>
+        </div>
+        <MobileBottomNav />
         <a
           href={`https://wa.me/${siteConfig.whatsappAi.replace("+", "")}?text=${encodeURIComponent("Hello! I'm interested in your products.")}`}
-          className="fixed bottom-5 right-5 z-50 inline-flex items-center justify-center rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition-colors hover:bg-[#20BA5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+          className="fixed bottom-[calc(6.25rem+env(safe-area-inset-bottom))] right-4 z-55 inline-flex items-center justify-center rounded-full bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition-colors hover:bg-[#20BA5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366] md:bottom-5 md:right-5"
           target="_blank"
           rel="noopener noreferrer"
         >

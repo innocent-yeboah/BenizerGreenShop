@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   className?: string;
+  variant?: "icon" | "accent";
 };
 
-export function CartNavLink({ className }: Props) {
+export function CartNavLink({ className, variant = "icon" }: Props) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -41,14 +42,22 @@ export function CartNavLink({ className }: Props) {
       aria-label={ariaLabel}
       title={ariaLabel}
       className={cn(
-        "relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-brand-green-dark ring-1 ring-transparent transition-colors hover:bg-brand-green/8 hover:text-brand-green hover:ring-brand-green/12 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
+        "relative shrink-0 items-center justify-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
+        variant === "accent"
+          ? "inline-flex h-11 w-11 rounded-full bg-brand-green-dark text-white shadow-md ring-1 ring-black/10 hover:bg-brand-green hover:text-white"
+          : "inline-flex h-10 w-10 rounded-lg text-brand-green-dark ring-1 ring-transparent hover:bg-brand-green/8 hover:text-brand-green hover:ring-brand-green/12",
         className,
       )}
     >
-      <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={2} aria-hidden />
+      <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={variant === "accent" ? 2.2 : 2} aria-hidden />
       {count > 0 ? (
         <span
-          className="absolute -right-0.5 -top-0.5 inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand-green px-1 text-[0.65rem] font-bold leading-none text-white tabular-nums ring-2 ring-brand-cream"
+          className={cn(
+            "absolute inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[0.65rem] font-bold leading-none text-white tabular-nums ring-2",
+            variant === "accent"
+              ? "-right-0.5 -top-0.5 bg-brand-gold-dark ring-brand-green-dark"
+              : "-right-0.5 -top-0.5 bg-brand-green ring-brand-cream",
+          )}
           aria-hidden
         >
           {count > 99 ? "99+" : count}

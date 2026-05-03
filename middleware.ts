@@ -10,7 +10,7 @@ async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? "";
 
   if (!supabaseUrl || !supabaseKey) {
-    if (pathname.startsWith("/admin") || pathname.startsWith("/distributor")) {
+    if (pathname.startsWith("/admin") || pathname.startsWith("/distributor") || pathname.startsWith("/account")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next({ request });
@@ -50,7 +50,7 @@ async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
 
   const query = new URLSearchParams({ next: pathname }).toString();
 
-  if ((pathname.startsWith("/admin") || pathname.startsWith("/distributor")) && !user) {
+  if ((pathname.startsWith("/admin") || pathname.startsWith("/distributor") || pathname.startsWith("/account")) && !user) {
     return NextResponse.redirect(new URL(`/auth/sign-in?${query}`, request.url));
   }
 
@@ -114,7 +114,36 @@ async function middlewareImpl(request: NextRequest): Promise<NextResponse> {
       return NextResponse.redirect(new URL("/become-distributor", request.url));
     }
 
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/account", request.url));
+  }
+
+  if (pathname.startsWith("/auth/sign-up") && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const role = profile?.role || "customer";
+
+    if (role === "admin") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
+    if (role === "distributor") {
+      const { data: distributor } = await supabase
+        .from("distributors")
+        .select("approved")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (distributor?.approved) {
+        return NextResponse.redirect(new URL("/distributor", request.url));
+      }
+      return NextResponse.redirect(new URL("/become-distributor", request.url));
+    }
+
+    return NextResponse.redirect(new URL("/account", request.url));
   }
 
   return response;
@@ -130,5 +159,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/distributor/:path*", "/auth/sign-in"],
+  matcher: ["/admin/:path*", "/distributor/:path*", "/account/:path*", "/auth/sign-in", "/auth/sign-up"],
 };

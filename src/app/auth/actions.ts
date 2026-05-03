@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { customerSignUpSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/server";
 import { getRequestOrigin } from "@/lib/request-origin";
 
@@ -62,7 +63,7 @@ export async function signInAction(formData: FormData) {
     redirect("/become-distributor");
   }
 
-  redirect("/");
+  redirect("/account");
 }
 
 export async function signOutAction() {
@@ -89,4 +90,42 @@ export async function requestPasswordResetAction(formData: FormData) {
   }
 
   redirect("/auth/forgot-password?sent=1");
+}
+
+export async function signUpAction(formData: FormData) {
+  const fullName = String(formData.get("fullName") || "").trim();
+  const email = String(formData.get("email") || "")
+    .trim()
+    .toLowerCase();
+  const password = String(formData.get("password") || "").trim();
+
+  const parsed = customerSignUpSchema.safeParse({ fullName, email, password });
+  if (!parsed.success) {
+    const msg = parsed.error.issues[0]?.message ?? "Check the form and try again.";
+    redirect(`/auth/sign-up?error=${encodeURIComponent(msg)}`);
+  }
+
+  const supabase = await createClient();
+  const origin = await getRequestOrigin();
+
+  const { data, error } = await supabase.auth.signUp({
+    email: parsed.data.email,
+    password: parsed.data.password,
+    options: {
+      emailRedirectTo: `${origin}/auth/sign-in`,
+      data: {
+        full_name: parsed.data.fullName,
+      },
+    },
+  });
+
+  if (error) {
+    redirect(`/auth/sign-up?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (data.session) {
+    redirect("/account");
+  }
+
+  redirect("/auth/sign-up?notice=confirm_email");
 }
