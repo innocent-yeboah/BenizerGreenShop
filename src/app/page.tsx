@@ -5,14 +5,13 @@ import {
   distributorPackages,
   type DistributorPackageTier,
   products,
-  siteConfig,
   siteTestimonials,
 } from "@/lib/site-data";
 import { cn, currencyFormatter } from "@/lib/utils";
 import { getCurrentUserWithRole } from "@/lib/auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { BrandWordmark } from "@/components/brand-wordmark";
+import { HomeHero } from "@/components/home-hero";
 import { HeroSlider } from "@/components/hero-slider";
 import { HomeHighlightStats } from "@/components/home-highlight-stats";
 import { TestimonialsSection } from "@/components/testimonials-section";
@@ -23,6 +22,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const featured = products.filter((product) => product.featured);
+  const heroProduct = featured[0];
 
   let shareEarnHref: string = "/become-distributor";
   const userCtx = await getCurrentUserWithRole();
@@ -82,41 +82,7 @@ export default async function Home() {
   };
   return (
     <main className="flex-1">
-      <section className="border-b border-brand-green/10 bg-linear-to-b from-white to-brand-cream/35">
-        <div className="container-shell py-8 md:py-10">
-          <h1 className="sr-only">
-            {siteConfig.name} — {siteConfig.description}
-          </h1>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-green">{siteConfig.tagline}</p>
-          <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-            <div className="max-w-2xl">
-              <div aria-hidden>
-                <BrandWordmark size="lg" />
-              </div>
-              <p className="mt-3 text-sm leading-relaxed text-brand-charcoal/85 md:text-base">
-                {siteConfig.description}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Link href="/products" className="btn-primary">
-                  Shop products
-                </Link>
-                <Link href="/become-distributor" className="btn-secondary">
-                  Become a distributor
-                </Link>
-              </div>
-            </div>
-            <a
-              href={siteConfig.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-brand-green/20 bg-white px-5 py-3 text-sm font-semibold text-brand-green shadow-sm transition-colors hover:border-brand-green/40 hover:bg-brand-cream/60 lg:self-end"
-            >
-              <img src="/icons/social/instagram.svg" alt="" className="size-4" width={16} height={16} />
-              {siteConfig.social.instagramHandle}
-            </a>
-          </div>
-        </div>
-      </section>
+      <HomeHero heroProduct={heroProduct} />
 
       <HeroSlider />
 
@@ -147,16 +113,16 @@ export default async function Home() {
                 />
               </div>
               <div className="flex flex-1 flex-col p-6">
-              <p className="text-sm text-brand-green">{product.category}</p>
-              <h3 className="mt-2 text-xl font-bold">{product.shortTitle}</h3>
-              <p className="mt-1 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
-              <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
-              <div className="mt-4 flex gap-2">
-                <Link href={`/products/${product.slug}`} className="btn-primary px-4 py-2">
-                  View Details
-                </Link>
-                <AddToCartButton slug={product.slug} />
-              </div>
+                <p className="text-sm text-brand-green">{product.category}</p>
+                <h3 className="mt-2 text-xl font-bold">{product.shortTitle}</h3>
+                <p className="mt-1 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
+                <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
+                <div className="mt-4 flex gap-2">
+                  <Link href={`/products/${product.slug}`} className="btn-primary px-4 py-2">
+                    View Details
+                  </Link>
+                  <AddToCartButton slug={product.slug} />
+                </div>
               </div>
             </article>
           ))}
@@ -256,7 +222,6 @@ export default async function Home() {
       </section>
 
       <TestimonialsSection items={siteTestimonials} />
-
     </main>
   );
 }
