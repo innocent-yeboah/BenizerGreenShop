@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:admin": "node --env-file=.env.local scripts/seed-default-admin.mjs"
+    "seed:admin": "node --env-file=.env.local scripts/seed-default-admin.mjs",
+    "strip:product-footers": "node scripts/strip-miira-product-footers.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -35,6 +36,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
