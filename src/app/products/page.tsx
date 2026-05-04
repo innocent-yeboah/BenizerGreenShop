@@ -53,7 +53,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         </p>
       ) : null}
 
-      <section className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section id="categories" className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {list.map((product) => (
           <article
             key={product.slug}

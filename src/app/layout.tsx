@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ReferralLinkCapture } from "@/components/referral-link-capture";
 import { ReferralShoppingBanner } from "@/components/referral-shopping-banner";
-import { CartNavLink } from "@/components/cart-nav-link";
+import { DesktopStoreHeader } from "@/components/desktop-store-header";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { MobileStoreToolbar } from "@/components/mobile-store-toolbar";
 import { SocialLinks } from "@/components/social-links";
-import { WishlistNavLink } from "@/components/wishlist-nav-link";
 import { SeoJsonLd } from "@/components/seo-json-ld";
 import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
@@ -128,121 +126,12 @@ export default async function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal">
         <SeoJsonLd />
-        <header className="sticky top-0 z-50 border-b border-brand-green/15 bg-brand-cream/92 shadow-[inset_0_-1px_0_rgba(13,59,15,0.06)] backdrop-blur-md backdrop-saturate-150">
-          <div className="h-1 shrink-0 bg-brand-green-dark" aria-hidden />
-
+        <header className="sticky top-0 z-50 border-b border-neutral-200/90 bg-white/95 backdrop-blur-sm backdrop-saturate-150">
           <MobileStoreToolbar>{drawerExtras}</MobileStoreToolbar>
 
-          <div className="mx-auto hidden w-full max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6 sm:py-4 md:flex md:gap-12">
-            <Link
-              href="/"
-              aria-label={`${siteConfig.name} — Home`}
-              className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90"
-            >
-              <span
-                className="relative isolate flex size-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-cream ring-1 ring-brand-green/8 md:size-14 lg:size-[60px]"
-                aria-hidden
-              >
-                <Image
-                  src="/benizer-logo.png"
-                  alt=""
-                  width={84}
-                  height={84}
-                  className="h-full w-full scale-[1.02] object-contain mix-blend-darken"
-                  priority
-                />
-              </span>
-            </Link>
-            <nav
-              className="flex h-11 shrink-0 items-center gap-0 lg:gap-1"
-              aria-label="Primary"
-            >
-              <div className="flex items-center lg:gap-0.5">
-                <Link
-                  href="/products"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                >
-                  Products
-                </Link>
-                <Link
-                  href="/about"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                >
-                  About Us
-                </Link>
-                {currentUser?.role === "admin" ? (
-                  <Link
-                    href="/admin"
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                  >
-                    Admin
-                  </Link>
-                ) : null}
-                {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
-                  <Link
-                    href="/distributor"
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-brand-green-dark/88 transition-colors hover:bg-brand-charcoal/4 hover:text-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                  >
-                    Partner
-                  </Link>
-                ) : null}
-              </div>
-              <span
-                className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
-                aria-hidden
-              />
-              <WishlistNavLink className="-mx-0.5" />
-              <CartNavLink className="-mx-0.5" />
-              <span
-                className="mx-2 hidden h-6 w-px shrink-0 bg-brand-green-dark/14 sm:block lg:mx-3"
-                aria-hidden
-              />
-              <div className="flex items-center gap-2 pl-0.5 sm:gap-3">
-                <Link
-                  href="/become-distributor"
-                  className="inline-flex shrink-0 items-center justify-center rounded-lg bg-brand-green px-4 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-brand-green-dark/10 transition-colors hover:bg-brand-green-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                >
-                  Become a Distributor
-                </Link>
-                {currentUser ? (
-                  <>
-                    <Link
-                      href="/account"
-                      prefetch={false}
-                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/28 bg-transparent px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-none transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                    >
-                      Account
-                    </Link>
-                    <form action={signOutAction} className="shrink-0">
-                      <button
-                        type="submit"
-                        className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                      >
-                        Sign Out
-                      </button>
-                    </form>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/auth/sign-up"
-                      prefetch={false}
-                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent px-4 py-2 text-sm font-semibold text-brand-green-dark underline-offset-4 hover:bg-brand-charcoal/4 hover:text-brand-green-dark hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                    >
-                      Join
-                    </Link>
-                    <Link
-                      href="/auth/sign-in"
-                      className="inline-flex shrink-0 items-center justify-center rounded-lg border border-brand-green-dark/25 bg-white/80 px-4 py-2 text-sm font-semibold text-brand-green-dark shadow-sm transition-colors hover:border-brand-green hover:bg-brand-green/6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
-                    >
-                      Sign In
-                    </Link>
-                  </>
-                )}
-              </div>
-            </nav>
-          </div>
-          <div className="relative overflow-hidden border-t border-white/15 bg-brand-green py-2 shadow-inner">
+          <DesktopStoreHeader currentUser={currentUser} />
+
+          <div className="relative overflow-hidden border-t border-neutral-100 bg-brand-green py-2 shadow-inner">
             <p className="sr-only">{siteConfig.promoMarquee}</p>
             <div className="promo-marquee-track" aria-hidden>
               {[0, 1].map((copy) => (
@@ -288,6 +177,9 @@ export default async function RootLayout({
                 </Link>
                 <Link href="/wishlist" prefetch={false} className="hover:text-brand-gold-light">
                   Wishlist
+                </Link>
+                <Link href="/contact" className="hover:text-brand-gold-light">
+                  Contact us
                 </Link>
                 <Link href="/about" className="hover:text-brand-gold-light">
                   About Us

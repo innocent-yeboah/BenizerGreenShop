@@ -84,7 +84,8 @@ export function MobileStoreToolbar({ children }: Props) {
                 <DrawerLinkRow href="/products">Shop</DrawerLinkRow>
                 <DrawerLinkRow href="/cart">Cart</DrawerLinkRow>
                 <DrawerLinkRow href="/wishlist">Wishlist</DrawerLinkRow>
-                <DrawerLinkRow href="/about">Our story</DrawerLinkRow>
+                <DrawerLinkRow href="/about">About</DrawerLinkRow>
+                <DrawerLinkRow href="/contact">Contact</DrawerLinkRow>
                 <DrawerLinkRow href="/order-status">Track order</DrawerLinkRow>
                 <DrawerLinkRow href="/become-distributor">Become a distributor</DrawerLinkRow>
                 <DrawerLinkRow href="/account">Account</DrawerLinkRow>
@@ -104,7 +105,7 @@ export function MobileStoreToolbar({ children }: Props) {
       : null;
 
   return (
-    <div className="border-b border-brand-green/10 md:hidden">
+    <div className="border-b border-neutral-200 bg-white md:hidden">
       <div className="relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-3 sm:px-4">
         <div className="flex min-w-0 shrink items-center gap-1.5 sm:gap-2">
           <button
@@ -115,7 +116,7 @@ export function MobileStoreToolbar({ children }: Props) {
               setMenuOpen((v) => !v);
               setSearchOpen(false);
             }}
-            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-brand-green/14 bg-white/85 text-brand-green-dark shadow-sm hover:bg-brand-cream/80 focus-visible:outline-2 focus-visible:outline-brand-green"
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-800 shadow-sm hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-neutral-900"
           >
             {menuOpen ? (
               <X className="size-[22px]" aria-hidden strokeWidth={2} />
@@ -126,13 +127,13 @@ export function MobileStoreToolbar({ children }: Props) {
           </button>
 
           <Link href="/" className="shrink-0" aria-label={`${siteConfig.name} — Home`}>
-            <span className="relative isolate flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-cream ring-1 ring-brand-green/10">
+            <span className="relative isolate flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-50 ring-1 ring-neutral-200">
               <Image
                 src="/benizer-logo.png"
                 alt=""
                 width={72}
                 height={72}
-                className="h-full w-full scale-[1.02] object-contain mix-blend-darken"
+                className="h-full w-full scale-[1.02] object-contain mix-blend-multiply"
                 priority
               />
             </span>
@@ -147,7 +148,7 @@ export function MobileStoreToolbar({ children }: Props) {
               setSearchOpen((v) => !v);
               setMenuOpen(false);
             }}
-            className="inline-flex size-11 items-center justify-center rounded-xl text-brand-green-dark hover:bg-brand-green/8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green"
+            className="inline-flex size-11 items-center justify-center rounded-xl text-neutral-800 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
           >
             <Search className="size-[22px]" aria-hidden strokeWidth={2} />
             <span className="sr-only">{searchOpen ? "Close search" : "Search products"}</span>
@@ -158,7 +159,7 @@ export function MobileStoreToolbar({ children }: Props) {
       </div>
 
       {searchOpen ? (
-        <div className="border-t border-brand-green/10 bg-brand-cream/55 px-3 py-3">
+        <div className="border-t border-neutral-200 bg-neutral-50/90 px-3 py-3">
           <InlineMobileProductSearch />
         </div>
       ) : null}

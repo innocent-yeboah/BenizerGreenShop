@@ -29,7 +29,7 @@ const STATS: Stat[] = [
   },
   {
     title: "Fast shipping",
-    subtitle: "Tamale · Accra · nationwide Ghana",
+    subtitle: "Nationwide",
     icon: "truck",
     iconColor: "text-sky-600",
     iconBg: "bg-sky-600/14",

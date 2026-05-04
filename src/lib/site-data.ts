@@ -9,7 +9,7 @@ export const siteConfig = {
   /** Homepage structure inspired by professional supplement storefronts (e.g. Revobit-style funnels). */
   homePage: {
     heroEyebrow:
-      "Organic supplements • Authentic sourcing • Tamale & Accra fulfilment",
+      "Organic supplements • Authentic sourcing • Nationwide fulfilment",
     heroTitle: "Wellness clients can feel.",
     heroTitleAccent: "Supply partners can scale.",
     heroLead:

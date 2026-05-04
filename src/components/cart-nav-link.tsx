@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   className?: string;
-  variant?: "icon" | "accent";
+  variant?: "icon" | "accent" | "minimal";
 };
 
 export function CartNavLink({ className, variant = "icon" }: Props) {
@@ -45,18 +45,26 @@ export function CartNavLink({ className, variant = "icon" }: Props) {
         "relative shrink-0 items-center justify-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green",
         variant === "accent"
           ? "inline-flex h-11 w-11 rounded-full bg-brand-green-dark text-white shadow-md ring-1 ring-black/10 hover:bg-brand-green hover:text-white"
-          : "inline-flex h-10 w-10 rounded-lg text-brand-green-dark ring-1 ring-transparent hover:bg-brand-green/8 hover:text-brand-green hover:ring-brand-green/12",
+          : variant === "minimal"
+            ? "inline-flex h-10 w-10 rounded-full text-neutral-800 transition-opacity hover:opacity-65 focus-visible:outline-neutral-900"
+            : "inline-flex h-10 w-10 rounded-lg text-brand-green-dark ring-1 ring-transparent hover:bg-brand-green/8 hover:text-brand-green hover:ring-brand-green/12",
         className,
       )}
     >
-      <ShoppingCart className="h-[22px] w-[22px]" strokeWidth={variant === "accent" ? 2.2 : 2} aria-hidden />
+      <ShoppingCart
+        className="h-[22px] w-[22px]"
+        strokeWidth={variant === "accent" ? 2.2 : variant === "minimal" ? 1.5 : 2}
+        aria-hidden
+      />
       {count > 0 ? (
         <span
           className={cn(
             "absolute inline-flex min-h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[0.65rem] font-bold leading-none text-white tabular-nums ring-2",
             variant === "accent"
               ? "-right-0.5 -top-0.5 bg-brand-gold-dark ring-brand-green-dark"
-              : "-right-0.5 -top-0.5 bg-brand-green ring-brand-cream",
+              : variant === "minimal"
+                ? "-right-0.5 -top-0.5 bg-neutral-900 ring-white"
+                : "-right-0.5 -top-0.5 bg-brand-green ring-brand-cream",
           )}
           aria-hidden
         >
