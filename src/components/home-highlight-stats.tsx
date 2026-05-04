@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Revobit-style four pillars — localized for Benizer (Ghana delivery, organic focus). */
+/** Homepage highlight pillars — delivery, organic focus, rewards. */
 type Stat = {
   title: string;
   subtitle: string;

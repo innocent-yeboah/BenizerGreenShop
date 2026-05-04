@@ -51,7 +51,7 @@ export default async function Home() {
       price: "text-emerald-950",
       blurb: "text-emerald-800/80",
     },
-    revocare: {
+    promo: {
       card: "border-2 border-teal-500/55 bg-linear-to-br from-teal-50 via-cyan-50/90 to-teal-100/70 shadow-[0_12px_36px_-16px_rgba(13,148,136,0.35)] ring-1 ring-teal-400/30",
       bar: "bg-linear-to-r from-teal-500 to-cyan-600",
       label: "text-teal-950",

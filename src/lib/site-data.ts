@@ -6,7 +6,7 @@ export const siteConfig = {
     "Your Health is your Wealth! Starts Now - Organic Wellness + Distributor Rewards",
   description:
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
-  /** Homepage structure inspired by professional supplement storefronts (e.g. Revobit-style funnels). */
+  /** Homepage funnel sections (hero, slider, highlights, packages). */
   homePage: {
     heroEyebrow:
       "Organic supplements • Authentic sourcing • Nationwide fulfilment",
@@ -37,8 +37,6 @@ export const siteConfig = {
   email: "benizergreens@gmail.com",
   social: {
     tiktok: "https://www.tiktok.com/@benizer.green.shop",
-    facebook: "https://www.facebook.com/Starlight94.co/",
-    instagram: "https://www.instagram.com/benizergreenshp/",
   },
 };
 
@@ -326,7 +324,7 @@ export const trustIndicators = [
 ];
 
 /** Distributor starter tiers (aligned with homepage package cards). */
-export const distributorPackageTiers = ["revocare", "starter", "bronze", "silver", "gold"] as const;
+export const distributorPackageTiers = ["promo", "starter", "bronze", "silver", "gold"] as const;
 export type DistributorPackageTier = (typeof distributorPackageTiers)[number];
 
 export type DistributorPackage = {
@@ -355,14 +353,14 @@ export type DistributorPackage = {
 
 export const distributorPackages: DistributorPackage[] = [
   {
-    tier: "revocare",
-    name: "Revocare",
+    tier: "promo",
+    name: "Intro promo",
     price: 350,
-    blurb: "Promo entry",
+    blurb: "Entry tier",
     usdApprox: 29,
     boxes: 0,
     pv: 50,
-    subtitle: "Revocare promo package",
+    subtitle: "Intro distributor promo",
     quantityNote: "Half product",
     promo: true,
   },

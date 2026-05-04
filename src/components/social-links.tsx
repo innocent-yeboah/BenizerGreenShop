@@ -7,7 +7,7 @@ type Props = {
 };
 
 export function SocialLinks({ variant = "footer", className }: Props) {
-  const { tiktok, facebook, instagram } = siteConfig.social;
+  const { tiktok } = siteConfig.social;
   const linkClass =
     variant === "footer"
       ? "inline-flex items-center gap-2 rounded-lg text-sm text-white/90 transition-colors hover:text-brand-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
@@ -28,24 +28,6 @@ export function SocialLinks({ variant = "footer", className }: Props) {
       >
         <img src="/icons/social/tiktok.svg" alt="" className={iconClass} width={20} height={20} />
         <span>TikTok</span>
-      </a>
-      <a
-        href={facebook}
-        className={linkClass}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img src="/icons/social/facebook.svg" alt="" className={iconClass} width={20} height={20} />
-        <span>Facebook</span>
-      </a>
-      <a
-        href={instagram}
-        className={linkClass}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img src="/icons/social/instagram.svg" alt="" className={iconClass} width={20} height={20} />
-        <span>Instagram</span>
       </a>
     </div>
   );

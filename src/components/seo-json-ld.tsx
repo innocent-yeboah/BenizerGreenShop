@@ -14,11 +14,7 @@ export function SeoJsonLd() {
       logo: `${url}/benizer-logo.png`,
       description: siteConfig.description,
       email: siteConfig.email,
-      sameAs: [
-        siteConfig.social.instagram,
-        siteConfig.social.facebook,
-        siteConfig.social.tiktok,
-      ].filter(Boolean),
+      sameAs: [siteConfig.social.tiktok].filter(Boolean),
       contactPoint: [
         {
           "@type": "ContactPoint",
