@@ -8,14 +8,19 @@ export const siteConfig = {
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
   /** Homepage structure inspired by professional supplement storefronts (e.g. Revobit-style funnels). */
   homePage: {
-    welcomeBar: "Welcome to your wellness store!",
-    heroEyebrow: "Ready for formulations you trust—delivered fast?",
-    heroTitle: "Your wellness comeback starts now",
-    heroTitleAccent: "— with Benizer.",
-    heroBody:
-      "You're done with watered-down formulas and stalled deliveries—lock in trusted organic supplements with rapid fulfillment across Tamale & Accra. Ready to monetize momentum? Become a distributor: exclusive bundle pricing, hands-on guidance, and income on every repeat order your buyers place.",
-    primaryCta: "Shop products",
-    secondaryCta: "Become a distributor",
+    heroEyebrow:
+      "Organic supplements • Authentic sourcing • Tamale & Accra fulfilment",
+    heroTitle: "Wellness clients can feel.",
+    heroTitleAccent: "Supply partners can scale.",
+    heroLead:
+      "Benizer Green Shop equips serious retailers and distributors with authenticated MiiraCare lines, disciplined logistics, and a partnership model engineered for recurring revenue—not one-off excuses.",
+    heroPoints: [
+      "Clinical-grade storytelling meets lifestyle demand: curated SKUs your buyers reorder with confidence.",
+      "Regional fulfilment that respects timelines across Ghana—ideal for flagship clinics, boutiques, and growing teams.",
+      "Distributor economics that compound: structured bundles, onboarding guidance, and upside as loyal accounts mature.",
+    ],
+    primaryCta: "Shop the catalogue",
+    secondaryCta: "Partner as a distributor",
     transformTitle: "Transform your future",
     discountBandEyebrow: "Member pricing",
     discountBandTitle: "Get 40% distributor pricing on product bundles!",
@@ -34,8 +39,6 @@ export const siteConfig = {
     tiktok: "https://www.tiktok.com/@benizer.green.shop",
     facebook: "https://www.facebook.com/Starlight94.co/",
     instagram: "https://www.instagram.com/benizergreenshp/",
-    /** Display handle (profile: benizergreenshp) */
-    instagramHandle: "@benizergreenshp",
   },
 };
 
