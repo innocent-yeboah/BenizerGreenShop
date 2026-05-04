@@ -21,7 +21,6 @@ export const siteConfig = {
     ],
     primaryCta: "Shop the catalogue",
     secondaryCta: "Partner as a distributor",
-    transformTitle: "Transform your future",
     discountBandEyebrow: "Member pricing",
     discountBandTitle: "Get 40% distributor pricing on product bundles!",
     discountBandSubtitle:
