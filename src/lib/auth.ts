@@ -38,6 +38,15 @@ export const getCurrentUserWithRole = cache(async () => {
       fullName: profile?.full_name || "",
     };
   } catch (e) {
+    const err = e as { message?: string; digest?: string };
+    const msg = err?.message ?? String(e);
+    if (
+      err?.digest === "DYNAMIC_SERVER_USAGE" ||
+      msg.includes("Dynamic server usage") ||
+      msg.includes("`cookies`")
+    ) {
+      return null;
+    }
     console.error("[auth] getCurrentUserWithRole:", e);
     return null;
   }

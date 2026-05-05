@@ -24,7 +24,7 @@ export function WishlistToggleButton({ slug, className, variant = "outline" }: P
   }, [slug]);
 
   useEffect(() => {
-    sync();
+    queueMicrotask(() => sync());
     window.addEventListener(WISHLIST_UPDATED_EVENT, sync);
     window.addEventListener("focus", sync);
     window.addEventListener("pageshow", sync);

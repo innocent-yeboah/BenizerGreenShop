@@ -40,7 +40,8 @@ export function OrderStatusForm() {
   const action = useAction(lookupOrder);
 
   useEffect(() => {
-    if (qpRef) setReference(qpRef);
+    if (!qpRef) return;
+    queueMicrotask(() => setReference(qpRef));
   }, [qpRef]);
 
   const data = action.result?.data as LookupPayload | undefined;

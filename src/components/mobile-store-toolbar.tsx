@@ -29,7 +29,7 @@ export function MobileStoreToolbar({ children }: Props) {
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    setPortalTarget(document.body);
+    queueMicrotask(() => setPortalTarget(document.body));
   }, []);
 
   useEffect(() => {

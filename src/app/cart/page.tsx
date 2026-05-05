@@ -36,11 +36,11 @@ export default function CartPage() {
   const checkout = useAction(createCheckoutSession);
 
   useEffect(() => {
-    setCart(readCart());
+    queueMicrotask(() => setCart(readCart()));
   }, []);
 
   useEffect(() => {
-    setReferralPrefill(getPersistedReferralCode());
+    queueMicrotask(() => setReferralPrefill(getPersistedReferralCode()));
     const sync = () => setReferralPrefill(getPersistedReferralCode());
     window.addEventListener(REFERRAL_UPDATED_EVENT, sync);
     return () => window.removeEventListener(REFERRAL_UPDATED_EVENT, sync);

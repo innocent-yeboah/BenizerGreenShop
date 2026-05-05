@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { siteConfig } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +27,7 @@ export function SocialLinks({ variant = "footer", className }: Props) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img src="/icons/social/tiktok.svg" alt="" className={iconClass} width={20} height={20} />
+        <Image src="/icons/social/tiktok.svg" alt="" width={20} height={20} className={iconClass} />
         <span>TikTok</span>
       </a>
     </div>

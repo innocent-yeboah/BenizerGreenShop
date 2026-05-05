@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
-import { getResend } from "@/lib/resend";
 import {
   checkoutSchema,
   distributorLeadSchema,
@@ -23,8 +22,6 @@ import {
 } from "@/lib/email-templates";
 import { parseOrderItemsJson } from "@/lib/order-email-notify";
 import { getTransactionalAdminEmail, sendTransactionalEmail } from "@/lib/transactional-email";
-
-const resend = getResend();
 
 const adminEmail = getTransactionalAdminEmail();
 
@@ -85,7 +82,7 @@ export const submitProductLead = actionClient
     });
 
     await sendTransactionalEmail({
-      to: [adminEmail],
+      to: [adminEmail.trim().toLowerCase()],
       subject: `New product lead: ${parsedInput.productInterest}`,
       html: `<p>${parsedInput.name} submitted a buyer lead.</p><p>${parsedInput.email} / ${parsedInput.phone}</p>`,
       text: [
@@ -121,38 +118,36 @@ export const submitDistributorLead = actionClient
       status: "new",
     });
 
-    if (resend) {
-      const adminMail = distributorApplicationAdminNotificationEmail({
-        applicantName: parsedInput.name,
-        applicantEmail: parsedInput.email,
-        applicantPhone: parsedInput.phone,
-        packageLine,
-        whyJoin: parsedInput.whyJoin,
-        salesExperience: parsedInput.salesExperience,
-      });
-      const applicantMail = distributorApplicationConfirmationEmail({
-        applicantName: parsedInput.name,
-        packageLine,
-        siteUrl: getPublicAppUrl(),
-      });
+    const adminMail = distributorApplicationAdminNotificationEmail({
+      applicantName: parsedInput.name,
+      applicantEmail: parsedInput.email,
+      applicantPhone: parsedInput.phone,
+      packageLine,
+      whyJoin: parsedInput.whyJoin,
+      salesExperience: parsedInput.salesExperience,
+    });
+    const applicantMail = distributorApplicationConfirmationEmail({
+      applicantName: parsedInput.name,
+      packageLine,
+      siteUrl: getPublicAppUrl(),
+    });
 
-      await Promise.all([
-        sendTransactionalEmail({
-          to: [adminEmail],
-          subject: adminMail.subject,
-          html: adminMail.html,
-          text: adminMail.text,
-          context: "distributor-lead-admin",
-        }),
-        sendTransactionalEmail({
-          to: [parsedInput.email],
-          subject: applicantMail.subject,
-          html: applicantMail.html,
-          text: applicantMail.text,
-          context: "distributor-lead-applicant",
-        }),
-      ]);
-    }
+    await Promise.all([
+      sendTransactionalEmail({
+        to: [adminEmail.trim().toLowerCase()],
+        subject: adminMail.subject,
+        html: adminMail.html,
+        text: adminMail.text,
+        context: "distributor-lead-admin",
+      }),
+      sendTransactionalEmail({
+        to: [parsedInput.email.trim().toLowerCase()],
+        subject: applicantMail.subject,
+        html: applicantMail.html,
+        text: applicantMail.text,
+        context: "distributor-lead-applicant",
+      }),
+    ]);
     revalidatePath("/admin/distributors");
     return { success: true };
   });
@@ -218,7 +213,8 @@ export const createCheckoutSession = actionClient
     let { error } = await supabase.from("orders").insert(insertPayload);
 
     if (error?.message && customerUserId && /user_id/i.test(error.message)) {
-      const { user_id: _omitUser, ...withoutUserLink } = insertPayload;
+      const { user_id, ...withoutUserLink } = insertPayload;
+      void user_id;
       ({ error } = await supabase.from("orders").insert(withoutUserLink));
     }
 
@@ -297,7 +293,7 @@ export const createCheckoutSession = actionClient
       appUrl,
     });
     await sendTransactionalEmail({
-      to: [parsedInput.customerEmail],
+      to: [parsedInput.customerEmail.trim().toLowerCase()],
       subject: customerMail.subject,
       html: customerMail.html,
       text: customerMail.text,

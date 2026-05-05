@@ -228,6 +228,17 @@ export default async function RootLayout({
               Product availability, formulations, and prices may change without notice. Distributor
               incentives apply only according to program rules shared with enrolled partners.
             </p>
+            <p className="mt-5 text-center text-[11px] text-white/50 md:text-xs">
+              Powered by{" "}
+              <a
+                href="https://buildwithinnocent.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-white/75 underline decoration-white/30 underline-offset-2 transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/80"
+              >
+                buildwithinnocent.com
+              </a>
+            </p>
           </div>
         </footer>
         </div>
