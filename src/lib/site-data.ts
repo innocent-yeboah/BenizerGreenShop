@@ -13,11 +13,11 @@ export const siteConfig = {
     heroTitle: "Wellness clients can feel.",
     heroTitleAccent: "Supply partners can scale.",
     heroLead:
-      "Benizer Green Shop equips serious retailers and distributors with authenticated MiiraCare lines, disciplined logistics, and a partnership model engineered for recurring revenue—not one-off excuses.",
+      "Benizer Green Shop helps retailers and distributors who take this seriously: real MiiraCare products, dependable delivery, and a partnership built for steady repeat orders—not one-hit deals.",
     heroPoints: [
-      "Clinical-grade storytelling meets lifestyle demand: curated SKUs your buyers reorder with confidence.",
-      "Regional fulfilment that respects timelines across Ghana—ideal for flagship clinics, boutiques, and growing teams.",
-      "Distributor economics that compound: structured bundles, onboarding guidance, and upside as loyal accounts mature.",
+      "Trust: A focused range your customers come back for.",
+      "Delivery: Fulfilment that keeps its promises across Ghana—clinics, boutiques, and teams on the rise.",
+      "Partnership: Clear bundles, help to get started, and room to grow as your accounts stick with you.",
     ],
     primaryCta: "Shop the catalogue",
     secondaryCta: "Partner as a distributor",
