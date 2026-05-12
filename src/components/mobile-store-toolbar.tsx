@@ -129,7 +129,7 @@ export function MobileStoreToolbar({ children }: Props) {
           <Link href="/" className="shrink-0" aria-label={`${siteConfig.name} — Home`}>
             <span className="relative isolate flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-50 ring-1 ring-neutral-200">
               <Image
-                src="/benizer-logo.png"
+                src="/benizer-logo.svg"
                 alt=""
                 width={72}
                 height={72}
