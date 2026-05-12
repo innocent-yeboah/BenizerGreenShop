@@ -7,8 +7,28 @@ type Props = {
   className?: string;
 };
 
+const ICONS = [
+  {
+    key: "facebook",
+    hrefKey: "facebook" as const,
+    label: "Facebook",
+    src: "/icons/social/facebook.svg",
+  },
+  {
+    key: "instagram",
+    hrefKey: "instagram" as const,
+    label: "Instagram",
+    src: "/icons/social/instagram.svg",
+  },
+  {
+    key: "tiktok",
+    hrefKey: "tiktok" as const,
+    label: "TikTok",
+    src: "/icons/social/tiktok.svg",
+  },
+];
+
 export function SocialLinks({ variant = "footer", className }: Props) {
-  const { tiktok } = siteConfig.social;
   const linkClass =
     variant === "footer"
       ? "inline-flex items-center gap-2 rounded-lg text-sm text-white/90 transition-colors hover:text-brand-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
@@ -19,17 +39,25 @@ export function SocialLinks({ variant = "footer", className }: Props) {
     variant === "footer" && "opacity-90 invert",
   );
 
+  const links = ICONS.map((item) => ({
+    ...item,
+    href: siteConfig.social[item.hrefKey]?.trim(),
+  })).filter((item) => Boolean(item.href));
+
   return (
     <div className={cn("flex flex-wrap gap-x-6 gap-y-3", className)}>
-      <a
-        href={tiktok}
-        className={linkClass}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Image src="/icons/social/tiktok.svg" alt="" width={20} height={20} className={iconClass} />
-        <span>TikTok</span>
-      </a>
+      {links.map(({ key, label, src, href }) => (
+        <a
+          key={key}
+          href={href}
+          className={linkClass}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image src={src} alt="" width={20} height={20} className={iconClass} />
+          <span>{label}</span>
+        </a>
+      ))}
     </div>
   );
 }

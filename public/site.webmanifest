@@ -1,0 +1,25 @@
+{
+  "name": "Benizer Green Shop",
+  "short_name": "Benizer",
+  "description": "Organic supplements, MiiraCare wellness & distributor-ready fulfilment.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff8e1",
+  "theme_color": "#1B5E20",
+  "lang": "en-GH",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

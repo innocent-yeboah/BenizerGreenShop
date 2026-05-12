@@ -60,7 +60,7 @@ export function HeroSlider() {
         aria-hidden
       />
 
-      <div className="container-shell relative z-10 flex min-h-[min(74vh,34rem)] flex-col justify-center py-12 pb-20 sm:min-h-[min(76vh,38rem)] sm:py-14 md:min-h-[min(82vh,44rem)] md:py-16 md:pb-24">
+      <div className="container-shell relative z-10 flex min-h-[min(74vh,34rem)] flex-col justify-center py-12 sm:min-h-[min(76vh,38rem)] sm:py-14 md:min-h-[min(82vh,44rem)] md:py-16">
         <div className="max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-green">
             {activeSlide.category}
@@ -93,23 +93,6 @@ export function HeroSlider() {
             {activeSlide.secondaryLabel}
           </Link>
         </div>
-      </div>
-
-      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full bg-black/10 px-3 py-2 backdrop-blur-sm md:bottom-7">
-        {slides.map((slide, index) => (
-          <button
-            key={slide.key}
-            type="button"
-            className={`h-2.5 rounded-full transition-all ${
-              index === activeIndex
-                ? "w-8 bg-brand-green"
-                : "w-2.5 bg-brand-green/45 hover:bg-brand-green/70"
-            }`}
-            onClick={() => setActiveIndex(index)}
-            aria-label={`Go to slide ${index + 1}: ${slide.alt}`}
-            aria-current={index === activeIndex ? "true" : undefined}
-          />
-        ))}
       </div>
 
       <p className="sr-only" aria-live="polite">

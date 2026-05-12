@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -11,13 +11,23 @@ import { SocialLinks } from "@/components/social-links";
 import { SeoJsonLd } from "@/components/seo-json-ld";
 import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
-import { clampMetaDescription, seoKeywords } from "@/lib/seo";
+import { homeMetaDescription, OG_SHARE_SIZE, seoKeywords } from "@/lib/seo";
 import { getCurrentUserWithRole } from "@/lib/auth";
 import { signOutAction } from "@/app/auth/actions";
 
 const siteUrl = getPublicAppUrl();
-const metaDescription = clampMetaDescription(siteConfig.description);
+const metaDescription = homeMetaDescription(siteConfig.name);
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const twitterSite = process.env.NEXT_PUBLIC_TWITTER_SITE?.trim();
+const twitterCreator = process.env.NEXT_PUBLIC_TWITTER_CREATOR?.trim();
+const asTwitterHandle = (h: string) => (h.startsWith("@") ? h : `@${h}`);
+const shareAlt = `${siteConfig.name} — organic wellness & distributors`;
+
+export const viewport: Viewport = {
+  themeColor: "#1B5E20",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -28,10 +38,21 @@ export const metadata: Metadata = {
   description: metaDescription,
   applicationName: siteConfig.name,
   keywords: seoKeywords,
-  authors: [{ name: siteConfig.name }],
+  authors: [{ name: siteConfig.name, url: siteUrl }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
   formatDetection: { email: true, telephone: true },
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
+    statusBarStyle: "default",
+  },
   ...(googleVerification
     ? {
         verification: {
@@ -45,11 +66,30 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: metaDescription,
+    images: [
+      {
+        url: "/opengraph-image",
+        width: OG_SHARE_SIZE.width,
+        height: OG_SHARE_SIZE.height,
+        alt: shareAlt,
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: metaDescription,
+    ...(twitterSite ? { site: asTwitterHandle(twitterSite) } : {}),
+    ...(twitterCreator ? { creator: asTwitterHandle(twitterCreator) } : {}),
+    images: [
+      {
+        url: "/twitter-image",
+        width: OG_SHARE_SIZE.width,
+        height: OG_SHARE_SIZE.height,
+        alt: shareAlt,
+      },
+    ],
   },
   robots: {
     index: true,
@@ -57,6 +97,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 };
@@ -193,6 +236,9 @@ export default async function RootLayout({
                 <Link href="/order-status" className="hover:text-brand-gold-light">
                   Track order
                 </Link>
+                <Link href="/cookies" className="hover:text-brand-gold-light">
+                  Cookies policy
+                </Link>
               </div>
             </div>
             <div>
@@ -218,15 +264,13 @@ export default async function RootLayout({
             <p className="text-center text-xs font-semibold tracking-wide text-white/80">
               © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
             </p>
-            <p className="mx-auto mt-4 max-w-3xl text-center text-[11px] leading-relaxed text-white/55 md:text-xs">
-              The information on this site is provided for general wellness and product awareness only.
-              It is not medical advice and does not replace consultation with a qualified healthcare
-              professional. Dietary supplements are not intended to diagnose, treat, cure, or prevent any
-              disease. Use products as directed and read labels carefully before purchase.
-            </p>
-            <p className="mx-auto mt-3 max-w-3xl text-center text-[11px] leading-relaxed text-white/55 md:text-xs">
-              Product availability, formulations, and prices may change without notice. Distributor
-              incentives apply only according to program rules shared with enrolled partners.
+            <p className="mt-3 text-center text-[11px] text-white/60 md:text-xs">
+              <Link
+                href="/cookies"
+                className="font-medium text-white/85 underline decoration-white/30 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/70"
+              >
+                Cookies policy
+              </Link>
             </p>
             <p className="mt-5 text-center text-[11px] text-white/50 md:text-xs">
               Powered by{" "}

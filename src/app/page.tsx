@@ -9,6 +9,7 @@ import {
   siteTestimonials,
 } from "@/lib/site-data";
 import { cn, currencyFormatter } from "@/lib/utils";
+import { homeMetaDescription, OG_SHARE_SIZE } from "@/lib/seo";
 import { getCurrentUserWithRole } from "@/lib/auth";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { AddToCartButton } from "@/components/add-to-cart-button";
@@ -18,7 +19,31 @@ import { HomeHighlightStats } from "@/components/home-highlight-stats";
 import { TestimonialsSection } from "@/components/testimonials-section";
 
 export const metadata: Metadata = {
+  title: {
+    absolute: `${siteConfig.name} — Organic supplements & trusted distributor fulfilment`,
+  },
+  description: homeMetaDescription(siteConfig.name),
   alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    type: "website",
+    title: `${siteConfig.name} — Trusted wellness & distributors`,
+    description: homeMetaDescription(siteConfig.name),
+    images: [
+      {
+        url: "/opengraph-image",
+        width: OG_SHARE_SIZE.width,
+        height: OG_SHARE_SIZE.height,
+        alt: `${siteConfig.name} storefront preview`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — Trusted wellness & distributors`,
+    description: homeMetaDescription(siteConfig.name),
+    images: ["/twitter-image"],
+  },
 };
 
 export default async function Home() {

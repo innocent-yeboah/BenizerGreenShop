@@ -35,6 +35,9 @@ export const siteConfig = {
   whatsappDirect: "0545753721",
   email: "benizergreens@gmail.com",
   social: {
+    /** Swap for your verified Meta Page URL if different. */
+    facebook: "https://www.facebook.com/benizergreenshop",
+    instagram: "https://www.instagram.com/benizer.green.shop/",
     tiktok: "https://www.tiktok.com/@benizer.green.shop",
   },
 };

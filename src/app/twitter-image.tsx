@@ -9,6 +9,7 @@ export const size = OG_SHARE_SIZE;
 
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+/** Social card image for `/twitter-image`; matches OG layout for identical previews everywhere. */
+export default function TwitterImage() {
   return new ImageResponse(<SeoOgBrandRoot />, { ...size });
 }

@@ -22,6 +22,11 @@ export function ProductJsonLd({ product }: { product: Product }) {
       url: pageUrl,
       priceCurrency: "GHS",
       price: product.price,
+      seller: {
+        "@type": "Organization",
+        name: siteConfig.name,
+        url: base,
+      },
       availability:
         product.stock > 0
           ? "https://schema.org/InStock"

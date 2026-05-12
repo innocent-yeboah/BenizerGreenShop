@@ -9,6 +9,7 @@ import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistToggleButton } from "@/components/wishlist-toggle-button";
 import { ProductJsonLd } from "@/components/product-json-ld";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-json-ld";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -55,6 +56,13 @@ export default async function ProductDetailsPage({ params }: Props) {
 
   return (
     <main className="container-shell py-14">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Products", path: "/products" },
+          { name: product.shortTitle, path: `/products/${product.slug}` },
+        ]}
+      />
       <ProductJsonLd product={product} />
       <section className="grid gap-8 rounded-3xl border border-brand-green/10 bg-white p-8 shadow-sm lg:grid-cols-2">
         <div className="flex flex-col gap-6">

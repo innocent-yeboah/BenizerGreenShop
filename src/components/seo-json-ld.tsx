@@ -3,35 +3,58 @@ import { siteConfig } from "@/lib/site-data";
 
 /** Organization + WebSite schema for richer search results */
 export function SeoJsonLd() {
-  const url = getPublicAppUrl();
+  const url = getPublicAppUrl().replace(/\/$/, "");
+  const phone = siteConfig.whatsappAi.startsWith("+")
+    ? siteConfig.whatsappAi
+    : `+${siteConfig.whatsappAi}`;
 
   const graph = [
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": `${url}/#organization`,
       name: siteConfig.name,
       url,
       logo: `${url}/benizer-logo.png`,
+      image: `${url}/benizer-logo.png`,
+      slogan: siteConfig.tagline,
       description: siteConfig.description,
       email: siteConfig.email,
-      sameAs: [siteConfig.social.tiktok].filter(Boolean),
+      telephone: phone,
+      areaServed: { "@type": "Country", name: "Ghana" },
+      sameAs: [
+        siteConfig.social.facebook,
+        siteConfig.social.instagram,
+        siteConfig.social.tiktok,
+      ].filter(Boolean),
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer support",
-          email: siteConfig.email,
-          telephone: siteConfig.whatsappDirect,
+          areaServed: "GH",
           availableLanguage: ["English"],
+          telephone: phone,
+          email: siteConfig.email,
         },
       ],
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": `${url}/#website`,
       name: siteConfig.name,
       url,
       description: siteConfig.description,
-      publisher: { "@type": "Organization", name: siteConfig.name, url },
+      publisher: { "@id": `${url}/#organization` },
+      inLanguage: "en-GH",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${url}/products?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
     },
   ];
 

@@ -6,6 +6,7 @@ import { clampMetaDescription } from "@/lib/seo";
 import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistToggleButton } from "@/components/wishlist-toggle-button";
+import { CatalogJsonLd } from "@/components/catalog-json-ld";
 
 export const metadata: Metadata = {
   title: "Wellness shop",
@@ -13,6 +14,14 @@ export const metadata: Metadata = {
     `Browse trusted organic supplements and daily wellness formulas from ${siteConfig.name}. Natural vitality, cellular support, and premium quality — ship-ready in Ghana and beyond.`,
   ),
   alternates: { canonical: "/products" },
+  openGraph: {
+    url: "/products",
+    type: "website",
+    title: `Wellness shop · ${siteConfig.name}`,
+    description: clampMetaDescription(
+      `Browse trusted organic supplements and daily wellness formulas from ${siteConfig.name}. Natural vitality, cellular support, and premium quality — ship-ready in Ghana and beyond.`,
+    ),
+  },
 };
 
 type Props = {
@@ -33,6 +42,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   return (
     <main className="container-shell pb-24 pt-10 md:pb-14 md:pt-14">
+      <CatalogJsonLd />
       <h1 className="text-4xl font-bold text-brand-green-dark">Best Selling Products</h1>
       <p className="mt-2 max-w-2xl text-brand-charcoal/80">
         Discover premium formulations designed to support daily wellness, natural balance, and measurable health outcomes.

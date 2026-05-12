@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SocialLinks } from "@/components/social-links";
 import { siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
 
@@ -47,6 +48,14 @@ export default function ContactPage() {
           >
             {siteConfig.email}
           </a>
+        </li>
+        <li>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+            Social
+          </p>
+          <div className="mt-2">
+            <SocialLinks variant="inline" />
+          </div>
         </li>
         <li>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">

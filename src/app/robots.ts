@@ -10,11 +10,13 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [
         "/admin",
+        "/account",
         "/api/",
         "/auth/",
         "/distributor/",
         "/cart/",
         "/order-status",
+        "/wishlist",
       ],
     },
     sitemap: `${base}/sitemap.xml`,

@@ -17,8 +17,30 @@ export const seoKeywords = [
   "wellness distributor",
   "premium supplements",
   "Miira Cell",
+  "MiiraCare",
+  "MiiraCoffee",
   "organic nutrition",
+  "supplements Ghana",
+  "Ayurvedic wellness Ghana",
+  "cellular health supplements",
 ];
+
+/** Shared dimensions for `opengraph-image` and `twitter-image` routes (Next.js OG). */
+export const OG_SHARE_SIZE = { width: 1200, height: 630 } as const;
+
+/** Keep generated share images readable (long site descriptions wrap poorly). */
+export function truncateForOgImage(text: string, maxChars: number): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= maxChars) return t;
+  return `${t.slice(0, maxChars - 1).trim()}…`;
+}
+
+export function homeMetaDescription(siteName: string): string {
+  return clampMetaDescription(
+    `${siteName} — authentic MiiraCare organic supplements & functional coffee across Ghana. ` +
+      "Shop curated wellness formulas or partner as a distributor with nationwide fulfilment.",
+  );
+}
 
 export function noIndexFollow(): NonNullable<Metadata["robots"]> {
   return { index: false, follow: true };
