@@ -199,92 +199,141 @@ export default async function RootLayout({
         <ReferralShoppingBanner />
         <div className="flex flex-1 flex-col pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-0">
           {children}
-          <footer className="bg-brand-green-dark py-10 text-white">
-          <div className="container-shell grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
-                {siteConfig.name}
-              </p>
-              <p className="mt-3 max-w-sm text-sm text-white/80">
-                Premium organic wellness products with trusted support and a
-                high-impact distributor opportunity.
-              </p>
+          <footer className="bg-brand-green-dark pt-12 pb-10 text-white md:pt-14">
+            <div className="container-shell grid gap-10 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-12">
+              <div className="lg:col-span-4">
+                <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
+                  {siteConfig.name}
+                </p>
+                <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/78">
+                  Premium organic wellness products with trusted support and a high-impact distributor
+                  opportunity.
+                </p>
+              </div>
+
+              <div className="lg:col-span-5">
+                <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
+                  Explore
+                </p>
+                <div className="mt-4 grid gap-8 sm:grid-cols-2">
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/48">Shop</p>
+                    <ul className="mt-2 flex flex-col gap-2 text-sm text-white/88">
+                      <li>
+                        <Link href="/products" className="transition-colors hover:text-brand-gold-light">
+                          Products
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/wishlist" prefetch={false} className="transition-colors hover:text-brand-gold-light">
+                          Wishlist
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/become-distributor" className="transition-colors hover:text-brand-gold-light">
+                          Become a distributor
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/48">
+                      Help & account
+                    </p>
+                    <ul className="mt-2 flex flex-col gap-2 text-sm text-white/88">
+                      <li>
+                        <Link href="/contact" className="transition-colors hover:text-brand-gold-light">
+                          Contact us
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/about" className="transition-colors hover:text-brand-gold-light">
+                          About
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/order-status" className="transition-colors hover:text-brand-gold-light">
+                          Track order
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/account" prefetch={false} className="transition-colors hover:text-brand-gold-light">
+                          My account
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-9 border-t border-white/10 pt-9 lg:col-span-3 lg:border-t-0 lg:pt-0">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
+                    Contact
+                  </p>
+                  <ul className="mt-3 flex flex-col gap-2.5 text-sm text-white/88">
+                    <li>
+                      <a
+                        href={`https://wa.me/${siteConfig.whatsappAi.replace("+", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-brand-gold-light"
+                      >
+                        WhatsApp · {siteConfig.whatsappDirect}
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href={`mailto:${siteConfig.email}`}
+                        className="break-all transition-colors hover:text-brand-gold-light"
+                      >
+                        {siteConfig.email}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
+                    Follow us
+                  </p>
+                  <div className="mt-3">
+                    <SocialLinks variant="footer" stack />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
-                Quick Links
-              </p>
-              <div className="mt-3 flex flex-col gap-2 text-sm">
-                <Link href="/products" className="hover:text-brand-gold-light">
-                  Shop Products
-                </Link>
-                <Link href="/wishlist" prefetch={false} className="hover:text-brand-gold-light">
-                  Wishlist
-                </Link>
-                <Link href="/contact" className="hover:text-brand-gold-light">
-                  Contact us
-                </Link>
-                <Link href="/about" className="hover:text-brand-gold-light">
-                  About Us
-                </Link>
-                <Link href="/become-distributor" className="hover:text-brand-gold-light">
-                  Become A Distributor
-                </Link>
-                <Link href="/account" prefetch={false} className="hover:text-brand-gold-light">
-                  My Account
-                </Link>
-                <Link href="/order-status" className="hover:text-brand-gold-light">
-                  Track order
-                </Link>
-                <Link href="/cookies" className="hover:text-brand-gold-light">
+
+            <div className="container-shell mt-12 border-t border-white/18 pt-8 md:mt-14 md:pt-10">
+              <div className="flex flex-col items-center justify-center gap-3 text-center text-[11px] leading-snug text-white/58 sm:flex-row sm:flex-wrap sm:text-xs">
+                <span className="text-white/80">
+                  © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+                </span>
+                <span className="hidden text-white/35 sm:inline" aria-hidden="true">
+                  ·
+                </span>
+                <Link
+                  href="/cookies"
+                  className="text-white/75 underline decoration-white/28 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/60"
+                >
                   Cookies policy
                 </Link>
+                <span className="hidden text-white/35 sm:inline" aria-hidden="true">
+                  ·
+                </span>
+                <span>
+                  Powered by{" "}
+                  <a
+                    href="https://buildwithinnocent.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-white/78 underline decoration-white/28 underline-offset-2 transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/60"
+                  >
+                    buildwithinnocent.com
+                  </a>
+                </span>
               </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
-                Contact
-              </p>
-              <div className="mt-3 space-y-2 text-sm text-white/85">
-                <p>WhatsApp: {siteConfig.whatsappDirect}</p>
-                <p>Email: {siteConfig.email}</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-gold-light">
-                Social
-              </p>
-              <div className="mt-3">
-                <SocialLinks variant="footer" />
-              </div>
-            </div>
-          </div>
-
-          <div className="container-shell mt-10 border-t border-white/15 pt-8">
-            <p className="text-center text-xs font-semibold tracking-wide text-white/80">
-              © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-            </p>
-            <p className="mt-3 text-center text-[11px] text-white/60 md:text-xs">
-              <Link
-                href="/cookies"
-                className="font-medium text-white/85 underline decoration-white/30 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/70"
-              >
-                Cookies policy
-              </Link>
-            </p>
-            <p className="mt-5 text-center text-[11px] text-white/50 md:text-xs">
-              Powered by{" "}
-              <a
-                href="https://buildwithinnocent.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-white/75 underline decoration-white/30 underline-offset-2 transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/80"
-              >
-                buildwithinnocent.com
-              </a>
-            </p>
-          </div>
-        </footer>
+          </footer>
         </div>
         <MobileBottomNav />
         <a

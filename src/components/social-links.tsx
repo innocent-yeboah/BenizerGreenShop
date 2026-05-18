@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   variant?: "footer" | "inline";
+  /** One link per row (recommended for footer side column). */
+  stack?: boolean;
   className?: string;
 };
 
@@ -45,7 +47,12 @@ export function SocialLinks({ variant = "footer", className }: Props) {
   })).filter((item) => Boolean(item.href));
 
   return (
-    <div className={cn("flex flex-wrap gap-x-6 gap-y-3", className)}>
+    <div
+      className={cn(
+        stack && variant === "footer" ? "flex flex-col gap-1" : "flex flex-wrap gap-x-6 gap-y-3",
+        className,
+      )}
+    >
       {links.map(({ key, label, src, href }) => (
         <a
           key={key}
