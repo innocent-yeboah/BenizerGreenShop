@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
+import { defaultSocialCardMetadata } from "@/lib/page-share-metadata";
 
 export const metadata: Metadata = {
   title: "Cookies policy",
@@ -9,6 +10,14 @@ export const metadata: Metadata = {
     `How ${siteConfig.name} uses cookies and similar storage on this website.`,
   ),
   alternates: { canonical: "/cookies" },
+  robots: { index: true, follow: true },
+  ...defaultSocialCardMetadata({
+    path: "/cookies",
+    title: "Cookies policy",
+    description: clampMetaDescription(
+      `How ${siteConfig.name} uses cookies and similar storage on this website.`,
+    ),
+  }),
 };
 
 export default function CookiesPolicyPage() {

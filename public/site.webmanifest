@@ -1,7 +1,9 @@
 {
+  "id": "/",
   "name": "Benizer Green Shop",
   "short_name": "Benizer",
   "description": "Organic supplements, MiiraCare wellness & distributor-ready fulfilment.",
+  "categories": ["shopping", "health", "lifestyle", "wellness"],
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

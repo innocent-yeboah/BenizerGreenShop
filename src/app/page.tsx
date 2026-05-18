@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     type: "website",
     title: `${siteConfig.name} — Trusted wellness & distributors`,
     description: homeMetaDescription(siteConfig.name),
+    siteName: siteConfig.name,
+    locale: "en_GH",
+    countryName: "Ghana",
     images: [
       {
         url: "/opengraph-image",

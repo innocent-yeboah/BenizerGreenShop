@@ -11,11 +11,16 @@ export function clampMetaDescription(text: string, max = 158): string {
 
 export const seoKeywords = [
   "Benizer Green Shop",
+  "Benizer Green Shop Ghana",
+  "benizergreenshop.com",
+  "organic supplements Ghana",
   "organic supplements",
   "natural wellness",
   "Ghana health supplements",
+  "wellness distributor Ghana",
   "wellness distributor",
   "premium supplements",
+  "buy supplements online Ghana",
   "Miira Cell",
   "MiiraCare",
   "MiiraCoffee",

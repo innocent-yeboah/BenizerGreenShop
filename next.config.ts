@@ -2,6 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "benizergreenshop.com" }],
+        destination: "https://www.benizergreenshop.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     // Browsers still request /favicon.ico; Next serves the B mark at /icon.svg.
     return [{ source: "/favicon.ico", destination: "/icon.svg" }];

@@ -8,6 +8,8 @@ export function ProductJsonLd({ product }: { product: Product }) {
   const ld = {
     "@context": "https://schema.org",
     "@type": "Product",
+    "@id": `${pageUrl}/#product`,
+    url: pageUrl,
     name: product.title,
     image: product.images.map((src) => (src.startsWith("http") ? src : `${base}${src}`)),
     description: [product.shortBenefit, product.tagline].join(" · "),
@@ -22,15 +24,16 @@ export function ProductJsonLd({ product }: { product: Product }) {
       url: pageUrl,
       priceCurrency: "GHS",
       price: product.price,
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@type": "Organization",
         name: siteConfig.name,
         url: base,
       },
-      availability:
-        product.stock > 0
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
     },
   };
 

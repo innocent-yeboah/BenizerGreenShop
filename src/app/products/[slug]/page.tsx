@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
-import { products } from "@/lib/site-data";
+import { products, siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
 import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
@@ -32,7 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: product.title,
       description,
       type: "website",
+      locale: "en_GH",
+      siteName: siteConfig.name,
       url: `/products/${product.slug}`,
+      countryName: "Ghana",
       images: [
         {
           url: product.images[0],

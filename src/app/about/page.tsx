@@ -4,6 +4,7 @@ import { BookOpen, HeartHandshake, Landmark, ShieldCheck, Users } from "lucide-r
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
+import { defaultSocialCardMetadata } from "@/lib/page-share-metadata";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -11,6 +12,13 @@ export const metadata: Metadata = {
     `${siteConfig.name} — wellness and wealth together. Trusted organic supplements, partner development, and distributor success.`,
   ),
   alternates: { canonical: "/about" },
+  ...defaultSocialCardMetadata({
+    path: "/about",
+    title: "About us",
+    description: clampMetaDescription(
+      `${siteConfig.name} — wellness and wealth together. Trusted organic supplements, partner development, and distributor success.`,
+    ),
+  }),
 };
 
 const values = [

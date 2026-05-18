@@ -18,6 +18,9 @@ import { signOutAction } from "@/app/auth/actions";
 const siteUrl = getPublicAppUrl();
 const metaDescription = homeMetaDescription(siteConfig.name);
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const bingVerification = process.env.BING_SITE_VERIFICATION?.trim();
+const facebookVerification = process.env.FACEBOOK_DOMAIN_VERIFICATION?.trim();
+const pinterestVerification = process.env.PINTEREST_SITE_VERIFICATION?.trim();
 const twitterSite = process.env.NEXT_PUBLIC_TWITTER_SITE?.trim();
 const twitterCreator = process.env.NEXT_PUBLIC_TWITTER_CREATOR?.trim();
 const asTwitterHandle = (h: string) => (h.startsWith("@") ? h : `@${h}`);
@@ -53,10 +56,19 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     statusBarStyle: "default",
   },
-  ...(googleVerification
+  ...(googleVerification || bingVerification || facebookVerification || pinterestVerification
     ? {
         verification: {
-          google: googleVerification,
+          ...(googleVerification ? { google: googleVerification } : {}),
+          ...(bingVerification || facebookVerification || pinterestVerification
+            ? {
+                other: {
+                  ...(bingVerification ? { "msvalidate.01": bingVerification } : {}),
+                  ...(facebookVerification ? { "facebook-domain-verification": facebookVerification } : {}),
+                  ...(pinterestVerification ? { "p:domain_verify": pinterestVerification } : {}),
+                },
+              }
+            : {}),
         },
       }
     : {}),
@@ -66,6 +78,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: metaDescription,
+    countryName: "Ghana",
     images: [
       {
         url: "/opengraph-image",

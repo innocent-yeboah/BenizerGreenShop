@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SocialLinks } from "@/components/social-links";
 import { siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
+import { defaultSocialCardMetadata } from "@/lib/page-share-metadata";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -10,6 +11,13 @@ export const metadata: Metadata = {
     `Reach ${siteConfig.name} — WhatsApp, email, and distributor enquiries.`,
   ),
   alternates: { canonical: "/contact" },
+  ...defaultSocialCardMetadata({
+    path: "/contact",
+    title: "Contact",
+    description: clampMetaDescription(
+      `Reach ${siteConfig.name} — WhatsApp, email, and distributor enquiries.`,
+    ),
+  }),
 };
 
 export default function ContactPage() {

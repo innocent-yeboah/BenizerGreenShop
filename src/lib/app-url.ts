@@ -1,9 +1,9 @@
 /**
  * Public URL for redirects and payment callbacks (Moolre, Paystack, Supabase).
  * Priority:
- * 1. NEXT_PUBLIC_APP_URL — canonical site URL (set on Vercel to your real domain, e.g. https://benizergreenshop.com)
+ * 1. NEXT_PUBLIC_APP_URL — canonical site URL (Vercel: https://www.benizergreenshop.com)
  * 2. PRODUCTION_CANONICAL_HOST — optional (Vercel Production only), when NEXT_PUBLIC_APP_URL is unset
- * 3. VERCEL_PROJECT_PRODUCTION_URL — on Vercel Production only; if *.vercel.app, we fall back to benizergreenshop.com for metadata/payments
+ * 3. VERCEL_PROJECT_PRODUCTION_URL — on Vercel Production only; if *.vercel.app, we fall back to www.benizergreenshop.com for metadata/payments
  * 4. NEXT_PUBLIC_SITE_URL — local dev; on Vercel, ignored if it still points to localhost
  * 5. VERCEL_URL — automatic on Vercel (preview/production deployment host)
  * 6. localhost for development
@@ -50,7 +50,7 @@ export function getPublicAppUrl(): string {
       const u = withHttpsIfNeeded(production);
       try {
         if (/\.vercel\.app$/i.test(new URL(u).hostname)) {
-          return "https://benizergreenshop.com";
+          return "https://www.benizergreenshop.com";
         }
       } catch {
         /* ignore */
