@@ -8,17 +8,11 @@ export const siteConfig = {
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
   /** Homepage funnel sections (hero, slider, highlights, packages). */
   homePage: {
-    heroEyebrow:
-      "Organic supplements • Authentic sourcing • Nationwide fulfilment",
-    heroTitle: "Wellness clients can feel.",
-    heroTitleAccent: "Supply partners can scale.",
-    heroLead:
-      "Benizer Green Shop helps retailers and distributors who take this seriously: real MiiraCare products, dependable delivery, and a partnership built for steady repeat orders—not one-hit deals.",
-    heroPoints: [
-      "Trust: A focused range your customers come back for.",
-      "Delivery: Fulfilment that keeps its promises across Ghana—clinics, boutiques, and teams on the rise.",
-      "Partnership: Clear bundles, help to get started, and room to grow as your accounts stick with you.",
-    ],
+    heroEyebrow: "MiiraCare · Ghana",
+    heroTitle: "Wellness that earns trust.",
+    heroTitleAccent: "",
+    heroLead: "",
+    heroPoints: [] as string[],
     primaryCta: "Shop the catalogue",
     secondaryCta: "Partner as a distributor",
     discountBandEyebrow: "Member pricing",
