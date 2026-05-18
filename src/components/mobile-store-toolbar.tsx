@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, Search, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { BrandSealMark } from "@/components/brand-seal";
 import { siteConfig } from "@/lib/site-data";
 import { CartNavLink } from "@/components/cart-nav-link";
 import { WishlistNavLink } from "@/components/wishlist-nav-link";
@@ -127,16 +127,7 @@ export function MobileStoreToolbar({ children }: Props) {
           </button>
 
           <Link href="/" className="shrink-0" aria-label={`${siteConfig.name} — Home`}>
-            <span className="relative isolate flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-50 ring-1 ring-neutral-200">
-              <Image
-                src="/benizer-logo.svg"
-                alt=""
-                width={72}
-                height={72}
-                className="h-full w-full scale-[1.02] object-contain mix-blend-multiply"
-                priority
-              />
-            </span>
+            <BrandSealMark variant="nav" priority className="size-11 sm:size-[2.75rem]" />
           </Link>
         </div>
 

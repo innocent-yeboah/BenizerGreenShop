@@ -8,7 +8,7 @@ export function SeoJsonLd() {
     ? siteConfig.whatsappAi
     : `+${siteConfig.whatsappAi}`;
 
-  const logoUrl = `${url}/benizer-logo.svg`;
+  const logoUrl = `${url}/branding/benizer-seal.png`;
 
   const organization = {
     "@context": "https://schema.org",

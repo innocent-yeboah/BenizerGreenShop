@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandSealMark } from "@/components/brand-seal";
 import { siteConfig } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,9 @@ export function HomeHero() {
         </p>
 
         <div className="mx-auto w-full max-w-3xl text-center lg:max-w-[52rem]">
+          <div className="flex justify-center pb-1 md:pb-2">
+            <BrandSealMark variant="hero" priority />
+          </div>
           {h.heroEyebrow.trim() ? (
             <p className="text-[10px] font-semibold uppercase leading-relaxed tracking-[0.28em] text-brand-green-dark/90 sm:text-[11px] sm:tracking-[0.32em] md:text-xs md:text-brand-gold-light md:[text-shadow:0_1px_3px_rgba(0,0,0,0.92)]">
               {h.heroEyebrow}

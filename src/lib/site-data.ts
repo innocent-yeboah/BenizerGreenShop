@@ -1,6 +1,8 @@
 export const siteConfig = {
   name: "Benizer Green Shop",
   tagline: "ORGANIC • NATURAL",
+  /** Seal strapline — pairs with nav lockup under the official mark */
+  brandLockupSubtitle: "Organic · Natural · Trusted",
   /** Scrolling banner above the header */
   promoMarquee:
     "Your Health is your Wealth! Starts Now - Organic Wellness + Distributor Rewards",

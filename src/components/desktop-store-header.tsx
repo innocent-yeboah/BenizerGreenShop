@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
+import { BrandSealMark } from "@/components/brand-seal";
 import { CartNavLink } from "@/components/cart-nav-link";
 import { HeaderProductSearch } from "@/components/header-product-search";
 import { WishlistNavLink } from "@/components/wishlist-nav-link";
@@ -20,24 +20,15 @@ export function DesktopStoreHeader({ currentUser }: { currentUser: SessionUser }
         <Link
           href="/"
           aria-label={`${siteConfig.name} — Home`}
-          className="group inline-flex items-center gap-3 transition-opacity hover:opacity-85"
+          className="group inline-flex min-w-0 items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
         >
-          <span className="relative isolate flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-50 ring-1 ring-neutral-200/80">
-            <Image
-              src="/benizer-logo.svg"
-              alt=""
-              width={72}
-              height={72}
-              className="h-full w-full scale-[1.02] object-contain mix-blend-multiply"
-              priority
-            />
-          </span>
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="font-accent text-xl font-semibold tracking-tight text-neutral-900">
-              Benizer
+          <BrandSealMark variant="nav" priority />
+          <span className="hidden min-w-0 flex-col justify-center gap-0.5 lg:flex">
+            <span className="truncate font-accent text-[1.0625rem] font-semibold tracking-[0.02em] text-neutral-900 xl:text-[1.125rem]">
+              Benizer Green Shop
             </span>
-            <span className="mt-1 text-[0.65rem] font-medium uppercase tracking-[0.28em] text-neutral-500">
-              Green Shop
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-neutral-500">
+              {siteConfig.brandLockupSubtitle}
             </span>
           </span>
         </Link>

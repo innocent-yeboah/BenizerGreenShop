@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
-    // Browsers still request /favicon.ico; Next serves the B mark at /icon.svg.
-    return [{ source: "/favicon.ico", destination: "/icon.svg" }];
+    // Browsers still request /favicon.ico — serve raster seal-derived icon.
+    return [{ source: "/favicon.ico", destination: "/favicon-32.png" }];
   },
   async headers() {
     return [

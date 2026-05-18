@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpen, HeartHandshake, Landmark, ShieldCheck, Users } from "lucide-react";
-import { BrandWordmark } from "@/components/brand-wordmark";
+import { BrandSealMark } from "@/components/brand-seal";
 import { siteConfig } from "@/lib/site-data";
 import { clampMetaDescription } from "@/lib/seo";
 import { defaultSocialCardMetadata } from "@/lib/page-share-metadata";
@@ -68,12 +68,20 @@ export default function AboutPage() {
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-gold-light/90">
             About us
           </p>
-          <div className="mt-4 max-w-3xl">
-            <BrandWordmark size="lg" tone="dark" />
-            <p className="mt-6 text-lg font-medium leading-relaxed text-white/92 md:text-xl">
-              Wellness and wealth, together. We supply trusted organic food supplements and develop partners, affiliates,
-              and distributors to succeed—with discipline, training, and a long-term view.
-            </p>
+          <div className="mt-6 flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start sm:gap-8 md:mt-8">
+            <BrandSealMark variant="aboutHero" />
+            <div className="min-w-0">
+              <p className="font-accent text-[1.85rem] font-semibold leading-tight tracking-tight text-white sm:text-[2rem] md:text-[2.25rem]">
+                Benizer Green Shop
+              </p>
+              <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.22em] text-brand-gold-light/88">
+                {siteConfig.brandLockupSubtitle}
+              </p>
+              <p className="mt-6 text-lg font-medium leading-relaxed text-white/92 md:text-xl">
+                Wellness and wealth, together. We supply trusted organic food supplements and develop partners, affiliates,
+                and distributors to succeed—with discipline, training, and a long-term view.
+              </p>
+            </div>
           </div>
           <blockquote className="mt-10 max-w-xl border-l-4 border-brand-gold-light bg-white/5 px-6 py-5 backdrop-blur-sm md:px-8 md:py-6">
             <p className="font-accent text-xl italic text-white/95 md:text-2xl">
