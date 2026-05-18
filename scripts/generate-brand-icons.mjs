@@ -1,6 +1,6 @@
 /**
- * Raster favicons / PWA icons from the canonical seal PNG.
- * Run after replacing public/branding/benizer-seal.png — npm run icons:brand
+ * Raster favicons / PWA icons from public/branding/benizer-seal.png (transparent circular seal).
+ * Run npm run brand:assets after replacing seal-screenshot.jpg / re-extracting the seal.
  */
 import { existsSync } from "fs";
 import { join } from "path";

@@ -1,0 +1,17 @@
+Canonical seal pipeline (transparent PNG ring / emblem):
+
+  seal-screenshot.jpg     — Full-page or wide screenshot source (preferred).
+  benizer-seal.png        — Extracted circular seal with alpha (site + JSON-LD logo).
+
+Regenerate after replacing the screenshot:
+
+  npm run brand:assets
+
+Or separately:
+
+  npm run brand:extract-seal
+  npm run icons:brand
+
+Tune crop if needed:
+
+  SEAL_CENTER_Y_RATIO=0.50 SEAL_BOX_RATIO=0.68 npm run brand:extract-seal
