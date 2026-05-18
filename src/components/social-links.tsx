@@ -30,10 +30,13 @@ const ICONS = [
   },
 ];
 
-export function SocialLinks({ variant = "footer", className }: Props) {
+export function SocialLinks({ variant = "footer", stack = false, className }: Props) {
   const linkClass =
     variant === "footer"
-      ? "inline-flex items-center gap-2 rounded-lg text-sm text-white/90 transition-colors hover:text-brand-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
+      ? cn(
+          "inline-flex items-center gap-2 rounded-lg text-sm text-white/90 transition-colors hover:text-brand-gold-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light",
+          stack && "w-full gap-3 py-1.5 sm:w-auto sm:py-1",
+        )
       : "inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:text-brand-green-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green";
 
   const iconClass = cn(

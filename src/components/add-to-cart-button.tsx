@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { CART_KEY, dispatchCartUpdated, type CartItem } from "@/lib/cart";
+import { cn } from "@/lib/utils";
 
 type Props = {
   slug: string;
   quantity?: number;
+  className?: string;
 };
 
-export function AddToCartButton({ slug, quantity = 1 }: Props) {
+export function AddToCartButton({ slug, quantity = 1, className }: Props) {
   const [label, setLabel] = useState("Add to Cart");
 
   return (
     <button
-      className="btn-ghost"
+      className={cn("btn-ghost", className)}
       onClick={() => {
         const raw = localStorage.getItem(CART_KEY);
         const existing: CartItem[] = raw ? JSON.parse(raw) : [];

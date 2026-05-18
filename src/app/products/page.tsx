@@ -63,32 +63,39 @@ export default async function ProductsPage({ searchParams }: Props) {
         </p>
       ) : null}
 
-      <section id="categories" className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section id="categories" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {list.map((product) => (
           <article
             key={product.slug}
-            className="surface-card lift-on-hover flex flex-col overflow-hidden rounded-2xl border-brand-gold/30 p-0 hover:border-brand-gold"
+            className="surface-card lift-on-hover flex flex-col overflow-hidden rounded-xl border-brand-gold/25 p-0 hover:border-brand-gold"
           >
-            <div className="relative aspect-square w-full bg-brand-cream">
+            <div className="relative aspect-4/3 w-full bg-brand-cream">
               <Image
                 src={product.images[0]}
                 alt={product.shortTitle}
                 fill
-                className="object-contain p-4"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-contain p-2 sm:p-3"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
             </div>
-            <div className="flex flex-1 flex-col p-6">
-              <p className="text-xs font-semibold uppercase text-brand-green">{product.category}</p>
-              <h2 className="mt-2 text-xl font-bold">{product.shortTitle}</h2>
-              <p className="mt-1 text-sm text-brand-charcoal/70">{product.shortBenefit}</p>
-              <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Link href={`/products/${product.slug}`} className="btn-primary px-4 py-2">
+            <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-green">{product.category}</p>
+              <h2 className="mt-1 text-[0.9375rem] font-semibold leading-snug text-brand-green-dark">{product.shortTitle}</h2>
+              <p className="mt-1 line-clamp-2 text-xs leading-snug text-brand-charcoal/70">{product.shortBenefit}</p>
+              <p className="mt-2.5 text-base font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <Link
+                  href={`/products/${product.slug}`}
+                  className="btn-primary min-h-9 shrink-0 px-3 py-2 text-xs font-semibold"
+                >
                   View Details
                 </Link>
-                <AddToCartButton slug={product.slug} />
-                <WishlistToggleButton slug={product.slug} />
+                <AddToCartButton slug={product.slug} className="min-h-9 px-3 py-2 text-xs font-semibold" />
+                <WishlistToggleButton
+                  slug={product.slug}
+                  variant="outline"
+                  className="rounded-full px-2.5 py-1 text-xs [&_svg]:size-4"
+                />
               </div>
             </div>
           </article>

@@ -56,9 +56,9 @@ function StatIcon({
     xmlns: "http://www.w3.org/2000/svg" as const,
     fill: "none" as const,
     viewBox: "0 0 24 24",
-    strokeWidth: 1.5,
+    strokeWidth: 1.65,
     stroke: "currentColor",
-    className: cn("h-9 w-9", className),
+    className: cn("h-[1.125rem] w-[1.125rem]", className),
     "aria-hidden": true as const,
   };
 
@@ -108,28 +108,30 @@ function StatIcon({
 
 export function HomeHighlightStats() {
   return (
-    <section className="border-y border-brand-green/10 bg-white py-10 md:py-12">
+    <section className="border-y border-brand-charcoal/7 bg-linear-to-b from-brand-cream/35 to-white py-7 md:py-8">
       <div className="container-shell">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map((item) => (
-            <div
+            <li
               key={item.title}
-              className="surface-card flex flex-col items-center rounded-2xl border border-brand-charcoal/6 bg-white px-5 py-6 text-center shadow-[0_12px_40px_-28px_rgba(13,59,15,0.2)] transition-transform hover:-translate-y-px"
+              className="flex items-start gap-3 rounded-xl border border-brand-charcoal/6 bg-white px-4 py-3 shadow-[0_4px_18px_-12px_rgba(13,59,15,0.18)] md:gap-3.5 md:py-3.5"
             >
               <div
                 className={cn(
-                  "mb-4 flex size-14 items-center justify-center rounded-full",
+                  "flex size-9 shrink-0 items-center justify-center rounded-full",
                   item.iconBg,
                   item.iconColor,
                 )}
               >
                 <StatIcon name={item.icon} />
               </div>
-              <p className={cn("text-lg font-bold capitalize", item.titleColor)}>{item.title}</p>
-              <p className="mt-1.5 text-sm font-medium leading-snug text-brand-charcoal/72">{item.subtitle}</p>
-            </div>
+              <div className="min-w-0 pt-0.5 text-left md:pt-px">
+                <p className={cn("text-sm font-semibold leading-tight tracking-tight", item.titleColor)}>{item.title}</p>
+                <p className="mt-1 text-xs leading-snug text-brand-charcoal/65">{item.subtitle}</p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

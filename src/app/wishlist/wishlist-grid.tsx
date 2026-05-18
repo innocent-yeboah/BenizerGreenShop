@@ -80,30 +80,30 @@ export function WishlistGrid() {
           Clear all
         </button>
       </div>
-      <section className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {wished.map((product) => (
           <article
             key={product.slug}
-            className="surface-card flex flex-col overflow-hidden rounded-2xl border-brand-gold/20 p-0"
+            className="surface-card flex flex-col overflow-hidden rounded-xl border-brand-gold/20 p-0"
           >
-            <div className="relative aspect-square w-full bg-brand-cream">
+            <div className="relative aspect-4/3 w-full bg-brand-cream">
               <Image
                 src={product.images[0]}
                 alt={product.shortTitle}
                 fill
-                className="object-contain p-5"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-contain p-2 sm:p-3"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
             </div>
-            <div className="flex flex-1 flex-col p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-brand-green">{product.category}</p>
-              <h2 className="mt-2 text-xl font-bold text-brand-green-dark">{product.shortTitle}</h2>
-              <p className="mt-4 text-lg font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Link href={`/products/${product.slug}`} className="btn-secondary px-4 py-2 text-sm">
+            <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-green">{product.category}</p>
+              <h2 className="mt-1 text-[0.9375rem] font-semibold leading-snug text-brand-green-dark">{product.shortTitle}</h2>
+              <p className="mt-2 text-base font-bold text-brand-green">{currencyFormatter.format(product.price)}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link href={`/products/${product.slug}`} className="btn-secondary min-h-9 px-3 py-2 text-xs font-semibold">
                   View
                 </Link>
-                <AddToCartButton slug={product.slug} />
+                <AddToCartButton slug={product.slug} className="min-h-9 px-3 py-2 text-xs font-semibold" />
               </div>
             </div>
           </article>
