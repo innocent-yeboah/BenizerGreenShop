@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   async redirects() {
     return [
+      // Common legacy/bookmark URLs that otherwise 404 in Search Console.
+      { source: "/privacy-policy", destination: "/privacy", permanent: true },
+      { source: "/shop", destination: "/products", permanent: true },
+      { source: "/store", destination: "/products", permanent: true },
+      { source: "/catalog", destination: "/products", permanent: true },
+      { source: "/login", destination: "/auth/sign-in", permanent: true },
+      { source: "/sign-in", destination: "/auth/sign-in", permanent: true },
+      { source: "/sign-up", destination: "/auth/sign-up", permanent: true },
+      { source: "/register", destination: "/auth/sign-up", permanent: true },
+      // Canonical apex → www for every path.
       {
         source: "/:path*",
         has: [{ type: "host", value: "benizergreenshop.com" }],

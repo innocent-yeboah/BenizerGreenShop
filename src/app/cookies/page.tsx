@@ -59,7 +59,11 @@ export default function CookiesPolicyPage() {
           <p className="mt-3">
             You can block or delete cookies and site data through your browser. Note that blocking
             necessary auth cookies may prevent sign-in, and clearing storage will reset your cart and
-            wishlist on this device.
+            wishlist on this device. For broader personal data disclosures, please read our{" "}
+            <Link href="/privacy" className="font-semibold text-brand-green-dark underline-offset-4 hover:underline">
+              privacy policy
+            </Link>
+            .
           </p>
         </section>
 
@@ -79,7 +83,11 @@ export default function CookiesPolicyPage() {
         </section>
 
         <p className="text-xs text-neutral-500">
-          We revise this policy when our use of cookies or storage changes materially.
+          We revise this policy when our use of cookies or storage changes materially. Related:{" "}
+          <Link href="/privacy" className="font-medium text-neutral-700 underline-offset-4 hover:text-brand-green-dark hover:underline">
+            Privacy policy
+          </Link>
+          .
         </p>
       </div>
     </main>

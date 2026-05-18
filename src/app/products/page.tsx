@@ -8,6 +8,7 @@ import { currencyFormatter } from "@/lib/utils";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistToggleButton } from "@/components/wishlist-toggle-button";
 import { CatalogJsonLd } from "@/components/catalog-json-ld";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-json-ld";
 
 const productsDescription = clampMetaDescription(
   `Browse trusted organic supplements and daily wellness formulas from ${siteConfig.name}. Natural vitality, cellular support, and premium quality — ship-ready in Ghana and beyond.`,
@@ -43,6 +44,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   return (
     <main className="container-shell pb-24 pt-10 md:pb-14 md:pt-14">
       <CatalogJsonLd />
+      <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }]} />
       <h1 className="text-4xl font-bold text-brand-green-dark">Best Selling Products</h1>
       <p className="mt-2 max-w-2xl text-brand-charcoal/80">
         Discover premium formulations designed to support daily wellness, natural balance, and measurable health outcomes.

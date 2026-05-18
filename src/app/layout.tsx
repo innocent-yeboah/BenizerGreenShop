@@ -325,6 +325,15 @@ export default async function RootLayout({
                   ·
                 </span>
                 <Link
+                  href="/privacy"
+                  className="text-white/75 underline decoration-white/28 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/60"
+                >
+                  Privacy policy
+                </Link>
+                <span className="hidden text-white/35 sm:inline" aria-hidden="true">
+                  ·
+                </span>
+                <Link
                   href="/cookies"
                   className="text-white/75 underline decoration-white/28 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/60"
                 >
