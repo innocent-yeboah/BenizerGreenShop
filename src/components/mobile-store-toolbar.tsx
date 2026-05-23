@@ -2,22 +2,32 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { signOutAction } from "@/app/auth/actions";
 import { BrandSealMark } from "@/components/brand-seal";
 import { siteConfig } from "@/lib/site-data";
 import { CartNavLink } from "@/components/cart-nav-link";
 import { WishlistNavLink } from "@/components/wishlist-nav-link";
 import { InlineMobileProductSearch } from "@/components/mobile-search-toggle";
+import type { getCurrentUserWithRole } from "@/lib/auth";
+import { cn } from "@/lib/utils";
+
+type CurrentUser = Awaited<ReturnType<typeof getCurrentUserWithRole>>;
 
 type Props = {
-  /** Extra links / auth actions appended in the drawer. */
-  children?: ReactNode;
+  currentUser: CurrentUser;
 };
 
-export function MobileStoreToolbar({ children }: Props) {
+const supportLinks = [
+  { href: "/contact", label: "Contact" },
+  { href: "/order-status", label: "Track order" },
+  { href: "/about", label: "About" },
+] as const;
+
+export function MobileStoreToolbar({ currentUser }: Props) {
   const path = usePathname() ?? "";
   const hide =
     path.startsWith("/admin") ||
@@ -43,61 +53,106 @@ export function MobileStoreToolbar({ children }: Props) {
 
   if (hide) return null;
 
+  const closeMenu = () => setMenuOpen(false);
+
   const drawer =
     menuOpen && portalTarget
       ? createPortal(
           <>
             <button
               type="button"
-              aria-label="Dismiss menu backdrop"
+              aria-label="Dismiss menu"
               className="fixed inset-0 z-[90] bg-black/45 backdrop-blur-[1px]"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMenu}
             />
             <aside
               id="mobile-nav-drawer"
               role="dialog"
               aria-modal="true"
               aria-labelledby="mobile-nav-drawer-title"
-              className="fixed left-0 top-0 z-[95] flex h-dvh max-h-dvh w-[min(20rem,calc(100vw-3rem))] max-w-[100vw] flex-col border-r border-brand-green/12 bg-brand-cream shadow-2xl supports-[height:100dvh]:h-[100dvh] supports-[height:100dvh]:max-h-[100dvh]"
+              className="fixed left-0 top-0 z-[95] flex h-dvh max-h-dvh w-[min(18rem,calc(100vw-2.5rem))] flex-col border-r border-brand-green/12 bg-brand-cream shadow-2xl supports-[height:100dvh]:h-[100dvh] supports-[height:100dvh]:max-h-[100dvh]"
             >
-              <div className="flex items-center justify-between border-b border-brand-green/10 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))]">
-                <p
-                  id="mobile-nav-drawer-title"
-                  className="font-heading text-sm font-bold uppercase tracking-wider text-brand-green-dark"
-                >
-                  Menu
-                </p>
+              <div className="flex items-center justify-between gap-3 border-b border-brand-green/10 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+                <Link href="/" onClick={closeMenu} className="inline-flex min-w-0 items-center gap-2.5">
+                  <BrandSealMark variant="nav" />
+                  <span id="mobile-nav-drawer-title" className="truncate font-heading text-sm font-bold text-brand-green-dark">
+                    {siteConfig.name}
+                  </span>
+                </Link>
                 <button
                   type="button"
-                  onClick={() => setMenuOpen(false)}
-                  className="inline-flex size-10 items-center justify-center rounded-lg border border-brand-green/14 bg-white text-brand-green-dark hover:bg-brand-green/10"
+                  onClick={closeMenu}
+                  className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-brand-green/14 bg-white text-brand-green-dark"
+                  aria-label="Close menu"
                 >
                   <X className="size-5" aria-hidden strokeWidth={2} />
                 </button>
               </div>
+
               <nav
-                aria-label="Site menu"
-                className="flex min-h-0 flex-1 flex-col gap-0 overflow-y-auto overscroll-contain pb-[max(2.75rem,env(safe-area-inset-bottom))] pt-4"
-                onClick={() => setMenuOpen(false)}
+                aria-label="More pages"
+                className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain py-2"
+                onClick={closeMenu}
               >
-                <DrawerLinkRow href="/">Home</DrawerLinkRow>
-                <DrawerLinkRow href="/products">Shop</DrawerLinkRow>
-                <DrawerLinkRow href="/cart">Cart</DrawerLinkRow>
-                <DrawerLinkRow href="/wishlist">Wishlist</DrawerLinkRow>
-                <DrawerLinkRow href="/about">About</DrawerLinkRow>
-                <DrawerLinkRow href="/contact">Contact</DrawerLinkRow>
-                <DrawerLinkRow href="/order-status">Track order</DrawerLinkRow>
-                <DrawerLinkRow href="/become-distributor">Become a distributor</DrawerLinkRow>
-                <DrawerLinkRow href="/account">Account</DrawerLinkRow>
-                {children ? (
-                  <div className="mt-6 border-t border-brand-green/10 px-5 pt-4 text-sm">
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand-green-dark/55">
-                      More
-                    </p>
-                    <div className="flex flex-col gap-3">{children}</div>
-                  </div>
-                ) : null}
+                <DrawerLink href="/products" className="font-semibold">
+                  Shop all products
+                </DrawerLink>
+                <DrawerLink href="/become-distributor">Partner program</DrawerLink>
+
+                <DrawerSection label="Help">
+                  {supportLinks.map((item) => (
+                    <DrawerLink key={item.href} href={item.href}>
+                      {item.label}
+                    </DrawerLink>
+                  ))}
+                </DrawerSection>
               </nav>
+
+              <div
+                className="shrink-0 border-t border-brand-green/10 px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+                onClick={closeMenu}
+              >
+                {currentUser?.role === "admin" ? (
+                  <DrawerLink href="/admin" className="mb-2 rounded-lg bg-white px-3 py-2 ring-1 ring-brand-green/12">
+                    Admin
+                  </DrawerLink>
+                ) : null}
+                {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
+                  <DrawerLink
+                    href="/distributor"
+                    className="mb-2 rounded-lg bg-white px-3 py-2 ring-1 ring-brand-green/12"
+                  >
+                    Partner hub
+                  </DrawerLink>
+                ) : null}
+
+                {currentUser ? (
+                  <form action={signOutAction}>
+                    <button
+                      type="submit"
+                      className="w-full rounded-xl border border-brand-green-dark/20 py-2.5 text-sm font-semibold text-brand-green-dark hover:bg-white"
+                    >
+                      Sign out
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/sign-in"
+                      prefetch={false}
+                      className="block rounded-xl bg-brand-green py-2.5 text-center text-sm font-semibold text-white hover:bg-brand-green-dark"
+                    >
+                      Sign in
+                    </Link>
+                    <p className="mt-2.5 text-center text-xs text-brand-charcoal/60">
+                      New here?{" "}
+                      <Link href="/auth/sign-up" prefetch={false} className="font-semibold text-brand-green-dark underline-offset-2 hover:underline">
+                        Create account
+                      </Link>
+                    </p>
+                  </>
+                )}
+              </div>
             </aside>
           </>,
           portalTarget,
@@ -123,7 +178,7 @@ export function MobileStoreToolbar({ children }: Props) {
             ) : (
               <Menu className="size-[22px]" aria-hidden strokeWidth={2} />
             )}
-            <span className="sr-only">{menuOpen ? "Close navigation menu" : "Open navigation menu"}</span>
+            <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
           </button>
 
           <Link href="/" className="shrink-0" aria-label={`${siteConfig.name} — Home`}>
@@ -160,15 +215,34 @@ export function MobileStoreToolbar({ children }: Props) {
   );
 }
 
-function DrawerLinkRow({ href, children }: { href: string; children: ReactNode }) {
+function DrawerSection({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="mt-3 border-t border-brand-green/8 pt-3">
+      <p className="px-4 pb-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-green-dark/45">{label}</p>
+      {children}
+    </div>
+  );
+}
+
+function DrawerLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <Link
       href={href}
       prefetch={false}
-      className="flex items-center justify-between border-b border-brand-green/10 px-5 py-3.5 text-sm font-semibold text-brand-green-dark hover:bg-white/70"
+      className={cn(
+        "block px-4 py-2.5 text-[15px] text-brand-green-dark transition-colors hover:bg-white/80",
+        className,
+      )}
     >
       {children}
-      <ChevronDown className="size-4 -rotate-90 text-brand-green/55" aria-hidden />
     </Link>
   );
 }

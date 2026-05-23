@@ -14,7 +14,6 @@ import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
 import { homeMetaDescription, OG_SHARE_SIZE, seoKeywords } from "@/lib/seo";
 import { getCurrentUserWithRole } from "@/lib/auth";
-import { signOutAction } from "@/app/auth/actions";
 
 const siteUrl = getPublicAppUrl();
 const metaDescription = homeMetaDescription(siteConfig.name);
@@ -128,64 +127,12 @@ export default async function RootLayout({
 }>) {
   const currentUser = await getCurrentUserWithRole();
 
-  const drawerExtras = (
-    <>
-      {currentUser?.role === "admin" ? (
-        <Link
-          href="/admin"
-          prefetch={false}
-          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-brand-green-dark ring-1 ring-brand-green/18 hover:bg-brand-cream"
-        >
-          Admin dashboard
-        </Link>
-      ) : null}
-      {currentUser && (currentUser.role === "distributor" || currentUser.role === "admin") ? (
-        <Link
-          href="/distributor"
-          prefetch={false}
-          className="rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-brand-green-dark ring-1 ring-brand-green/18 hover:bg-brand-cream"
-        >
-          Partner hub
-        </Link>
-      ) : null}
-      {currentUser ? (
-        <>
-          <form action={signOutAction} className="w-full">
-            <button
-              type="submit"
-              className="w-full cursor-pointer rounded-xl border border-brand-green-dark/28 bg-brand-cream/50 px-4 py-3 text-sm font-semibold text-brand-green-dark hover:bg-brand-green/10"
-            >
-              Sign out
-            </button>
-          </form>
-        </>
-      ) : (
-        <>
-          <Link
-            href="/auth/sign-up"
-            prefetch={false}
-            className="rounded-xl bg-brand-green px-4 py-3 text-center text-sm font-semibold text-white hover:bg-brand-green-dark"
-          >
-            Create shopper account
-          </Link>
-          <Link
-            href="/auth/sign-in"
-            prefetch={false}
-            className="rounded-xl border border-brand-green-dark/30 bg-white px-4 py-3 text-center text-sm font-semibold text-brand-green-dark hover:bg-brand-cream"
-          >
-            Sign in
-          </Link>
-        </>
-      )}
-    </>
-  );
-
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-brand-cream text-brand-charcoal">
         <SeoJsonLd />
         <header className="sticky top-0 z-50 border-b border-neutral-200/90 bg-white/95 backdrop-blur-sm backdrop-saturate-150">
-          <MobileStoreToolbar>{drawerExtras}</MobileStoreToolbar>
+          <MobileStoreToolbar currentUser={currentUser} />
 
           <DesktopStoreHeader currentUser={currentUser} />
 
