@@ -53,7 +53,7 @@ export function DistributorPackageShowcase({ shareEarnHref, showShareEarn = true
     <section className="container-shell py-14 md:py-16">
       <div className="flex flex-col gap-5 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold capitalize text-brand-green-dark md:text-4xl">
+          <h2 className="font-heading text-3xl font-bold text-brand-green-dark md:text-4xl">
             {siteConfig.homePage.packagesIntroTitle}
           </h2>
           <p className="mt-4 text-base font-medium leading-snug text-brand-charcoal/80 md:text-lg">

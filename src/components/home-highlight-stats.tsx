@@ -1,57 +1,36 @@
 import { cn } from "@/lib/utils";
 
-/** Homepage highlight pillars — delivery, organic focus, rewards. */
+/** Homepage trust pillars — single brand palette (green / gold). */
 type Stat = {
   title: string;
   subtitle: string;
   icon: "heart" | "shield" | "truck" | "banknotes";
-  iconColor: string;
-  iconBg: string;
-  titleColor: string;
 };
 
 const STATS: Stat[] = [
   {
-    title: "Get back your health",
-    subtitle: "Wellness-focused formulas you can trust",
+    title: "Wellness-first formulas",
+    subtitle: "Curated MiiraCare and organic supplements",
     icon: "heart",
-    iconColor: "text-emerald-600",
-    iconBg: "bg-emerald-600/14",
-    titleColor: "text-emerald-950",
   },
   {
-    title: "Certified products",
-    subtitle: "100% organic formulas",
+    title: "Quality you can verify",
+    subtitle: "Original, sealed products with clear labelling",
     icon: "shield",
-    iconColor: "text-amber-700",
-    iconBg: "bg-amber-500/15",
-    titleColor: "text-amber-950",
   },
   {
-    title: "Fast shipping",
-    subtitle: "Nationwide",
+    title: "Nationwide delivery",
+    subtitle: "Reliable fulfilment across Ghana",
     icon: "truck",
-    iconColor: "text-sky-600",
-    iconBg: "bg-sky-600/14",
-    titleColor: "text-sky-950",
   },
   {
-    title: "Get rewards",
-    subtitle: "Distributor bonuses & referral earnings",
+    title: "Partner program",
+    subtitle: "Structured distributor onboarding and support",
     icon: "banknotes",
-    iconColor: "text-rose-600",
-    iconBg: "bg-rose-600/14",
-    titleColor: "text-rose-950",
   },
 ];
 
-function StatIcon({
-  name,
-  className,
-}: {
-  name: Stat["icon"];
-  className?: string;
-}) {
+function StatIcon({ name, className }: { name: Stat["icon"]; className?: string }) {
   const common = {
     xmlns: "http://www.w3.org/2000/svg" as const,
     fill: "none" as const,
@@ -108,25 +87,19 @@ function StatIcon({
 
 export function HomeHighlightStats() {
   return (
-    <section className="border-y border-brand-charcoal/7 bg-linear-to-b from-brand-cream/35 to-white py-7 md:py-8">
+    <section className="border-y border-brand-charcoal/7 bg-white py-7 md:py-8" aria-label="Why shop with Benizer">
       <div className="container-shell">
         <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           {STATS.map((item) => (
             <li
               key={item.title}
-              className="flex items-start gap-3 rounded-xl border border-brand-charcoal/6 bg-white px-4 py-3 shadow-[0_4px_18px_-12px_rgba(13,59,15,0.18)] md:gap-3.5 md:py-3.5"
+              className="flex items-start gap-3 rounded-xl border border-brand-green/10 bg-brand-cream/30 px-4 py-3.5 md:gap-3.5"
             >
-              <div
-                className={cn(
-                  "flex size-9 shrink-0 items-center justify-center rounded-full",
-                  item.iconBg,
-                  item.iconColor,
-                )}
-              >
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-green/10 text-brand-green-dark">
                 <StatIcon name={item.icon} />
               </div>
               <div className="min-w-0 pt-0.5 text-left md:pt-px">
-                <p className={cn("text-sm font-semibold leading-tight tracking-tight", item.titleColor)}>{item.title}</p>
+                <p className="text-sm font-semibold leading-tight tracking-tight text-brand-green-dark">{item.title}</p>
                 <p className="mt-1 text-xs leading-snug text-brand-charcoal/65">{item.subtitle}</p>
               </div>
             </li>

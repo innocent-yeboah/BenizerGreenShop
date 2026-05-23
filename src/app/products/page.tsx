@@ -26,29 +26,48 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string }>;
 };
 
 export default async function ProductsPage({ searchParams }: Props) {
   const sp = await searchParams;
   const displayQ = (sp?.q ?? "").trim();
   const q = displayQ.toLowerCase();
+  const displayCategory = (sp?.category ?? "").trim();
 
-  const list = q.length
-    ? products.filter((p) => {
-        const blob = `${p.shortTitle} ${p.title} ${p.category} ${p.slug}`.toLowerCase();
-        return blob.includes(q);
-      })
-    : products;
+  let list = products;
+
+  if (displayCategory) {
+    list = list.filter((p) => p.category.toLowerCase() === displayCategory.toLowerCase());
+  }
+
+  if (q.length) {
+    list = list.filter((p) => {
+      const blob = `${p.shortTitle} ${p.title} ${p.category} ${p.slug}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }
 
   return (
     <main className="container-shell pb-24 pt-10 md:pb-14 md:pt-14">
       <CatalogJsonLd />
       <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "Products", path: "/products" }]} />
-      <h1 className="text-4xl font-bold text-brand-green-dark">Best Selling Products</h1>
+      <h1 className="font-heading text-4xl font-bold text-brand-green-dark">
+        {displayCategory ? displayCategory : "Wellness catalog"}
+      </h1>
       <p className="mt-2 max-w-2xl text-brand-charcoal/80">
         Discover premium formulations designed to support daily wellness, natural balance, and measurable health outcomes.
       </p>
+
+      {displayCategory && !q ? (
+        <p className="mt-6 text-sm text-brand-charcoal/70">
+          Showing {list.length} product{list.length === 1 ? "" : "s"} in{" "}
+          <span className="font-semibold text-brand-green-dark">{displayCategory}</span>.{" "}
+          <Link href="/products" className="font-medium text-brand-green hover:underline">
+            View all categories
+          </Link>
+        </p>
+      ) : null}
 
       {q ? (
         <p className="mt-6 text-sm text-brand-charcoal/70">

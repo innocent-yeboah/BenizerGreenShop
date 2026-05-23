@@ -3,27 +3,52 @@ export const siteConfig = {
   tagline: "ORGANIC • NATURAL",
   /** Seal strapline — pairs with nav lockup under the official mark */
   brandLockupSubtitle: "Organic · Natural · Trusted",
-  /** Scrolling banner above the header */
-  promoMarquee:
-    "Your Health is your Wealth! Starts Now - Organic Wellness + Distributor Rewards",
+  /** Static utility strip below the header (replaces scrolling promo). */
+  utilityBar: [
+    "Organic supplements",
+    "Nationwide delivery",
+    "GHS pricing",
+    "Partner support",
+  ] as const,
   description:
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
   /** Homepage funnel sections (hero, slider, highlights, packages). */
   homePage: {
     heroEyebrow: "MiiraCare · Ghana",
     heroTitle: "Wellness that earns trust.",
-    heroTitleAccent: "",
-    heroLead: "",
-    heroPoints: [] as string[],
-    primaryCta: "Shop the catalogue",
-    secondaryCta: "Partner as a distributor",
-    discountBandEyebrow: "Member pricing",
-    discountBandTitle: "Get 40% distributor pricing on product bundles!",
+    heroTitleAccent: "Organic supplements. Professional fulfilment.",
+    heroLead:
+      "Benizer Green Shop supplies original MiiraCare wellness products with transparent pricing, reliable delivery across Ghana, and structured support for shoppers and distributors.",
+    heroPoints: [
+      "Authentic, properly sealed products",
+      "Nationwide shipping and order tracking",
+      "Dedicated partner onboarding and training",
+    ] as string[],
+    primaryCta: "Shop products",
+    secondaryCta: "Become a distributor",
+    featuredLimit: 4,
+    featuredSectionTitle: "Featured products",
+    featuredSectionSubtitle:
+      "A curated selection from our catalog. Browse the full range for cellular wellness, vitality, and everyday balance.",
+    brandStoryTitle: "Built on trust in Ghana",
+    brandStoryBody:
+      "We combine rigorous product sourcing with clear guidance for families and partners. Whether you are restocking for home wellness or building a distribution business, our team is with you after every order.",
+    brandStoryCta: "About Benizer",
+    howItWorksTitle: "How ordering works",
+    howItWorksSteps: [
+      { title: "Browse the catalog", body: "Explore supplements by category and read full product details." },
+      { title: "Checkout securely", body: "Pay in GHS with clear pricing and order confirmation." },
+      { title: "Receive with support", body: "Track delivery and reach our team on WhatsApp or email." },
+    ] as const,
+    discountBandEyebrow: "Partner program",
+    discountBandTitle: "Grow with Benizer as a distributor",
     discountBandSubtitle:
-      "Become a registered Benizer distributor today and buy your boxes for less—plus earn on referrals.",
-    discountBandCta: "Join the distributor program",
+      "Registered partners access preferential bundle pricing, referral tools, and training from our team.",
+    discountBandCta: "Explore partner tiers",
     packagesIntroTitle: "Become a distributor",
     packagesIntroSubtitle: "Pick a starter package and unlock better rates on every restock.",
+    supplementDisclaimer:
+      "Products are dietary supplements, not medicines. They are not intended to diagnose, treat, cure, or prevent any disease. Consult a qualified healthcare professional before use, especially if you are pregnant, nursing, or on medication.",
   },
   /** E.164 for wa.me links (Ghana: 0545753721 → 233545753721) */
   whatsappAi: "+233545753721",
@@ -419,15 +444,27 @@ export const siteTestimonials: SiteTestimonial[] = [
       "Benizer products helped me regain energy and confidence in my daily life.",
     name: "Ama Serwaa",
     initial: "AS",
-    tagline: "Verified customer · Greater Accra",
+    tagline: "Customer · Greater Accra",
   },
   {
     quote:
-      "I joined as a distributor and the support system made it easy to start earning.",
+      "The onboarding was clear and my first restock arrived on time. Support answered every product question.",
+    name: "Kwame Mensah",
+    initial: "KM",
+    tagline: "Distributor · Ashanti Region",
+  },
+  {
+    quote:
+      "I appreciate the transparency on pricing and ingredients. Ordering online was straightforward.",
+    name: "Efua Boateng",
+    initial: "EB",
+    tagline: "Customer · Kumasi",
+  },
+  {
+    quote:
+      "I joined as a distributor and the training made it easier to serve my clients with confidence.",
     name: "Innocen Golden",
     initial: "IG",
-    tagline: "Founder",
-    href: "https://buildwithinnocent.com",
-    linkLabel: "buildwithinnocent.com",
+    tagline: "Lead distributor · Ghana",
   },
 ];

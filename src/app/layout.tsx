@@ -8,6 +8,7 @@ import { DesktopStoreHeader } from "@/components/desktop-store-header";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { MobileStoreToolbar } from "@/components/mobile-store-toolbar";
 import { SocialLinks } from "@/components/social-links";
+import { HeaderUtilityBar } from "@/components/header-utility-bar";
 import { SeoJsonLd } from "@/components/seo-json-ld";
 import { siteConfig } from "@/lib/site-data";
 import { getPublicAppUrl } from "@/lib/app-url";
@@ -126,8 +127,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const currentUser = await getCurrentUserWithRole();
-  const [promoBeforeWealth, promoAfterWealth] =
-    siteConfig.promoMarquee.split("Wealth!");
 
   const drawerExtras = (
     <>
@@ -190,24 +189,7 @@ export default async function RootLayout({
 
           <DesktopStoreHeader currentUser={currentUser} />
 
-          <div className="relative overflow-hidden border-t border-neutral-100 bg-brand-green py-2 shadow-inner">
-            <p className="sr-only">{siteConfig.promoMarquee}</p>
-            <div className="promo-marquee-track" aria-hidden>
-              {[0, 1].map((copy) => (
-                <span
-                  key={copy}
-                  className="inline-flex shrink-0 items-center whitespace-nowrap px-10 text-[0.7rem] font-semibold tracking-wide text-white sm:text-xs"
-                >
-                  {promoBeforeWealth}
-                  <strong className="px-0.5 font-bold text-brand-gold-light">Wealth!</strong>
-                  {promoAfterWealth}
-                  <span className="pl-10 text-brand-gold-light/95" aria-hidden>
-                    ✦
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
+          <HeaderUtilityBar />
         </header>
         <Suspense fallback={null}>
           <ReferralLinkCapture />
