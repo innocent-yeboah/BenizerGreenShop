@@ -8,6 +8,7 @@ import { HomeCategoryStrip } from "@/components/home-category-strip";
 import { HomeFeaturedProducts } from "@/components/home-featured-products";
 import { HomeBrandStory } from "@/components/home-brand-story";
 import { HomeHowItWorks } from "@/components/home-how-it-works";
+import { HomeVisitLocation } from "@/components/home-visit-location";
 import { HomeDistributorTeaser } from "@/components/home-distributor-teaser";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { HomeSupplementDisclaimer } from "@/components/home-supplement-disclaimer";
@@ -54,6 +55,7 @@ export default function Home() {
       <HomeFeaturedProducts />
       <HomeBrandStory />
       <HomeHowItWorks />
+      <HomeVisitLocation />
       <HomeDistributorTeaser />
 
       <section className="bg-brand-green px-6 py-14 text-white md:py-16" aria-labelledby="home-cta-heading">

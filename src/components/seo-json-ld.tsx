@@ -9,6 +9,7 @@ export function SeoJsonLd() {
     : `+${siteConfig.whatsappAi}`;
 
   const logoUrl = `${url}/branding/benizer-seal.png`;
+  const loc = siteConfig.location;
 
   const organization = {
     "@context": "https://schema.org",
@@ -25,7 +26,15 @@ export function SeoJsonLd() {
     telephone: phone,
     address: {
       "@type": "PostalAddress",
+      streetAddress: loc.streetAddress,
+      addressLocality: loc.locality,
+      addressRegion: loc.region,
       addressCountry: "GH",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: loc.latitude,
+      longitude: loc.longitude,
     },
     knowsAbout: [
       "Organic supplements",
@@ -87,7 +96,33 @@ export function SeoJsonLd() {
     areaServed: "GH",
   };
 
-  const graph = [organization, webSite, onlineStore];
+  const store = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "@id": `${url}/#store-location`,
+    name: `${siteConfig.name} — ${loc.name}`,
+    description: `Visit ${siteConfig.name} at ${loc.name}, ${loc.locality}.`,
+    url: loc.mapsUrl,
+    telephone: phone,
+    email: siteConfig.email,
+    image: logoUrl,
+    parentOrganization: { "@id": `${url}/#organization` },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: loc.streetAddress,
+      addressLocality: loc.locality,
+      addressRegion: loc.region,
+      addressCountry: "GH",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+    },
+    hasMap: loc.mapsUrl,
+  };
+
+  const graph = [organization, webSite, onlineStore, store];
 
   return (
     <script

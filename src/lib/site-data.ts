@@ -9,6 +9,7 @@ export const siteConfig = {
     "Nationwide delivery",
     "GHS pricing",
     "Partner support",
+    "Visit us · Accra Mall",
   ] as const,
   description:
     "Premium organic supplements for men, women, and complete wellness with a high-impact distributor opportunity.",
@@ -55,6 +56,26 @@ export const siteConfig = {
   /** Display format for footer / copy */
   whatsappDirect: "0545753721",
   email: "benizergreens@gmail.com",
+  /** Physical presence — Accra Mall (maps + structured data). */
+  location: {
+    name: "Accra Mall",
+    streetAddress: "Tetteh Quarshie Interchange, Plot No. C11",
+    locality: "Accra",
+    region: "Greater Accra",
+    country: "Ghana",
+    mapsUrl: "https://www.google.com/maps/place/Accra+Mall/@5.6219071,-0.1763612,17z/data=!3m1!4b1!4m6!3m5!1s0xfdf9c420cd93f05:0xfaad7a9c74811a5b!8m2!3d5.6219071!4d-0.1763612!16s%2Fg%2F11b6g29n8l",
+    embedUrl:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.789878456789!2d-0.1763612!3d5.6219071!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9c420cd93f05%3A0xfaad7a9c74811a5b!2sAccra%20Mall!5e0!3m2!1sen!2sgh!4v1716300000000!5m2!1sen!2sgh",
+    latitude: 5.6219071,
+    longitude: -0.1763612,
+    /** Homepage / contact location band copy */
+    visitEyebrow: "Walk in welcome",
+    visitTitle: "Find us at Accra Mall",
+    visitLead:
+      "Shop in person at Ghana’s flagship mall — easy parking, clear signage, and our team on hand for product questions and partner enquiries.",
+    visitCta: "Get directions",
+    visitSecondaryCta: "Contact & map",
+  },
   social: {
     /** Swap for your verified Meta Page URL if different. */
     facebook: "https://www.facebook.com/benizergreenshop",
