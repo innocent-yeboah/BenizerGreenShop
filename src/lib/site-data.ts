@@ -16,21 +16,15 @@ export const siteConfig = {
   /** Homepage funnel sections (hero, slider, highlights, packages). */
   homePage: {
     heroEyebrow: "MiiraCare · Ghana",
-    heroTitle: "Wellness that earns trust.",
-    heroTitleAccent: "Organic supplements. Professional fulfilment.",
-    heroLead:
-      "Benizer Green Shop supplies original MiiraCare wellness products with transparent pricing, reliable delivery across Ghana, and structured support for shoppers and distributors.",
-    heroPoints: [
-      "Authentic, properly sealed products",
-      "Nationwide shipping and order tracking",
-      "Dedicated partner onboarding and training",
-    ] as string[],
+    heroTitle: "Organic supplements you can trust.",
+    heroTitleAccent: "",
+    heroLead: "Original MiiraCare products, nationwide delivery, and support at Accra Mall or online.",
+    heroPoints: [] as string[],
     primaryCta: "Shop products",
     secondaryCta: "Become a distributor",
     featuredLimit: 4,
     featuredSectionTitle: "Featured products",
-    featuredSectionSubtitle:
-      "A curated selection from our catalog. Browse the full range for cellular wellness, vitality, and everyday balance.",
+    featuredSectionSubtitle: "",
     brandStoryTitle: "Built on trust in Ghana",
     brandStoryBody:
       "We combine rigorous product sourcing with clear guidance for families and partners. Whether you are restocking for home wellness or building a distribution business, our team is with you after every order.",
