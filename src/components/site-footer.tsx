@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { Mail, MapPin, Navigation } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { BrandSealMark } from "@/components/brand-seal";
 import { SocialLinks } from "@/components/social-links";
 import { siteConfig } from "@/lib/site-data";
@@ -14,80 +13,35 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-type ContactRowProps = {
-  href: string;
-  label: string;
-  value: string;
-  external?: boolean;
-  icon: ReactNode;
-  iconClassName?: string;
-};
-
-function FooterContactRow({ href, label, value, external, icon, iconClassName }: ContactRowProps) {
-  const content = (
-    <>
-      <span
-        className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-gold-light transition-colors group-hover:bg-brand-gold/25 group-hover:text-white",
-          iconClassName,
-        )}
-      >
-        {icon}
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50">{label}</span>
-        <span className="mt-0.5 block text-sm font-medium leading-snug text-white/92 group-hover:text-brand-gold-light">
-          {value}
-        </span>
-      </span>
-    </>
-  );
-
-  const rowClass =
-    "group flex gap-3 rounded-xl p-2 transition-colors hover:bg-white/6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light";
-
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={rowClass}>
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link href={href} className={rowClass}>
-      {content}
-    </Link>
-  );
-}
+const iconBtnClass =
+  "inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white/90 transition-colors hover:bg-brand-gold/25 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light";
 
 type FooterLink = { href: string; label: string; prefetch?: boolean };
 
 const shopLinks: FooterLink[] = [
   { href: "/products", label: "All products" },
   { href: "/wishlist", label: "Wishlist", prefetch: false },
-  { href: "/become-distributor", label: "Become a distributor" },
+  { href: "/become-distributor", label: "Distributors" },
 ];
 
 const supportLinks: FooterLink[] = [
-  { href: "/contact", label: "Contact us" },
-  { href: "/contact#visit", label: "Store & map" },
-  { href: "/about", label: "About us" },
+  { href: "/contact", label: "Contact" },
+  { href: "/about", label: "About" },
   { href: "/order-status", label: "Track order" },
-  { href: "/account", label: "My account", prefetch: false },
+  { href: "/account", label: "Account", prefetch: false },
 ];
 
 function FooterNavColumn({ title, links }: { title: string; links: FooterLink[] }) {
   return (
     <nav aria-label={title}>
-      <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold-light">{title}</h2>
-      <ul className="mt-4 flex flex-col gap-2.5">
+      <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-gold-light">{title}</h2>
+      <ul className="mt-2 flex flex-col gap-1.5">
         {links.map((item) => (
           <li key={item.href}>
             <Link
               href={item.href}
               prefetch={item.prefetch}
-              className="text-sm text-white/85 transition-colors hover:text-brand-gold-light"
+              className="text-[13px] text-white/82 transition-colors hover:text-brand-gold-light"
             >
               {item.label}
             </Link>
@@ -98,7 +52,7 @@ function FooterNavColumn({ title, links }: { title: string; links: FooterLink[] 
   );
 }
 
-/** Global footer — four-column layout with icon contact rows (international e-commerce pattern). */
+/** Compact global footer — dense columns, icon-only contact actions. */
 export function SiteFooter() {
   const loc = siteConfig.location;
   const waDigits = siteConfig.whatsappAi.replace("+", "");
@@ -106,117 +60,95 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-brand-green-dark text-white" role="contentinfo">
-      <div className="container-shell border-b border-white/10 py-12 md:py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-8 xl:gap-x-12">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light">
-              <BrandSealMark variant="nav" />
-              <span>
-                <span className="block font-heading text-base font-bold leading-tight text-white">{siteConfig.name}</span>
-                <span className="mt-0.5 block text-[11px] font-medium uppercase tracking-[0.14em] text-brand-gold-light/90">
-                  {siteConfig.brandLockupSubtitle}
-                </span>
-              </span>
-            </Link>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{siteConfig.description}</p>
-            <div className="mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">Follow us</p>
-              <SocialLinks variant="footer" layout="icons" className="mt-3" />
-            </div>
-          </div>
-
-          {/* Shop + Support */}
-          <div className="grid gap-8 sm:col-span-2 sm:grid-cols-2 lg:col-span-4">
-            <FooterNavColumn title="Shop" links={shopLinks} />
-            <FooterNavColumn title="Customer care" links={supportLinks} />
-          </div>
-
-          {/* Contact with icons */}
-          <div className="sm:col-span-2 lg:col-span-4">
-            <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-brand-gold-light">Get in touch</h2>
-            <ul className="mt-4 flex flex-col gap-1">
-              <li>
-                <FooterContactRow
-                  href={`https://wa.me/${waDigits}`}
-                  label="WhatsApp"
-                  value={siteConfig.whatsappDirect}
-                  external
-                  icon={<WhatsAppIcon className="size-5" />}
-                  iconClassName="text-[#25D366] group-hover:text-[#25D366]"
-                />
-              </li>
-              <li>
-                <FooterContactRow
-                  href={`mailto:${siteConfig.email}`}
-                  label="Email"
-                  value={siteConfig.email}
-                  external
-                  icon={<Mail className="size-5" strokeWidth={1.75} />}
-                />
-              </li>
-              <li>
-                <FooterContactRow
-                  href={loc.mapsUrl}
-                  label="Visit us"
-                  value={`${loc.name}, ${loc.locality}`}
-                  external
-                  icon={<MapPin className="size-5" strokeWidth={1.75} />}
-                />
-              </li>
-            </ul>
-            <p className="mt-2 px-2 text-xs leading-relaxed text-white/55">
-              {loc.streetAddress}, {loc.region}
-            </p>
-            <a
-              href={loc.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-gold px-4 py-2.5 text-sm font-bold text-brand-green-dark transition-colors hover:bg-brand-gold-light"
+      <div className="container-shell border-b border-white/10 py-7 md:py-8">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8 lg:gap-10">
+          {/* Brand + social */}
+          <div className="sm:col-span-2 md:col-span-1">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
             >
-              <Navigation className="size-4 shrink-0" aria-hidden />
-              Get directions
-            </a>
+              <BrandSealMark variant="nav" />
+              <span className="font-heading text-sm font-bold leading-tight text-white">{siteConfig.name}</span>
+            </Link>
+            <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-brand-gold-light/85">
+              {siteConfig.brandLockupSubtitle}
+            </p>
+            <SocialLinks variant="footer" layout="icons" className="mt-3" />
+          </div>
+
+          <FooterNavColumn title="Shop" links={shopLinks} />
+          <FooterNavColumn title="Help" links={supportLinks} />
+
+          {/* Icon-only contact */}
+          <div>
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-gold-light">Contact</h2>
+            <div className="mt-2 flex flex-wrap gap-2" role="list">
+              <a
+                href={`https://wa.me/${waDigits}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                role="listitem"
+                aria-label={`WhatsApp ${siteConfig.whatsappDirect}`}
+                title={`WhatsApp ${siteConfig.whatsappDirect}`}
+                className={cn(iconBtnClass, "text-[#25D366] hover:text-[#25D366]")}
+              >
+                <WhatsAppIcon className="size-[18px]" />
+              </a>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                role="listitem"
+                aria-label={`Email ${siteConfig.email}`}
+                title={siteConfig.email}
+                className={iconBtnClass}
+              >
+                <Mail className="size-[18px]" strokeWidth={1.75} />
+              </a>
+              <a
+                href={loc.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                role="listitem"
+                aria-label={`Directions to ${loc.name}, ${loc.locality}`}
+                title={`${loc.name} — get directions`}
+                className={iconBtnClass}
+              >
+                <MapPin className="size-[18px]" strokeWidth={1.75} />
+              </a>
+            </div>
+            <p className="mt-2 text-[11px] leading-snug text-white/50">
+              <Link href="/contact#visit" className="hover:text-brand-gold-light hover:underline">
+                {loc.name}, {loc.locality}
+              </Link>
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Legal bar */}
-      <div className="container-shell py-6 md:py-7">
-        <div className="flex flex-col items-center gap-4 text-center md:flex-row md:items-center md:justify-between md:text-left">
-          <p className="text-xs text-white/70">
-            © {year} {siteConfig.name}. All rights reserved.
-          </p>
-          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-            <li>
-              <Link
-                href="/privacy"
-                className="text-white/80 underline decoration-white/25 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/50"
-              >
-                Privacy policy
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/cookies"
-                className="text-white/80 underline decoration-white/25 underline-offset-[3px] transition-colors hover:text-brand-gold-light hover:decoration-brand-gold-light/50"
-              >
-                Cookies policy
-              </Link>
-            </li>
-            <li className="text-white/55">
-              <span className="sr-only">Site by </span>
-              <a
-                href="https://buildwithinnocent.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/75 transition-colors hover:text-brand-gold-light"
-              >
-                buildwithinnocent.com
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div className="container-shell flex flex-col items-center justify-between gap-2 py-3.5 text-[11px] text-white/60 sm:flex-row sm:gap-4">
+        <p>© {year} {siteConfig.name}</p>
+        <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+          <li>
+            <Link href="/privacy" className="hover:text-brand-gold-light">
+              Privacy
+            </Link>
+          </li>
+          <li>
+            <Link href="/cookies" className="hover:text-brand-gold-light">
+              Cookies
+            </Link>
+          </li>
+          <li>
+            <a
+              href="https://buildwithinnocent.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-gold-light"
+            >
+              buildwithinnocent.com
+            </a>
+          </li>
+        </ul>
       </div>
     </footer>
   );

@@ -54,7 +54,7 @@ export function SocialLinks({ variant = "footer", layout = "text", stack = false
             role="listitem"
             aria-label={label}
             title={label}
-            className="inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-gold/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
+            className="inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-brand-gold/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-gold-light"
             target="_blank"
             rel="noopener noreferrer"
           >
