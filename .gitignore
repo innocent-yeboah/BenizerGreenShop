@@ -43,3 +43,7 @@ next-env.d.ts
 
 # hero slide source PNGs (heavy originals; processed outputs in public/images/hero-slides are committed)
 /scripts/hero-source/
+
+# transient commit message scratch files used by the agent when -m on shells is awkward
+.commit-msg.tmp
+.commit-msg.*.tmp
