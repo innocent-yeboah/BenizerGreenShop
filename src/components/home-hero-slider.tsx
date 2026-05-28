@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { BrandSealMark } from "@/components/brand-seal";
 import { siteConfig } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
@@ -289,14 +288,6 @@ export function HomeHeroSlider() {
               key={slideKey}
             >
               Now showing: {active.title}. {active.body}
-            </div>
-
-            {/* Subtle Benizer brand seal — pins the Benizer identity onto the slide. */}
-            <div className="pointer-events-none absolute right-4 top-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 shadow-md ring-1 ring-brand-green/20 backdrop-blur-sm">
-              <BrandSealMark variant="nav" className="size-6 sm:size-6" />
-              <span className="font-heading text-[11px] font-bold uppercase tracking-[0.14em] text-brand-green-dark">
-                Benizer
-              </span>
             </div>
           </div>
         </div>

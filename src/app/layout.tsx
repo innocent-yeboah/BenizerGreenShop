@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Link from "next/link";
 import { Suspense } from "react";
 import { ReferralLinkCapture } from "@/components/referral-link-capture";
 import { ReferralShoppingBanner } from "@/components/referral-shopping-banner";

@@ -40,6 +40,41 @@ export const siteConfig = {
     discountBandSubtitle:
       "Registered partners access preferential bundle pricing, referral tools, and training from our team.",
     discountBandCta: "Explore partner tiers",
+    /** Slim trust ribbon directly under the hero. */
+    trustRibbon: [
+      { label: "Halal certified", short: "Halal" },
+      { label: "MeSTI approved", short: "MeSTI" },
+      { label: "GMP standards", short: "GMP" },
+      { label: "Natural ingredients", short: "Natural" },
+      { label: "Nationwide delivery", short: "Ghana-wide" },
+    ] as const,
+    /** Shop-by-goal section header. */
+    shopByGoalEyebrow: "Browse",
+    shopByGoalTitle: "Shop by goal",
+    shopByGoalLead: "Find the right MiiraCare formula for your everyday wellness.",
+    /** Editorial "Made in Ghana" section — pillars + Accra Mall map. */
+    madeEyebrow: "Made for Ghana",
+    madeTitle: "A trusted home for organic wellness.",
+    madeLead:
+      "Authentic MiiraCare formulations, carefully sourced and served from our Accra Mall counter. Built on dignity, transparency, and the long-term care of our community.",
+    madePillars: [
+      {
+        title: "Authentic only",
+        body: "Sealed MiiraCare originals — never repackaged, never substituted.",
+      },
+      {
+        title: "Walk-in trust",
+        body: "Meet our team at Accra Mall for advice, bundles, or partner registration.",
+      },
+      {
+        title: "After-order care",
+        body: "Reach us on WhatsApp or email after every order — your wellness is the relationship.",
+      },
+    ] as const,
+    /** Customer voices headline. */
+    voicesEyebrow: "Customer voices",
+    voicesTitle: "Real Ghanaians, real wellness.",
+    voicesLead: "A few words from people who shop and partner with Benizer.",
     packagesIntroTitle: "Become a distributor",
     packagesIntroSubtitle: "Pick a starter package and unlock better rates on every restock.",
     supplementDisclaimer:
