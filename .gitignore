@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hero slide source PNGs (heavy originals; processed outputs in public/images/hero-slides are committed)
+/scripts/hero-source/

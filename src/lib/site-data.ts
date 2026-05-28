@@ -44,6 +44,53 @@ export const siteConfig = {
     packagesIntroSubtitle: "Pick a starter package and unlock better rates on every restock.",
     supplementDisclaimer:
       "Products are dietary supplements, not medicines. They are not intended to diagnose, treat, cure, or prevent any disease. Consult a qualified healthcare professional before use, especially if you are pregnant, nursing, or on medication.",
+    /**
+     * Hero slider — each slide owns its own headline, subhead, primary CTA and a
+     * cleaned product photograph (third-party brand marks stripped at build time).
+     * Image basenames map to public/images/hero-slides/{base}.{jpg,webp}.
+     */
+    slider: [
+      {
+        eyebrow: "Featured · Cellular wellness",
+        title: "Double the cell power",
+        body: "MiiraLife paired with Miira-Cell+ — botanicals, stem-cell support, and daily vitality for adults across Ghana.",
+        primaryCta: { label: "Shop Miira-Cell+", href: "/products/miira-cell-plus" },
+        secondaryCta: { label: "Explore range", href: "/products?category=Cellular+Health" },
+        image: "slide-1-cell-power",
+        alt: "Miira-Cell+ and MiiraLife packaging arranged on a clean podium against a blue sky background.",
+        tone: "sky",
+      },
+      {
+        eyebrow: "Daily detox · Botanical",
+        title: "Good gut health, guarded.",
+        body: "Miira-Phyll with chlorophyll, senna and citrus — a gentle daily reset for digestion and balance.",
+        primaryCta: { label: "Shop Miira-Phyll", href: "/products/miira-phyll" },
+        secondaryCta: { label: "Visit our store", href: "/contact#visit" },
+        image: "slide-2-gut-health",
+        alt: "Miira-Phyll botanical sachet with fresh limes and lemons on a dark green backdrop.",
+        tone: "forest",
+      },
+      {
+        eyebrow: "Morning energy · Immunity",
+        title: "Wellness in your morning cup",
+        body: "Miira Coffee with black seed, dates and fingerroot — energy and immunity, all in one cup.",
+        primaryCta: { label: "Shop Miira Coffee", href: "/products/miira-coffee" },
+        secondaryCta: { label: "Browse catalog", href: "/products" },
+        image: "slide-3-coffee",
+        alt: "Premium Miira Coffee pouch with brewed coffee cup and roasted beans on a wooden surface.",
+        tone: "espresso",
+      },
+      {
+        eyebrow: "Full catalog · Certified",
+        title: "Halal · MeSTI · GMP certified",
+        body: "Authentic MiiraCare formulations — properly sealed, lab-certified, and shipped nationwide from Accra Mall.",
+        primaryCta: { label: "Browse all products", href: "/products" },
+        secondaryCta: { label: "Become a distributor", href: "/become-distributor" },
+        image: "slide-4-range",
+        alt: "Complete MiiraCare product range — Tiara, Wedok, Lanang, Coffee, Phyll, Cell+, Curve — with certification badges and fresh botanicals.",
+        tone: "cream",
+      },
+    ] as const,
   },
   /** E.164 for wa.me links (Ghana: 0545753721 → 233545753721) */
   whatsappAi: "+233545753721",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-data";
 import { homeMetaDescription, OG_SHARE_SIZE } from "@/lib/seo";
-import { HomeHero } from "@/components/home-hero";
+import { HomeHeroSlider } from "@/components/home-hero-slider";
 import { HomeCategoryStrip } from "@/components/home-category-strip";
 import { HomeFeaturedProducts } from "@/components/home-featured-products";
 import { HomeVisitStrip } from "@/components/home-visit-strip";
@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <main className="flex-1">
-      <HomeHero />
+      <HomeHeroSlider />
       <HomeFeaturedProducts />
       <HomeCategoryStrip />
       <HomeVisitStrip />

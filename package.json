@@ -12,7 +12,8 @@
     "strip:product-footers": "node scripts/strip-miira-product-footers.mjs",
     "icons:brand": "node scripts/generate-brand-icons.mjs",
     "brand:extract-seal": "node scripts/extract-brand-seal.mjs",
-    "brand:assets": "node scripts/extract-brand-seal.mjs && node scripts/generate-brand-icons.mjs"
+    "brand:assets": "node scripts/extract-brand-seal.mjs && node scripts/generate-brand-icons.mjs",
+    "hero:process": "node scripts/process-hero-slides.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
