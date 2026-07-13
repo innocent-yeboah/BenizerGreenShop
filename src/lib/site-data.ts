@@ -40,14 +40,6 @@ export const siteConfig = {
     discountBandSubtitle:
       "Registered partners access preferential bundle pricing, referral tools, and training from our team.",
     discountBandCta: "Explore partner tiers",
-    /** Slim trust ribbon directly under the hero. */
-    trustRibbon: [
-      { label: "Halal certified", short: "Halal" },
-      { label: "MeSTI approved", short: "MeSTI" },
-      { label: "GMP standards", short: "GMP" },
-      { label: "Natural ingredients", short: "Natural" },
-      { label: "Nationwide delivery", short: "Ghana-wide" },
-    ] as const,
     /** Shop-by-goal section header. */
     shopByGoalEyebrow: "Browse",
     shopByGoalTitle: "Shop by goal",

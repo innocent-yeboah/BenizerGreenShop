@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { siteConfig } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
@@ -170,78 +169,6 @@ export function HomeHeroSlider() {
               {active.secondaryCta.label}
             </Link>
           </div>
-        </div>
-      </div>
-
-      <div className="container-shell relative z-10 pb-8 md:pb-10">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            type="button"
-            aria-label="Previous slide"
-            onClick={prev}
-            className="inline-flex size-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            <ChevronLeft className="size-5" aria-hidden />
-          </button>
-
-          <ul role="tablist" aria-label="Choose slide" className="flex items-center gap-2">
-            {slides.map((slide, i) => {
-              const isActive = i === index;
-              return (
-                <li key={slide.image}>
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-label={`Slide ${i + 1}: ${slide.title}`}
-                    onClick={() => goTo(i)}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-500",
-                      isActive
-                        ? "w-9 bg-brand-gold"
-                        : "w-3 bg-white/35 hover:bg-white/55",
-                    )}
-                  >
-                    <span className="sr-only">Slide {i + 1}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          <button
-            type="button"
-            aria-label="Next slide"
-            onClick={next}
-            className="inline-flex size-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            <ChevronRight className="size-5" aria-hidden />
-          </button>
-
-          <button
-            type="button"
-            aria-label={isPaused ? "Resume autoplay" : "Pause autoplay"}
-            aria-pressed={isPaused}
-            onClick={() => setIsPaused((v) => !v)}
-            className="ml-1 inline-flex size-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            {isPaused ? (
-              <Play className="size-4" aria-hidden />
-            ) : (
-              <Pause className="size-4" aria-hidden />
-            )}
-          </button>
-
-          <span className="ml-auto text-xs font-semibold tabular-nums text-white/75">
-            <span aria-hidden>{String(index + 1).padStart(2, "0")}</span>
-            <span className="mx-1 text-white/40" aria-hidden>
-              /
-            </span>
-            <span aria-hidden>{String(total).padStart(2, "0")}</span>
-            <span className="sr-only">
-              Slide {index + 1} of {total}
-            </span>
-          </span>
         </div>
       </div>
 
