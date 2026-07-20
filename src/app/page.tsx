@@ -3,7 +3,6 @@ import { siteConfig } from "@/lib/site-data";
 import { homeMetaDescription, OG_SHARE_SIZE } from "@/lib/seo";
 import { HomeHeroSlider } from "@/components/home-hero-slider";
 import { HomeFeaturedProducts } from "@/components/home-featured-products";
-import { HomeShopByGoal } from "@/components/home-shop-by-goal";
 import { HomeMadeInGhana } from "@/components/home-made-in-ghana";
 import { HomeCustomerVoices } from "@/components/home-customer-voices";
 import { HomePartnerInvite } from "@/components/home-partner-invite";
@@ -45,7 +44,6 @@ export default function Home() {
     <main className="flex-1">
       <HomeHeroSlider />
       <HomeFeaturedProducts />
-      <HomeShopByGoal />
       <HomeMadeInGhana />
       <HomeCustomerVoices />
       <HomePartnerInvite />

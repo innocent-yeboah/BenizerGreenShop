@@ -40,10 +40,6 @@ export const siteConfig = {
     discountBandSubtitle:
       "Registered partners access preferential bundle pricing, referral tools, and training from our team.",
     discountBandCta: "Explore partner tiers",
-    /** Shop-by-goal section header. */
-    shopByGoalEyebrow: "Browse",
-    shopByGoalTitle: "Shop by goal",
-    shopByGoalLead: "Find the right MiiraCare formula for your everyday wellness.",
     /** Editorial "Made in Ghana" section — pillars + Accra Mall map. */
     madeEyebrow: "Made for Ghana",
     madeTitle: "A trusted home for organic wellness.",
