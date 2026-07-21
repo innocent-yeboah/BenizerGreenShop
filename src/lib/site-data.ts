@@ -142,8 +142,8 @@ export const siteConfig = {
   },
   social: {
     /** Swap for your verified Meta Page URL if different. */
-    facebook: "https://www.facebook.com/benizergreenshop",
-    instagram: "https://www.instagram.com/benizer.green.shop/",
+    facebook: "https://www.facebook.com/share/1Febqt4HGg/",
+    instagram: "https://www.instagram.com/benizergreenshp?igsh=MTZvZWY0MjRraDhoYg==",
     tiktok: "https://www.tiktok.com/@benizer.green.shop",
   },
 };
